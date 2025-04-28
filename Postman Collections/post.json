@@ -49,7 +49,8 @@
 							"",
 							"// Set it as a Postman variable",
 							"pm.environment.set(\"random_isbn\", random13Digit);",
-							""
+							"",
+							"console.log(\"{{$random_isbn}}\");"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -61,39 +62,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "{{$randomLoremWords}}",
-							"type": "text",
-							"uuid": "d9a0fd34-dec3-44c4-b606-0d83a8ca8577"
-						},
-						{
-							"key": "author",
-							"value": "{{$randomFirstName}}{{$randomLastName}}",
-							"type": "text",
-							"uuid": "d3800f9c-7c19-4c06-b0b1-680e1dc83ca9"
-						},
-						{
-							"key": "published_on",
-							"value": "",
-							"type": "text",
-							"uuid": "408f2254-149e-461d-a4dd-fcc65c86fdfc"
-						},
-						{
-							"key": "isbn",
-							"value": "{{$random_isbn}}",
-							"type": "text",
-							"uuid": "668cc7ef-5205-478e-a5dd-7b2521da0657"
-						},
-						{
-							"key": "publisher_company",
-							"value": "{{$randomFirstName}}",
-							"type": "text",
-							"uuid": "f25f556b-0bb4-4aa9-897f-23a4b28abc51"
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"et rerum occaecati\",\n    \"author\": \"OrvilleJacobs\",\n    \"published_on\": null,\n    \"isbn\": \"{{$random_isbn}}\",\n    \"pages\": null,\n    \"publisher_company\": \"Beulah\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": "{{base_url}}books/",
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
