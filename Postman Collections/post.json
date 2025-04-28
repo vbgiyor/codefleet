@@ -63,7 +63,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": null,\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{$today}}\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
