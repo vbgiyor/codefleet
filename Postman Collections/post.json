@@ -59,16 +59,16 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "name",
+							"key": "title",
+							"value": "{{$randomLoremWords}}",
+							"type": "text",
+							"uuid": "d9a0fd34-dec3-44c4-b606-0d83a8ca8577"
+						},
+						{
+							"key": "author",
 							"value": "{{$randomFirstName}}{{$randomLastName}}",
 							"type": "text",
 							"uuid": "d3800f9c-7c19-4c06-b0b1-680e1dc83ca9"
-						},
-						{
-							"key": "description",
-							"value": "{{$randomLoremSentences}}",
-							"type": "text",
-							"uuid": "d9a0fd34-dec3-44c4-b606-0d83a8ca8577"
 						}
 					]
 				},
