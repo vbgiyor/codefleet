@@ -63,7 +63,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"et rerum occaecati\",\n    \"author\": \"OrvilleJacobs\",\n    \"published_on\": null,\n    \"isbn\": \"{{$random_isbn}}\",\n    \"pages\": null,\n    \"publisher_company\": \"Beulah\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": null,\n    \"isbn\": \"{{$random_isbn}}\",\n    \"pages\": null,\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
