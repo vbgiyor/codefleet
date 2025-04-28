@@ -75,6 +75,12 @@
 							"value": "{{$randomDatePast}}",
 							"type": "text",
 							"uuid": "408f2254-149e-461d-a4dd-fcc65c86fdfc"
+						},
+						{
+							"key": "isbn",
+							"value": "{{$randomUUID}}",
+							"type": "text",
+							"uuid": "668cc7ef-5205-478e-a5dd-7b2521da0657"
 						}
 					]
 				},
