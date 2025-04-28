@@ -69,6 +69,12 @@
 							"value": "{{$randomFirstName}}{{$randomLastName}}",
 							"type": "text",
 							"uuid": "d3800f9c-7c19-4c06-b0b1-680e1dc83ca9"
+						},
+						{
+							"key": "published_on",
+							"value": "{{$randomDatePast}}",
+							"type": "text",
+							"uuid": "408f2254-149e-461d-a4dd-fcc65c86fdfc"
 						}
 					]
 				},
