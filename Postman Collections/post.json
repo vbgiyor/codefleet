@@ -42,15 +42,7 @@
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-							"});",
-							"",
-							"// Generate a random 13-digit number as a string",
-							"let random13Digit = Math.floor(Math.random() * 1e13).toString().padStart(13, '0');",
-							"",
-							"// Set it as a Postman variable",
-							"pm.environment.set(\"random_isbn\", random13Digit);",
-							"",
-							"console.log(\"{{$random_isbn}}\");"
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -63,7 +55,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{$today}}\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{$fromMillis($toMillis($now()), 'YYYY-MM-DD')}}\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
