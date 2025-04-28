@@ -47,6 +47,17 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "be504324-653c-423d-a08e-1e58576b7bfe",
+						"exec": [
+							"pm.globals.set(\"today\", new Date().toLocaleDateString());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"id": "9abd21b6-979d-4d8e-9b82-d1cde6c77228",
@@ -55,7 +66,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"2025-04-22\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{$today}}\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
