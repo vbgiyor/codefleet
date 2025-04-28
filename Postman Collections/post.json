@@ -72,7 +72,7 @@
 						},
 						{
 							"key": "published_on",
-							"value": "{{$randomDatePast}}",
+							"value": "",
 							"type": "text",
 							"uuid": "408f2254-149e-461d-a4dd-fcc65c86fdfc"
 						},
@@ -81,6 +81,12 @@
 							"value": "{{$randomUUID}}",
 							"type": "text",
 							"uuid": "668cc7ef-5205-478e-a5dd-7b2521da0657"
+						},
+						{
+							"key": "publisher_company",
+							"value": "{{$randomFirstName}}",
+							"type": "text",
+							"uuid": "f25f556b-0bb4-4aa9-897f-23a4b28abc51"
 						}
 					]
 				},
