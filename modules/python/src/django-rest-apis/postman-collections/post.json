@@ -56,7 +56,9 @@
 							"const moment = require('moment');",
 							"const dash = require('lodash');",
 							"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));",
-							"pm.globals.set(\"random_number\", dash.random(100, 999));"
+							"pm.globals.set(\"random_number\", dash.random(100, 999));",
+							"pm.globals.set(\"isbn\", new Date().getMilliseconds());",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -69,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{$timestamp}}{{random_number}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
