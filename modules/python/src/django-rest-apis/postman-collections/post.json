@@ -99,6 +99,17 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e82a89e2-d01f-415b-bec9-200e22f2568b",
+						"exec": [
+							"pm.globals.set(\"isbn\", new Date().getTime());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"id": "6360b9a9-1912-4e40-bedd-4bb7aba0fc38",
@@ -115,12 +126,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}books/6",
+					"raw": "{{base_url}}books/5",
 					"host": [
 						"{{base_url}}books"
 					],
 					"path": [
-						"6"
+						"5"
 					],
 					"query": [
 						{
