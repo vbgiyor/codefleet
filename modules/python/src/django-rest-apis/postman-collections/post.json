@@ -57,7 +57,7 @@
 							"const dash = require('lodash');",
 							"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));",
 							"pm.globals.set(\"random_number\", dash.random(100, 999));",
-							"pm.globals.set(\"isbn\", new Date().getMilliseconds());",
+							"pm.globals.set(\"isbn\", new Date().getTime());",
 							""
 						],
 						"type": "text/javascript",
