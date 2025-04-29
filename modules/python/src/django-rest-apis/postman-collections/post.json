@@ -107,7 +107,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": null,\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -115,12 +115,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}books/4",
+					"raw": "{{base_url}}books/5",
 					"host": [
 						"{{base_url}}books"
 					],
 					"path": [
-						"4"
+						"5"
 					],
 					"query": [
 						{
