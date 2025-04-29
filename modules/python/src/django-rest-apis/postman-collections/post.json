@@ -107,7 +107,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"New Title {{$randomLoremWords}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
+					"raw": "{\n    \"title\": \"New Title {{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -170,7 +170,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}books/6",
+				"url": "{{base_url}}books/3",
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 			},
 			"response": []
