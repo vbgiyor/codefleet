@@ -54,7 +54,9 @@
 						"id": "be504324-653c-423d-a08e-1e58576b7bfe",
 						"exec": [
 							"const moment = require('moment');",
-							"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));"
+							"const dash = require('lodash');",
+							"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));",
+							"pm.globals.set(\"random_number\", dash.random(100, 999));"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -67,7 +69,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{today}}\",\n    \"isbn\": \"{{$timestamp}}324\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_on\": \"{{today}}\",\n    \"isbn\": \"{{$timestamp}}{{random_number}}\",\n    \"pages\": \"{{$randomInt}}\",\n    \"publisher_company\": \"{{$randomFirstName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
