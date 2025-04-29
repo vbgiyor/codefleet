@@ -27,7 +27,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{base_url}}",
+				"url": "{{base_url}}books/",
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
 			},
 			"response": []
@@ -42,7 +42,22 @@
 						"exec": [
 							"pm.test(\"Successful POST request\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-							"});",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "be504324-653c-423d-a08e-1e58576b7bfe",
+						"exec": [
+							"const moment = require('moment');",
+							"const dash = require('lodash');",
+							"pm.globals.set(\"today\", moment().format(\"YYYY-MM-DD\"));",
+							"pm.globals.set(\"random_number\", dash.random(100, 999));",
+							"pm.globals.set(\"isbn\", new Date().getTime());",
 							""
 						],
 						"type": "text/javascript",
@@ -55,23 +70,15 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "name",
-							"value": "Django DELETE API",
-							"type": "text",
-							"uuid": "d3800f9c-7c19-4c06-b0b1-680e1dc83ca9"
-						},
-						{
-							"key": "description",
-							"value": "Delete Test",
-							"type": "text",
-							"uuid": "d9a0fd34-dec3-44c4-b606-0d83a8ca8577"
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
-				"url": "{{base_url}}",
+				"url": "{{base_url}}books/",
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
 			},
 			"response": []
@@ -92,6 +99,17 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e82a89e2-d01f-415b-bec9-200e22f2568b",
+						"exec": [
+							"pm.globals.set(\"isbn\", new Date().getTime());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"id": "6360b9a9-1912-4e40-bedd-4bb7aba0fc38",
@@ -100,7 +118,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Django API Methods\",\n        \"description\": \"Updated Test\"\n}",
+					"raw": "{\n    \"title\": \"New Title {{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -108,9 +126,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}4",
+					"raw": "{{base_url}}books/5",
 					"host": [
-						"{{base_url}}4"
+						"{{base_url}}books"
+					],
+					"path": [
+						"5"
 					],
 					"query": [
 						{
@@ -160,7 +181,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}6",
+				"url": "{{base_url}}books/3",
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
 			},
 			"response": []
