@@ -10,4 +10,7 @@ class Books(models.Model):
     language = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.title 
+         return f"{self.title} by {self.author}"
+    
+
+    
