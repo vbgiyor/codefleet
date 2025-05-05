@@ -1,4 +1,5 @@
 # Codefleet GitHub Actions workflow
+
 name: CodeFleetCI
 
 on:
@@ -33,9 +34,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
+      - name: Verify Maven project
+        run: |
+          echo "Listing pom.xml files:"
+          find . -name pom.xml
+          if [ -f modules/automation/pom.xml ]; then
+            echo "Found pom.xml in modules/automation"
+          elif [ -f pom.xml ]; then
+            echo "Found pom.xml in root"
+          else
+            echo "No pom.xml found" >&2
+            exit 1
+          fi
+
       - name: Build and test Selenium
-        working-directory: modules/automation
-        run: mvn clean test -Dtestng.xml=testng.xml
+        run: |
+          if [ -f modules/automation/pom.xml ]; then
+            cd modules/automation
+            mvn clean test -Dtestng.xml=testng.xml
+          else
+            mvn clean test -pl modules/automation -Dtestng.xml=modules/automation/testng.xml
+          fi
         env:
           BROWSER: chrome
           HEADLESS: true
@@ -45,7 +64,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: testng-reports
-          path: modules/automation/target/surefire-reports/
+          path: |
+            modules/automation/target/surefire-reports/
+            target/surefire-reports/
           retention-days: 7
 
       - name: Upload screenshots
@@ -53,10 +74,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: screenshots
-          path: modules/automation/target/screenshots/
+          path: |
+            modules/automation/target/screenshots/
+            target/screenshots/
           retention-days: 7
 
-  django:
+  bookslibrary:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -81,9 +104,13 @@ jobs:
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           else
-            echo "requirements.txt not found, installing django and pytest"
-            pip install django pytest pytest-django
+            echo "requirements.txt not found, installing django, pytest, and djangorestframework"
+            pip install django>=4.2 djangorestframework>=3.15 pytest>=7.4 pytest-django>=4.5
           fi
+
+      - name: Verify Django settings
+        working-directory: modules/python/src/django-rest-framework/bookslibrary
+        run: python manage.py check
 
       - name: Run Django migrations
         working-directory: modules/python/src/django-rest-framework/bookslibrary
@@ -97,6 +124,55 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: django-test-logs
+          name: bookslibrary-test-logs
           path: modules/python/src/django-rest-framework/bookslibrary/*.log
+          retention-days: 7
+
+  djangocommerce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        working-directory: modules/python/src/django-rest-framework/djangocommerce
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found, installing django, pytest, and djangorestframework"
+            pip install django>=4.2 djangorestframework>=3.15 pytest>=7.4 pytest-django>=4.5
+          fi
+
+      - name: Verify Django settings
+        working-directory: modules/python/src/django-rest-framework/djangocommerce
+        run: python manage.py check
+
+      - name: Run Django migrations
+        working-directory: modules/python/src/django-rest-framework/djangocommerce
+        run: python manage.py migrate
+
+      - name: Run Django tests
+        working-directory: modules/python/src/django-rest-framework/djangocommerce
+        run: python manage.py test
+
+      - name: Upload Django test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: djangocommerce-test-logs
+          path: modules/python/src/django-rest-framework/djangocommerce/*.log
           retention-days: 7
