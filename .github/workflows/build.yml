@@ -1,22 +1,102 @@
 # Codefleet GitHub Actions workflow
-name: CI
-on: [push]
+name: CodeFleetCI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  build:
+  selenium:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with: { java-version: '11' }
-      - name: Build PageInspector
-        run: cd modules/automation && mvn clean test
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with: { python-version: '3.9' }
-      - name: DjangoCommerce
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Chrome for headless testing
         run: |
-          cd modules/python/src/django-rest-framework/bookslibrary
-          pip install -r requirements.txt
-          python manage.py migrate
-          python manage.py test
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Build and test Selenium
+        working-directory: modules/automation
+        run: mvn clean test -Dtestng.xml=testng.xml
+        env:
+          BROWSER: chrome
+          HEADLESS: true
+
+      - name: Upload TestNG reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testng-reports
+          path: modules/automation/target/surefire-reports/
+          retention-days: 7
+
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: modules/automation/target/screenshots/
+          retention-days: 7
+
+  django:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        working-directory: modules/python/src/django-rest-framework/bookslibrary
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found, installing django and pytest"
+            pip install django pytest pytest-django
+          fi
+
+      - name: Run Django migrations
+        working-directory: modules/python/src/django-rest-framework/bookslibrary
+        run: python manage.py migrate
+
+      - name: Run Django tests
+        working-directory: modules/python/src/django-rest-framework/bookslibrary
+        run: python manage.py test
+
+      - name: Upload Django test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: django-test-logs
+          path: modules/python/src/django-rest-framework/bookslibrary/*.log
+          retention-days: 7
