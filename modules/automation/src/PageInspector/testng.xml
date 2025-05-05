@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="HerokuappTestSuite">
+    <test name="HerokuappTests">
+        <classes>
+            <class name="modules.tests.BasePageTest"/>
+            <class name="modules.tests.HerokuappHomePageTest">
+                <methods>
+                    <include name="testSuccessfulHomepageNavigation"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

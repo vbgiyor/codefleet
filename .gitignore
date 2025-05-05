@@ -22,3 +22,62 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# System files
+**/.DS_Store
+
+# IDE files
+.idea/
+**/*.iml
+
+# Django database
+**/db.sqlite3
+
+# Java build artifacts
+target/
+*.war
+*.ear
+
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Python virtual environments
+venv/
+env/
+.venv/
+orderenv/
+
+# Django-specific
+media/
+static/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Logs
+logs/
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Coverage reports
+coverage/
+*.lcov
