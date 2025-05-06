@@ -1,0 +1,18 @@
+# CI/CD for Python Modules
+
+name: Python CI
+
+on:
+    push:
+      branches: [main]
+      paths:
+        - 'python/**'
+    pull_request:
+      branches: [main]
+      paths:
+        - 'python/**'
+    workflow_dispatch: # Allows manual triggering
+  
+jobs:
+    test-django:
+        runs-on: ubuntu-latest

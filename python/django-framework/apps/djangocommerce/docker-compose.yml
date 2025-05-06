@@ -1,0 +1,53 @@
+# version: '3.8'
+
+services:
+  order_service:
+    build:
+      context: ../..
+      dockerfile: apps/djangocommerce/order_service/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/codefleet_djangocommerce
+      - SERVICE_TYPE=djangocommerce
+    depends_on:
+      - db
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - app-network
+
+  user_service:
+    build:
+      context: ../..
+      dockerfile: apps/djangocommerce/user_service/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/codefleet_djangocommerce
+      - SERVICE_TYPE=djangocommerce
+    depends_on:
+      - db
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - app-network
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=codefleet_djangocommerce
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  static_volume:
+
+networks:
+  app-network:
+    driver: bridge

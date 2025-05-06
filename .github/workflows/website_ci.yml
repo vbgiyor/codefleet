@@ -1,0 +1,18 @@
+# CI/CD for website (ReactJS + Node.js)
+
+name: Website CI
+
+on:
+    push:
+      branches: [main]
+      paths:
+        - 'website/**'
+    pull_request:
+      branches: [main]
+      paths:
+        - 'website/**'
+    workflow_dispatch: # Allows manual triggering
+  
+jobs:
+    test-django:
+        runs-on: ubuntu-latest
