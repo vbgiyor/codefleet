@@ -1,0 +1,18 @@
+# Deployment workflow for AWS
+
+name: AWS CI
+
+on:
+    push:
+      branches: [main]
+      paths:
+        - 'aws/**'
+    pull_request:
+      branches: [main]
+      paths:
+        - 'aws/**'
+    workflow_dispatch: # Allows manual triggering
+  
+jobs:
+    test-django:
+        runs-on: ubuntu-latest

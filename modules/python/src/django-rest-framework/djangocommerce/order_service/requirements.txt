@@ -1,4 +1,0 @@
-django>=4.2
-djangorestframework>=3.15
-pytest>=7.4
-pytest-django>=4.5

@@ -1,0 +1,78 @@
+# CI/CD for Selenium + Java
+
+name: Selenium CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'selenium/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'selenium/**'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  test-selenium:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [automation1] # Add more Selenium projects as needed
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('selenium/**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install Chrome for headless testing
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Verify Maven project
+        working-directory: selenium/${{ matrix.project }}
+        run: |
+          echo "Listing pom.xml files:"
+          ls -la pom.xml
+          if [ -f pom.xml ]; then
+            echo "Found pom.xml in selenium/${{ matrix.project }}"
+          else
+            echo "No pom.xml found in selenium/${{ matrix.project }}" >&2
+            exit 1
+          fi
+
+      - name: Build and test Selenium
+        working-directory: selenium/${{ matrix.project }}
+        run: mvn clean test -Dtestng.xml=testng.xml
+        env:
+          BROWSER: chrome
+          HEADLESS: true
+
+      - name: Upload TestNG reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-${{ matrix.project }}-testng-reports
+          path: selenium/${{ matrix.project }}/target/surefire-reports/
+          retention-days: 7
+
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-${{ matrix.project }}-screenshots
+          path: selenium/${{ matrix.project }}/target/screenshots/
+          retention-days: 7
