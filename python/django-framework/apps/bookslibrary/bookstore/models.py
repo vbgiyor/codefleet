@@ -10,7 +10,7 @@ class Book(models.Model):
     published_date = models.DateField()
 
     class Meta:
-        app_label = 'bookstore'
+        app_label = 'apps.bookslibrary.bookstore'
 
     def __str__(self):
         return self.title

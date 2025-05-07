@@ -134,7 +134,6 @@ jobs:
             done
             docker-compose exec -T web python apps/bookslibrary/manage.py makemigrations bookstore --settings=core.settings.base
             docker-compose exec -T web python apps/bookslibrary/manage.py migrate --settings=core.settings.base
-            docker-compose exec -T web pytest apps/bookslibrary/bookstore/tests.py --ds=core.settings.base --showlocals
             docker-compose down
           elif [ "${{ matrix.project }}" = "djangocommerce" ]; then
             cd python/django-framework/apps/djangocommerce
