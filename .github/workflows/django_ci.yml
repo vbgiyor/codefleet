@@ -97,7 +97,7 @@ jobs:
             pytest apps/bookslibrary/bookstore/tests.py --ds=core.settings.base
             docker-compose down
           elif [ "${{ matrix.project }}" = "djangocommerce" ]; then
-            cd python/django-framework/apps/djangocommerce
+            cd python/django-framework
             docker-compose down --volumes
             docker-compose up --build -d
             # Wait for db service to be healthy
@@ -113,7 +113,7 @@ jobs:
             docker-compose exec -T order_service python apps/djangocommerce/manage.py makemigrations users --settings=core.settings.base
             docker-compose exec -T order_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
             docker-compose exec -T user_service python apps/djangocommerce/manage.py makemigrations users --settings=core.settings.base
-            docker-compose exec -T user_service python apps/django-framework/apps/djangocommerce/manage.py migrate --settings=core.settings.base
+            docker-compose exec -T user_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
             pytest apps/djangocommerce/orders/tests.py apps/djangocommerce/users/tests.py --ds=core.settings.base
             docker-compose down
           fi
