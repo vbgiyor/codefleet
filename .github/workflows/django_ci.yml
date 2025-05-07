@@ -48,17 +48,21 @@ jobs:
           find python/django-framework -type d -o -type f -not -path "*venv*" | sort
           echo "Python path in CI:"
           docker run --rm python:3.9-slim python -c "import sys; print('\n'.join(sys.path))"
-          echo "Checking for stray bookstore modules..."
+          echo "Checking for stray bookstore modules in project..."
           find python/django-framework -name "bookstore" -type d -not -path "*apps/bookslibrary/bookstore*" -not -path "*venv*" -o -name "bookstore.py" -not -path "*venv*" | tee stray_bookstore.txt
           if [ -s stray_bookstore.txt ]; then
             echo "Found stray bookstore modules, removing..."
             cat stray_bookstore.txt | xargs -I {} rm -rf "{}"
           else
-            echo "No stray bookstore modules found"
+            echo "No stray bookstore modules found in project"
           fi
           rm -f stray_bookstore.txt
           echo "Removing __pycache__ directories..."
           find python/django-framework -name "__pycache__" -type d -not -path "*venv*" -exec rm -rf {} +
+          echo "Checking for bookstore in site-packages in Docker..."
+          docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d | tee /tmp/stray_bookstore.txt && if [ -s /tmp/stray_bookstore.txt ]; then cat /tmp/stray_bookstore.txt | xargs -I {} rm -rf '{}'; echo 'Removed stray bookstore modules from site-packages'; else echo 'No bookstore modules in site-packages'; fi"
+          echo "Debugging bookstore module resolution..."
+          docker run --rm -v $(pwd)/python/django-framework:/app python:3.9-slim python -c "import sys; sys.path.insert(0, '/app'); try: import bookstore; print('Found bookstore module at:', bookstore.__file__); except ImportError: print('No bookstore module found')"
           echo "Post-cleanup structure:"
           find python/django-framework -type d -o -type f -not -path "*venv*" | sort
 
