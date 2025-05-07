@@ -42,8 +42,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set working directory
+        run: |
+          cd python/django-framework
+          pwd
+          ls -la
+
+      - name: Verify requirements file
+        run: |
+          cd python/django-framework
+          if [ -f requirements/base.txt ]; then
+            echo "Found requirements/base.txt"
+            cat requirements/base.txt
+          else
+            echo "Error: requirements/base.txt not found"
+            exit 1
+          fi
+
       - name: Clean and debug project structure
         run: |
+          cd python/django-framework
           echo "Project structure:"
           find . -type d -o -type f -not -path "*venv*" | sort
           echo "Python path in CI:"
@@ -63,7 +81,6 @@ jobs:
           docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d | tee /tmp/stray_bookstore.txt && if [ -s /tmp/stray_bookstore.txt ]; then cat /tmp/stray_bookstore.txt | xargs -I {} rm -rf '{}'; echo 'Removed stray bookstore modules from site-packages'; else echo 'No bookstore modules in site-packages'; fi"
           echo "Verifying site-packages after cleanup..."
           docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d || echo 'No bookstore modules found in site-packages'"
-          echo "Debugging bookstore module resolution..."
           echo "Post-cleanup structure:"
           find . -type d -o -type f -not -path "*venv*" | sort
 
@@ -82,28 +99,30 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/base.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('python/django-framework/requirements/base.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
+          cd python/django-framework
           python -m pip install --upgrade pip
           pip install -r requirements/base.txt
           pip install flake8 pytest pytest-django
 
       - name: Run linting
         run: |
+          cd python/django-framework
           flake8 apps core --max-line-length=120 --exclude=migrations
 
       - name: Run Django tests
         env:
           SERVICE_TYPE: ${{ matrix.project }}
           DATABASE_URL: postgres://user:password@postgres:5432/codefleet_${{ matrix.project }}
-          PYTHONPATH: /app
+          PYTHONPATH: /github/workspace/python/django-framework
         run: |
           if [ "${{ matrix.project }}" = "bookslibrary" ]; then
-            cd .
+            cd python/django-framework
             docker-compose down --volumes
             docker-compose up --build -d
             for i in {1..30}; do
@@ -119,7 +138,7 @@ jobs:
             docker-compose exec -T web pytest apps/bookslibrary/bookstore/tests.py --ds=core.settings.base --showlocals
             docker-compose down
           elif [ "${{ matrix.project }}" = "djangocommerce" ]; then
-            cd apps/djangocommerce
+            cd python/django-framework/apps/djangocommerce
             docker-compose down --volumes
             docker-compose up --build -d
             for i in {1..30}; do
@@ -142,5 +161,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-logs-${{ matrix.project }}
-          path: '*.log'
+          path: 'python/django-framework/*.log'
           retention-days: 7
