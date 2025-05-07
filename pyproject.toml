@@ -1,4 +1,4 @@
-The pyproject.toml is placed at the root of codefleet/ because it’s the standard, centralized location for Python project configurations in a monorepo, 
-serving both django/ and python/ modules. It ensures consistent tooling, dependency management, and CI/CD integration across Python projects without 
-affecting non-Python modules (website/, java/, selenium/). This placement aligns with Python best practices, monorepo conventions, 
-and the codefleet structure’s need for unified Python settings.
+# The pyproject.toml is placed at the root of codefleet/ because it’s the standard, centralized location for Python project configurations in a monorepo, 
+# serving both django/ and python/ modules. It ensures consistent tooling, dependency management, and CI/CD integration across Python projects without 
+# affecting non-Python modules (website/, java/, selenium/). This placement aligns with Python best practices, monorepo conventions, 
+# and the codefleet structure’s need for unified Python settings.
