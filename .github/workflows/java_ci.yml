@@ -3,16 +3,30 @@
 name: Java CI
 
 on:
-    push:
-      branches: [main]
-      paths:
-        - 'java/**'
-    pull_request:
-      branches: [main]
-      paths:
-        - 'java/**'
-    workflow_dispatch: # Allows manual triggering
-  
+  push:
+    branches: [main]
+    paths:
+      - 'java/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'java/**'
+  workflow_dispatch: # Allows manual triggering
+
 jobs:
-    test-django:
-        runs-on: ubuntu-latest
+  test-django:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Compile and run tests
+        run: |
+          cd java
+          javac Main.java
+          java Main
