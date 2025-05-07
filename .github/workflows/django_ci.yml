@@ -77,7 +77,7 @@ jobs:
       - name: Run Django tests
         env:
           SERVICE_TYPE: ${{ matrix.project }}
-          DATABASE_URL: postgres://user:password@localhost:5432/codefleet_${{ matrix.project }}
+          DATABASE_URL: postgres://user:password@db:5432/codefleet_${{ matrix.project }}
         run: |
           if [ "${{ matrix.project }}" = "bookslibrary" ]; then
             cd python/django-framework
