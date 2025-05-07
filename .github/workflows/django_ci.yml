@@ -1,5 +1,20 @@
 name: Django CI
-
+description: |
+  This workflow runs Django tests for the Bookslibrary and Djangocommerce projects using Docker Compose.
+  It includes linting, building, and testing steps, with caching for Docker layers.
+  PostgreSQL is used as the database service, and test logs are uploaded on failure.
+  The workflow is triggered on pushes and pull requests to the main branch, as well as manually via workflow dispatch.
+  The workflow runs on the latest Ubuntu environment and uses Docker Compose to manage services.
+  The workflow uploads test logs as artifacts, with retention set to 7 days.
+  The workflow runs migrations before executing the tests to ensure the database schema is up to date.
+  The workflow uses a matrix strategy to run tests for multiple projects and services.
+  The workflow sets the `SERVICE_TYPE` and `DATABASE_URL` environment variables for each service to configure the database connection.
+  The workflow uses the `docker-compose` command to manage the lifecycle of the services, including building, starting, and stopping them.
+  The workflow uses the `--max-line-length` option for flake8 to customize the maximum line length for linting, excluding migration files.
+  The workflow uses the `--exclude` option for flake8 to exclude migration files from linting, ensuring that only relevant code is checked.
+  The workflow uses the `--volumes` option for `docker-compose down` to remove named volumes, ensuring a clean state for each run.
+  The workflow uses the `--build` option for `docker-compose up` to rebuild the images if there are changes, ensuring that the latest code is used.
+  The workflow uses the `-d` option for `docker-compose up` to run the services in detached mode, allowing the tests to run in the background.
 on:
   push:
     branches: [main]
