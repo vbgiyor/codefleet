@@ -1,35 +1,37 @@
 # version: '3.8'
 
 services:
-  web:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgres://user:password@db:5432/codefleet_bookslibrary
-      - SERVICE_TYPE=bookslibrary
-    depends_on:
-      - db
-    volumes:
-      - static_volume:/app/static
-    networks:
-      - app-network
-
   db:
     image: postgres:13
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=codefleet_bookslibrary
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: codefleet_${SERVICE_TYPE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - SERVICE_TYPE=${SERVICE_TYPE}
+      - DATABASE_URL=postgres://user:password@db:5432/codefleet_${SERVICE_TYPE}
 
 volumes:
   postgres_data:
-  static_volume:
-
-networks:
-  app-network:
-    driver: bridge
