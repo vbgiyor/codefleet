@@ -54,7 +54,7 @@ jobs:
             echo "Found stray bookstore modules, removing..."
             cat stray_bookstore.txt | xargs -I {} rm -rf "{}"
           else
-            echo "No stray bookstore modules found in project"
+            echo "No bookstore modules found in project"
           fi
           rm -f stray_bookstore.txt
           echo "Removing __pycache__ directories..."
@@ -64,7 +64,7 @@ jobs:
           echo "Verifying site-packages after cleanup..."
           docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d || echo 'No bookstore modules found in site-packages'"
           echo "Debugging bookstore module resolution..."
-          docker run --rm -v $(pwd):/app python:3.9-slim python -c "import sys; sys.path.insert(0, '/app'); try: import bookstore; print('Found bookstore module at: ' + bookstore.__file__); except ImportError: print('No bookstore module found')"
+          docker run --rm -v $(pwd):/app python:3.9-slim python -c "import sys; sys.path.insert(0, '/app'); try: import bookstore; print(f'Found bookstore module at: {bookstore.__file__}'); except ImportError: print('No bookstore module found')"
           echo "Post-cleanup structure:"
           find . -type d -o -type f -not -path "*venv*" | sort
 
