@@ -1,14 +1,11 @@
 name: Django CI
 description: |
-  This workflow runs Django tests for the Bookslibrary and Djangocommerce projects using Docker Compose.
-  The workflow is triggered on pushes and pull requests to the main branch, as well as manually via workflow dispatch.
-  The workflow uploads test logs as artifacts, with retention set to 7 days.
-  The workflow uses a matrix strategy to run tests for multiple projects and services.
-  The workflow sets the `SERVICE_TYPE` and `DATABASE_URL` environment variables for each service to configure the database connection.
-  The workflow uses the `docker-compose` command to manage the lifecycle of the services, including building, starting, and stopping them.
-  The workflow uses the `--volumes` option for `docker-compose down` to remove named volumes, ensuring a clean state for each run.
-  The workflow uses the `--build` option for `django_ci.yml` to rebuild the images if there are changes, ensuring that the latest code is used.
-  The workflow uses the `-d` option for `django_ci.yml` to run the services in detached mode, allowing the tests to run in the background.
+  Runs Django tests for Bookslibrary and Djangocommerce projects using Docker Compose.
+  Triggered on pushes and pull requests to the main branch, and manually via workflow dispatch.
+  Uploads test logs as artifacts with 7-day retention.
+  Uses a matrix strategy for multiple projects.
+  Sets SERVICE_TYPE and DATABASE_URL for database configuration.
+  Manages service lifecycle with docker-compose, ensuring clean state via --volumes.
 on:
   push:
     branches: [main]
@@ -48,13 +45,22 @@ jobs:
       - name: Clean and debug project structure
         run: |
           echo "Project structure:"
-          find python/django-framework -type d -o -type f | sort
+          find python/django-framework -type d -o -type f -not -path "*venv*" | sort
+          echo "Python path in CI:"
+          docker run --rm python:3.9-slim python -c "import sys; print('\n'.join(sys.path))"
           echo "Checking for stray bookstore modules..."
-          find python/django-framework -name "bookstore" -type d | grep -v "apps/bookslibrary/bookstore" || echo "No stray bookstore modules found"
-          # Remove stray bookstore modules
-          find python/django-framework -name "bookstore" -type d -not -path "*apps/bookslibrary/bookstore*" -exec rm -rf {} +
+          find python/django-framework -name "bookstore" -type d -not -path "*apps/bookslibrary/bookstore*" -not -path "*venv*" -o -name "bookstore.py" -not -path "*venv*" | tee stray_bookstore.txt
+          if [ -s stray_bookstore.txt ]; then
+            echo "Found stray bookstore modules, removing..."
+            cat stray_bookstore.txt | xargs -I {} rm -rf "{}"
+          else
+            echo "No stray bookstore modules found"
+          fi
+          rm -f stray_bookstore.txt
+          echo "Removing __pycache__ directories..."
+          find python/django-framework -name "__pycache__" -type d -not -path "*venv*" -exec rm -rf {} +
           echo "Post-cleanup structure:"
-          find python/django-framework -type d -o -type f | sort
+          find python/django-framework -type d -o -type f -not -path "*venv*" | sort
 
       - name: Install Docker Compose
         run: |
@@ -88,16 +94,15 @@ jobs:
       - name: Run Django tests
         env:
           SERVICE_TYPE: ${{ matrix.project }}
-          DATABASE_URL: postgres://user:password@db:5432/codefleet_${{ matrix.project }}
+          DATABASE_URL: postgres://user:password@postgres:5432/codefleet_${{ matrix.project }}
           PYTHONPATH: /app
         run: |
           if [ "${{ matrix.project }}" = "bookslibrary" ]; then
             cd python/django-framework
             docker-compose down --volumes
             docker-compose up --build -d
-            # Wait for db service to be healthy
             for i in {1..30}; do
-              if docker-compose ps | grep db | grep "Up.*(healthy)"; then
+              if docker-compose ps | grep postgres | grep "Up.*(healthy)"; then
                 echo "Database is healthy"
                 break
               fi
@@ -112,28 +117,25 @@ jobs:
             cd python/django-framework/apps/djangocommerce
             docker-compose down --volumes
             docker-compose up --build -d
-            # Wait for db service to be healthy
             for i in {1..30}; do
-              if docker-compose ps | grep db | grep "Up.*(healthy)"; then
+              if docker-compose ps | grep postgres | grep "Up.*(healthy)"; then
                 echo "Database is healthy"
                 break
               fi
               echo "Waiting for database to be healthy..."
               sleep 2
             done
-            docker-compose exec -T order_service python apps/djangocommerce/manage.py makemigrations orders --settings=core.settings.base
-            docker-compose exec -T order_service python apps/djangocommerce/manage.py makemigrations users --settings=core.settings.base
-            docker-compose exec -T order_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
-            docker-compose exec -T user_service python apps/djangocommerce/manage.py makemigrations users --settings=core.settings.base
-            docker-compose exec -T user_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
-            docker-compose exec -T order_service pytest apps/djangocommerce/orders/tests.py apps/djangocommerce/users/tests.py --ds=core.settings.base --showlocals
+            docker-compose exec -T order_service python manage.py makemigrations orders --settings=core.settings.base
+            docker-compose exec -T order_service python manage.py makemigrations users --settings=core.settings.base
+            docker-compose exec -T order_service python manage.py migrate --settings=core.settings.base
+            docker-compose exec -T order_service pytest tests --ds=core.settings.base
             docker-compose down
           fi
 
-      - name: Upload test reports
+      - name: Upload test logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: django-${{ matrix.project }}-test-reports
-          path: python/django-framework/pytest-reports/
+          name: test-logs-${{ matrix.project }}
+          path: python/django-framework/*.log
           retention-days: 7
