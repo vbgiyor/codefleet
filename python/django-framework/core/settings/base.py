@@ -1,6 +1,7 @@
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -31,6 +32,11 @@ elif SERVICE_TYPE == 'djangocommerce':
         'apps.djangocommerce.orders',
         'apps.djangocommerce.users',
     ])
+
+# Log INSTALLED_APPS for debugging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.info(f"INSTALLED_APPS: {INSTALLED_APPS}")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
