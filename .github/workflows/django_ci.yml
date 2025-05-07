@@ -45,6 +45,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check for stray bookstore module
+        run: |
+          if find python/django-framework -name "bookstore" -type d | grep -v "apps/bookslibrary/bookstore"; then
+            echo "Error: Found stray 'bookstore' module outside apps/bookslibrary/bookstore/"
+            exit 1
+          else
+            echo "No stray bookstore modules found"
+          fi
+
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
