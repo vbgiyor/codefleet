@@ -67,6 +67,8 @@ jobs:
           docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d | tee /tmp/stray_bookstore.txt && if [ -s /tmp/stray_bookstore.txt ]; then cat /tmp/stray_bookstore.txt | xargs -I {} rm -rf '{}'; echo 'Removed stray bookstore modules from site-packages'; else echo 'No bookstore modules in site-packages'; fi"
           echo "Verifying site-packages after cleanup..."
           docker run --rm python:3.9-slim sh -c "find /usr/local/lib/python3.9/site-packages -name 'bookstore*' -type f -o -type d || echo 'No bookstore modules found in site-packages'"
+          echo "Debugging installed packages..."
+          docker run --rm python:3.9-slim sh -c "pip list | grep -i bookstore || echo 'No bookstore-related packages found'"
           echo "Post-cleanup structure:"
           find . -type d -o -type f -not -path "*venv*" | sort
 
