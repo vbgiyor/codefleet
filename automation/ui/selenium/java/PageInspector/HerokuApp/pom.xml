@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.codefleet</groupId>
-    <artifactId>PageInspector</artifactId>
+    <artifactId>HerokuApp</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
