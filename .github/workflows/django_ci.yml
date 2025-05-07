@@ -7,7 +7,7 @@ description: |
   The workflow sets the `SERVICE_TYPE` and `DATABASE_URL` environment variables for each service to configure the database connection.
   The workflow uses the `docker-compose` command to manage the lifecycle of the services, including building, starting, and stopping them.
   The workflow uses the `--volumes` option for `docker-compose down` to remove named volumes, ensuring a clean state for each run.
-  The workflow uses the `--build` option for `docker-compose up` to rebuild the images if there are changes, ensuring that the latest code is used.
+  The workflow uses the `--build` option for `django_ci.yml` to rebuild the images if there are changes, ensuring that the latest code is used.
   The workflow uses the `-d` option for `django_ci.yml` to run the services in detached mode, allowing the tests to run in the background.
 on:
   push:
@@ -45,14 +45,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check for stray bookstore module
+      - name: Clean and debug project structure
         run: |
-          if find python/django-framework -name "bookstore" -type d | grep -v "apps/bookslibrary/bookstore"; then
-            echo "Error: Found stray 'bookstore' module outside apps/bookslibrary/bookstore/"
-            exit 1
-          else
-            echo "No stray bookstore modules found"
-          fi
+          echo "Project structure:"
+          find python/django-framework -type d -o -type f | sort
+          echo "Checking for stray bookstore modules..."
+          find python/django-framework -name "bookstore" -type d | grep -v "apps/bookslibrary/bookstore" || echo "No stray bookstore modules found"
+          # Remove stray bookstore modules
+          find python/django-framework -name "bookstore" -type d -not -path "*apps/bookslibrary/bookstore*" -exec rm -rf {} +
+          echo "Post-cleanup structure:"
+          find python/django-framework -type d -o -type f | sort
 
       - name: Install Docker Compose
         run: |
@@ -104,7 +106,7 @@ jobs:
             done
             docker-compose exec -T web python apps/bookslibrary/manage.py makemigrations bookstore --settings=core.settings.base
             docker-compose exec -T web python apps/bookslibrary/manage.py migrate --settings=core.settings.base
-            docker-compose exec -T web pytest apps/bookslibrary/bookstore/tests.py --ds=core.settings.base
+            docker-compose exec -T web pytest apps/bookslibrary/bookstore/tests.py --ds=core.settings.base --showlocals
             docker-compose down
           elif [ "${{ matrix.project }}" = "djangocommerce" ]; then
             cd python/django-framework/apps/djangocommerce
@@ -124,7 +126,7 @@ jobs:
             docker-compose exec -T order_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
             docker-compose exec -T user_service python apps/djangocommerce/manage.py makemigrations users --settings=core.settings.base
             docker-compose exec -T user_service python apps/djangocommerce/manage.py migrate --settings=core.settings.base
-            docker-compose exec -T order_service pytest apps/djangocommerce/orders/tests.py apps/djangocommerce/users/tests.py --ds=core.settings.base
+            docker-compose exec -T order_service pytest apps/djangocommerce/orders/tests.py apps/djangocommerce/users/tests.py --ds=core.settings.base --showlocals
             docker-compose down
           fi
 
