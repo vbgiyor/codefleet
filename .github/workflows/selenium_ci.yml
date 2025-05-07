@@ -1,27 +1,40 @@
-# CI/CD for Selenium + Java
-
 name: Selenium CI
-
+description: |
+  This workflow runs Selenium tests for the HerokuApp project using Maven and TestNG.
+  It includes linting, building, and testing steps, with caching for Maven dependencies.
+  Screenshots are uploaded on failure, and TestNG reports are uploaded regardless of the outcome.
+  The workflow is triggered on pushes and pull requests to the main branch, as well as manually via workflow dispatch.
+  The workflow runs on the latest Ubuntu environment and uses JDK 17.
+  The Maven dependencies are cached to speed up the build process.
+  The workflow installs Google Chrome for headless testing and verifies the presence of the pom.xml file before proceeding with the build and test steps.
+  The workflow uploads TestNG reports and screenshots as artifacts, with retention set to 7 days.
 on:
   push:
     branches: [main]
     paths:
-      - 'selenium/**'
+      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
   pull_request:
     branches: [main]
     paths:
-      - 'selenium/**'
-  workflow_dispatch: # Allows manual triggering
+      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
+  workflow_dispatch:
 
 jobs:
   test-selenium:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [automation1] # Add more Selenium projects as needed
+        project: [HerokuApp]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Run linting
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
+        run: |
+          mvn checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
+        env:
+          MAVEN_OPTS: -Xmx512m
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -33,7 +46,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('selenium/**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('automation/ui/selenium/java/PageInspector/HerokuApp/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
@@ -43,19 +56,19 @@ jobs:
           sudo apt-get install -y google-chrome-stable
 
       - name: Verify Maven project
-        working-directory: selenium/${{ matrix.project }}
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
         run: |
           echo "Listing pom.xml files:"
           ls -la pom.xml
           if [ -f pom.xml ]; then
-            echo "Found pom.xml in selenium/${{ matrix.project }}"
+            echo "Found pom.xml in automation/ui/selenium/java/PageInspector/HerokuApp"
           else
-            echo "No pom.xml found in selenium/${{ matrix.project }}" >&2
+            echo "No pom.xml found in automation/ui/selenium/java/PageInspector/HerokuApp" >&2
             exit 1
           fi
 
       - name: Build and test Selenium
-        working-directory: selenium/${{ matrix.project }}
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
         run: mvn clean test -Dtestng.xml=testng.xml
         env:
           BROWSER: chrome
@@ -66,7 +79,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-testng-reports
-          path: selenium/${{ matrix.project }}/target/surefire-reports/
+          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/surefire-reports/
           retention-days: 7
 
       - name: Upload screenshots
@@ -74,5 +87,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-screenshots
-          path: selenium/${{ matrix.project }}/target/screenshots/
+          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/screenshots/
           retention-days: 7
