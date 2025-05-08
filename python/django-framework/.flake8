@@ -1,0 +1,7 @@
+[flake8]
+exclude = migrations
+ignore =
+    F401,F403,F405
+per-file-ignores =
+    core/settings/*.py:F401,F403,F405
+max-line-length = 120
