@@ -1,0 +1,88 @@
+name: Ecommerce CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      user_db:
+        image: postgres:13
+        env:
+          POSTGRES_USER: user_user
+          POSTGRES_PASSWORD: user_pass
+          POSTGRES_DB: user_db
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      order_db:
+        image: postgres:13
+        env:
+          POSTGRES_USER: order_user
+          POSTGRES_PASSWORD: order_pass
+          POSTGRES_DB: order_db
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies for user_service
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ecommerce/user_service/requirements.txt
+
+      - name: Run migrations for user_service
+        run: |
+          cd ecommerce/user_service
+          python manage.py migrate
+        env:
+          DATABASE_URL: postgresql://user_user:user_pass@localhost:5433/user_db
+
+      - name: Run tests for user_service
+        run: |
+          cd ecommerce/user_service
+          python manage.py test
+
+      - name: Install dependencies for order_service
+        run: |
+          pip install -r ecommerce/order_service/requirements.txt
+
+      - name: Run migrations for order_service
+        run: |
+          cd ecommerce/order_service
+          python manage.py migrate
+        env:
+          DATABASE_URL: postgresql://order_user:order_pass@localhost:5434/order_db
+          USER_SERVICE_URL: http://localhost:8001
+
+      - name: Run tests for order_service
+        run: |
+          cd ecommerce/order_service
+          python manage.py test
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 ecommerce/user_service --max-line-length=120 --exclude=migrations
+          flake8 ecommerce/order_service --max-line-length=120 --exclude=migrations
