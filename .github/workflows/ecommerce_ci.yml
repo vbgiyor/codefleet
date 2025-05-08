@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'python/microservices/**'
+      - 'ecommerce/**'
   pull_request:
     branches: [main]
     paths:
-      - 'python/microservices/**'
+      - 'ecommerce/**'
   workflow_dispatch:
 
 jobs:

@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - 'python/django-framework/bookslibrary/**'
+      - 'bookslibrary/**'
   pull_request:
     branches: [main]
     paths:
-      - 'python/django-framework/bookslibrary/**'
+      - 'bookslibrary/**'
   workflow_dispatch:
 
 jobs:
