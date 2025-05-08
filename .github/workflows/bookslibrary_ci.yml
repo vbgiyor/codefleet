@@ -2,9 +2,14 @@ name: BooksLibrary CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'python/django-framework/bookslibrary/**'
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'python/django-framework/bookslibrary/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:

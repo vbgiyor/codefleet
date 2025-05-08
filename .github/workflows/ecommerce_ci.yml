@@ -2,9 +2,14 @@ name: Ecommerce CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'python/microservices/**'
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'python/microservices/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:
