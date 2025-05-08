@@ -1,0 +1,30 @@
+services:
+  order_service:
+    build: ../order_service
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://order_user:order_pass@order_db:5432/order_db
+      - USER_SERVICE_URL=http://user_service:8001
+    depends_on:
+      - order_db
+    networks:
+      - ecommerce-network
+
+  order_db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=order_user
+      - POSTGRES_PASSWORD=order_pass
+      - POSTGRES_DB=order_db
+    volumes:
+      - order_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  order_data:
