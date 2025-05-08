@@ -13,7 +13,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    @action(detail=False, methods=['get'], url_path='user_details/(?P<user_id>\d+)', permission_classes=[AllowAny])
+    @action(detail=False, methods=['get'], url_path=r'user_details/(?P<user_id>\d+)', permission_classes=[AllowAny])
     def user_details(self, request, user_id=None):
         logger.info(f"Fetching orders for user_id: {user_id}")
         try:
