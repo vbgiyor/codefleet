@@ -58,16 +58,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'codefleet.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'codefleet_db',
-        'USER': 'codefleet_user',
-        'PASSWORD': 'codefleet_pass',
-        'HOST': 'db',
-        'PORT': '5432',
+# Database configuration
+if os.getenv('Website CI') == 'true':
+    # Use SQLite for CI (GitHub Actions)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',  # In-memory database for faster tests
+        }
     }
-}
+else:
+    # Use PostgreSQL for local development (via docker-compose)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'codefleet_db',
+            'USER': 'codefleet_user',
+            'PASSWORD': 'codefleet_pass',
+            'HOST': 'db',
+            'PORT': '5432',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
