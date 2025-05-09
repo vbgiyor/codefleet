@@ -1,0 +1,39 @@
+services:
+  codefleet:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://codefleet_user:codefleet_pass@db:5432/codefleet_db
+      - DJANGO_SECRET_KEY=wv1PfdqUo6MKun5QBIy6Tm6-LxZcUrFXXvJRHY4K8Zfut5E6ghHUNVrBaNfPtYPFYZw
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=codefleet0@gmail.com
+      - EMAIL_HOST_PASSWORD=riyoqtxohoyctwkb
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - codefleet-network
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=codefleet_user
+      - POSTGRES_PASSWORD=codefleet_pass
+      - POSTGRES_DB=codefleet_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codefleet_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - codefleet-network
+networks:
+  codefleet-network:
+    driver: bridge
+volumes:
+  postgres_data:
