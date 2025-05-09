@@ -4,9 +4,14 @@ name: Website CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'website/**'
   pull_request:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - 'website/**'
+  workflow_dispatch:
 
 jobs:
   backend:
@@ -32,7 +37,7 @@ jobs:
     # Step 4: Run Django tests
     - name: Run Django tests
       run: |
-        cd website/backend/codefleet
+        cd backend
         python manage.py test
 
   frontend:
