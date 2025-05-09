@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input:invalid {
+  border-color: red;
+}
+input:valid {
+  border-color: green;
+}
+select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button:hover {
+  opacity: 0.9;
+}
