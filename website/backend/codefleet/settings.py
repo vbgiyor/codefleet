@@ -59,7 +59,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'codefleet.wsgi.application'
 
 # Database configuration
-if os.getenv('Website CI') == 'true':
+if os.getenv('CI') == 'true':
     # Use SQLite for CI (GitHub Actions)
     DATABASES = {
         'default': {
