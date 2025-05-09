@@ -37,7 +37,7 @@ jobs:
     # Step 4: Run Django tests
     - name: Run Django tests
       run: |
-        cd backend
+        cd website/backend/codefleet
         python manage.py test
 
   frontend:
