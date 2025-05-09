@@ -36,6 +36,8 @@ jobs:
 
     # Step 4: Run Django tests
     - name: Run Django tests
+      env:
+        CI: true
       run: |
         cd website/backend
         python manage.py test
