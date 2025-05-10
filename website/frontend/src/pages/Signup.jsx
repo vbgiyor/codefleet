@@ -21,6 +21,7 @@ const Signup = () => {
     setSuccess('');
     try {
       const response = await axios.post('http://localhost:8000/api/signup/', data);
+      console.log(response);
       setSuccess(
         data.subscribe_newsletter
           ? "Registration successful. Thank you for subscribing to our newsletter."
