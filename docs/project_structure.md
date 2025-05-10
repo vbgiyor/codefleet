@@ -4,6 +4,7 @@ The `codefleet` repository is a monorepo, organizing multiple projects for the `
 
 ```
 codefleet
+.
 ├── .github
 │   └── workflows
 │       ├── bookslibrary_ci.yml
@@ -101,7 +102,6 @@ codefleet
 │   ├── djangocommerce.md
 │   ├── project_structure.md
 │   ├── selenium.md
-│   ├── setup.md
 │   ├── solutions
 │   │   └── git-checkout-conflict-branch.md
 │   └── website.md
@@ -195,7 +195,8 @@ codefleet
     │   │   ├── email_utils.py
     │   │   ├── migrations
     │   │   │   ├── __init__.py
-    │   │   │   └── 0001_initial.py
+    │   │   │   ├── 0001_initial.py
+    │   │   │   └── 0002_alter_userprofile_email.py
     │   │   ├── models.py
     │   │   ├── serializers.py
     │   │   ├── settings.py
@@ -207,62 +208,52 @@ codefleet
     │   ├── Dockerfile
     │   ├── manage.py
     │   ├── requirements.txt
-    │   ├── static
-    │   │   └── images
-    │   │       ├── logo-100x100.png
-    │   │       ├── logo-white.png
-    │   │       └── logo.png
     │   └── templates
     │       └── emails
     │           ├── contact_email.html
     │           └── signup_email.html
-    ├── frontend
-    │   ├── build
-    │   │   ├── asset-manifest.json
-    │   │   ├── favicon.ico
-    │   │   ├── index.html
-    │   │   └── static
-    │   │       ├── css
-    │   │       │   ├── main.e5b29c47.css
-    │   │       │   └── main.e5b29c47.css.map
-    │   │       └── js
-    │   │           ├── main.d0043e88.js
-    │   │           ├── main.d0043e88.js.LICENSE.txt
-    │   │           └── main.d0043e88.js.map
-    │   ├── Dockerfile.txt
-    │   ├── package-lock.json
-    │   ├── package.json
-    │   ├── postcss.config.js
-    │   ├── public
-    │   │   ├── favicon.ico
-    │   │   └── index.html
-    │   ├── src
-    │   │   ├── App.jsx
-    │   │   ├── components
-    │   │   │   ├── __tests__
-    │   │   │   │   └── Header.test.jsx
-    │   │   │   ├── Footer.jsx
-    │   │   │   ├── Header.jsx
-    │   │   │   └── Navbar.jsx
-    │   │   ├── images
-    │   │   │   ├── logo-100x100.png
-    │   │   │   ├── logo-white.png
-    │   │   │   └── logo.png
-    │   │   ├── index.js
-    │   │   ├── output.css
-    │   │   ├── pages
-    │   │   │   ├── Automation.jsx
-    │   │   │   ├── Cicd.jsx
-    │   │   │   ├── Contact.jsx
-    │   │   │   ├── Home.jsx
-    │   │   │   ├── Java.jsx
-    │   │   │   ├── Login.jsx
-    │   │   │   ├── Python.jsx
-    │   │   │   └── Signup.jsx
-    │   │   ├── setupTests.js
-    │   │   └── styles.css
-    │   └── tailwind.config.js
-    └── project_structure.txt
+    └── frontend
+        ├── Dockerfile.txt
+        ├── package-lock.json
+        ├── package.json
+        ├── postcss.config.js
+        ├── public
+        │   ├── favicon_ico
+        │   │   ├── android-chrome-192x192.png
+        │   │   ├── android-chrome-512x512.png
+        │   │   ├── apple-touch-icon.png
+        │   │   ├── favicon-16x16.png
+        │   │   ├── favicon-32x32.png
+        │   │   ├── favicon.ico
+        │   │   └── site.webmanifest
+        │   ├── favicon.ico
+        │   └── index.html
+        ├── src
+        │   ├── App.jsx
+        │   ├── components
+        │   │   ├── __tests__
+        │   │   │   └── Header.test.jsx
+        │   │   ├── Footer.jsx
+        │   │   └── Header.jsx
+        │   ├── images
+        │   │   ├── logo-100x100.png
+        │   │   ├── logo-transparent.png
+        │   │   └── logo.png
+        │   ├── index.js
+        │   ├── output.css
+        │   ├── pages
+        │   │   ├── Automation.jsx
+        │   │   ├── Cicd.jsx
+        │   │   ├── Contact.jsx
+        │   │   ├── Home.jsx
+        │   │   ├── Java.jsx
+        │   │   ├── Python.jsx
+        │   │   ├── ResetPassword.jsx
+        │   │   ├── SignIn.jsx
+        │   │   └── Signup.jsx
+        │   ├── setupTests.js
+        │   └── styles.css
+        └── tailwind.config.js
 
-104 directories, 345 files
+75 directories, 175 files
 ```
