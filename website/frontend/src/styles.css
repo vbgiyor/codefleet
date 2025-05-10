@@ -1,19 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+       --primary-blue: #1E40AF;
+       --light-blue: #DBEAFE;
+       --white: #FFFFFF;
+       --glass-bg: rgba(255, 255, 255, 0.15);
+       --glass-border: rgba(255, 255, 255, 0.3);
+       --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+       --dark-blue: #2563EB;
+       --bluish-black: #1E3A8A; /* Added for nav hover */
+     }
 
-input:invalid {
-  border-color: red;
-}
-input:valid {
-  border-color: green;
-}
-select, textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-button:hover {
-  opacity: 0.9;
-}
+     * { margin: 0; padding: 0; box-sizing: border-box; }
+     body { background-color: var(--light-blue); color: var(--primary-blue); font-family: 'Inter', sans-serif; line-height: 1.6; }
+     .navbar, .footer { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--shadow); padding: 1rem 2rem; position: sticky; top: 0; z-index: 1000; }
+     .navbar a, .footer a { color: var(--primary-blue); text-decoration: none; margin: 0 1rem; transition: color 0.3s ease; }
+     .navbar a:hover, .footer a:hover { color: var(--bluish-black); }
+     .container { background: var(--white); border-radius: 12px; padding: 2rem; margin: 2rem auto; max-width: 1200px; box-shadow: var(--shadow); border: 1px solid var(--glass-border); }
+     button, .btn { background-color: var(--primary-blue); color: var(--white); padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s ease, transform 0.2s ease; }
+     button:hover, .btn:hover { background-color: #3B82F6; transform: translateY(-2px); }
+     h1, h2, h3 { color: var(--primary-blue); margin-bottom: 1rem; }
+     @tailwind base; @tailwind components; @tailwind utilities;
+
+     .bg-glass-bg { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); }
+     .text-primary-blue { color: var(--primary-blue); }
+     .hover\:bg-dark-blue:hover { background-color: var(--dark-blue); color: var(--white); }
+     .text-dark-blue { color: var(--dark-blue); }
+     .hover\:bg-white:hover { background-color: var(--white); color: var(--bluish-black); }
