@@ -1,15 +1,24 @@
+# website/backend/codefleet/email_utils.py
 from django.core.mail import send_mail
-from django.conf import settings
-from django.template.loader import render_to_string
 
-
-def send_signup_email(email, first_name):
+def send_signup_email(email, username):
     subject = 'Welcome to Codefleet!'
-    message = render_to_string('emails/signup_email.html', {'first_name': first_name})
-    send_mail(subject, '', settings.DEFAULT_FROM_EMAIL, [email], html_message=message)
+    body = f'Hi {username},\nThank you for signing up!'
+    send_mail(
+        subject,
+        body,
+        'codefleet0@gmail.com',  # Must match EMAIL_HOST_USER
+        [email],
+        fail_silently=False
+    )
 
-
-def send_contact_email(email, opinion):
-    subject = 'Thank You for Your Feedback!'
-    message = render_to_string('emails/contact_email.html', {'opinion': opinion})
-    send_mail(subject, '', settings.DEFAULT_FROM_EMAIL, [email], html_message=message)
+def send_contact_email(name, email, message):
+    subject = f"Contact Form Submission from {name}"
+    body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
+    send_mail(
+        subject,
+        body,
+        'codefleet0@gmail.com',
+        ['to@example.com'],
+        fail_silently=False
+    )

@@ -4,7 +4,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://codefleet_user:codefleet_pass@db:5432/codefleet_db
       - DJANGO_SECRET_KEY=wv1PfdqUo6MKun5QBIy6Tm6-LxZcUrFXXvJRHY4K8Zfut5E6ghHUNVrBaNfPtYPFYZw
       - EMAIL_HOST=smtp.gmail.com
       - EMAIL_PORT=587
