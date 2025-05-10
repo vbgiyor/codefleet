@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ClipLoader } from 'react-spinners';
-import { useForm } from 'react-hook-form';
 
 const Contact = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (data) => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
     try {
-      const response = await axios.post('http://localhost:8000/api/contact/', data);
+      const response = await axios.post('http://localhost:8000/api/contact/', formData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
       setSuccess(response.data.message);
-      setError('');
-      window.location.href = '/';
+      setFormData({ name: '', email: '', message: '' });
     } catch (err) {
-      setError(err.response?.data?.non_field_errors || 'An error occurred.');
-      setSuccess('');
-    } finally {
-      setLoading(false);
+      setError(err.response?.data?.message || 'An error occurred.');
     }
   };
 
@@ -29,30 +26,41 @@ const Contact = () => {
       <h2 className="text-2xl font-bold text-center my-8" id="contact_title">Contact Us</h2>
       {error && <p className="text-red-500 text-center" id="contact_error">{error}</p>}
       {success && <p className="text-green-500 text-center" id="contact_success">{success}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow-md" id="contact_form">
+      <form onSubmit={handleSubmit} className="p-6" id="contact_form">
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700">Email Address</label>
+          <label htmlFor="name" className="block text-primary-blue">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-primary-blue">Email Address</label>
           <input
             type="email"
             id="email"
-            {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' } })}
-            className={`w-full p-2 border rounded ${errors.email ? 'border-red-500' : ''}`}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full p-2 border rounded"
+            required
           />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         </div>
         <div className="mb-4">
-          <label htmlFor="opinion" className="block text-gray-700">Opinion</label>
+          <label htmlFor="message" className="block text-primary-blue">Message</label>
           <textarea
-            id="opinion"
-            {...register('opinion', { required: 'Opinion is required' })}
-            className={`w-full p-2 border rounded ${errors.opinion ? 'border-red-500' : ''}`}
+            id="message"
+            value={formData.message}
+            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            className="w-full p-2 border rounded"
             rows="5"
-          ></textarea>
-          {errors.opinion && <p className="text-red-500">{errors.opinion.message}</p>}
+            required
+          />
         </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded w-full" id="contact_submit" disabled={loading}>
-          {loading ? <ClipLoader size={20} color="#fff" /> : 'Submit'}
-        </button>
+        <button type="submit" className="btn">Submit</button>
       </form>
     </div>
   );
