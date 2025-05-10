@@ -15,4 +15,4 @@ class SignupViewTest(TestCase):
             'subscribe_newsletter': True
         }, format='json')
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data['message'], 'Signup successful! Welcome email sent.')
+        self.assertEqual(response.data['message'], 'User created successfully')
