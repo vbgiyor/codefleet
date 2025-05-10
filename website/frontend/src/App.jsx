@@ -4,7 +4,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
-import Login from './pages/Login';
+import SignIn from './pages/SignIn';
+import ResetPassword from './pages/ResetPassword';
 import Contact from './pages/Contact';
 import Java from './pages/Java';
 import Python from './pages/Python';
@@ -17,13 +18,14 @@ function App() {
   return (
     <HelmetProvider>
       <Router>
-        <div className="flex flex-col min-h-screen bg-red-500">
-          <Header />
-          <main className="flex-grow pt-16">
+        <div className="flex flex-col min-h-screen">
+          <Header className="navbar" />
+          <main className="flex-grow pt-16 container mx-auto">
             <Routes>
               <Route path="/" element={<><Helmet><title>Codefleet - Home</title></Helmet><Home /></>} />
               <Route path="/signup" element={<><Helmet><title>Codefleet - Sign Up</title></Helmet><Signup /></>} />
-              <Route path="/login" element={<><Helmet><title>Codefleet - Login</title></Helmet><Login /></>} />
+              <Route path="/signin" element={<><Helmet><title>Codefleet - Sign In</title></Helmet><SignIn /></>} />
+              <Route path="/reset-password/:uid/:token" element={<><Helmet><title>Codefleet - Reset Password</title></Helmet><ResetPassword /></>} />
               <Route path="/contact" element={<><Helmet><title>Codefleet - Contact</title></Helmet><Contact /></>} />
               <Route path="/java" element={<><Helmet><title>Codefleet - Java</title></Helmet><Java /></>} />
               <Route path="/python" element={<><Helmet><title>Codefleet - Python</title></Helmet><Python /></>} />
@@ -31,7 +33,7 @@ function App() {
               <Route path="/automation" element={<><Helmet><title>Codefleet - Automation</title></Helmet><Automation /></>} />
             </Routes>
           </main>
-          <Footer />
+          <Footer className="footer" />
         </div>
       </Router>
     </HelmetProvider>
