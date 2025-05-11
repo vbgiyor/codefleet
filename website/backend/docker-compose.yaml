@@ -1,6 +1,8 @@
 services:
   codefleet:
-    build: .
+    build:
+      context: ../
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -10,7 +12,11 @@ services:
       - EMAIL_HOST_USER=codefleet0@gmail.com
       - EMAIL_HOST_PASSWORD=riyoqtxohoyctwkb
     volumes:
-      - .:/app
+      - ./:/app
+      - ../frontend/build:/app/frontend/build
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             gunicorn --bind 0.0.0.0:8000 codefleet.wsgi:application"
     depends_on:
       db:
         condition: service_healthy

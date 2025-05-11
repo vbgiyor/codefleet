@@ -11,25 +11,30 @@ from .email_utils import send_signup_email, send_contact_email
 
 class UserProfileSerializer(serializers.ModelSerializer):
     country_code = serializers.ChoiceField(
-        choices=[('+1', '+1 (USA)'), ('+91', '+91 (India)'), ('+44', '+44 (UK)')],
+        choices=[('+1', '+1 (USA)'), ('+91', '+91 (India)'),
+                 ('+44', '+44 (UK)')],
         required=False
     )
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'email', 'country_code', 'contact_number', 'subscribe_newsletter', 'password']
+        fields = ['first_name', 'last_name', 'email', 'country_code',
+                  'contact_number', 'subscribe_newsletter', 'password']
 
     def validate_email(self, value):
         if UserProfile.objects.filter(email=value).exists():
-            raise serializers.ValidationError("This email is already registered.")
+            raise serializers.ValidationError(
+                "This email is already registered.")
         return value
 
     def validate_contact_number(self, value):
         if value and not value.isdigit():
-            raise serializers.ValidationError("Contact number must contain only digits.")
+            raise serializers.ValidationError(
+                "Contact number must contain only digits.")
         if value and len(value) > 15:
-            raise serializers.ValidationError("Contact number must not exceed 15 digits.")
+            raise serializers.ValidationError(
+                "Contact number must not exceed 15 digits.")
         return value
 
     def create(self, validated_data):
