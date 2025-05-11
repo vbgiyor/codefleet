@@ -7,6 +7,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from .email_utils import send_signup_email, send_contact_email
+from django.http import HttpResponse
+import base64
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
 
 
 class SignupView(APIView):
@@ -14,15 +19,16 @@ class SignupView(APIView):
         serializer = UserProfileSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            
+
             # Check if user subscribed to newsletter and send welcome email
-            subscribe_newsletter = request.data.get('subscribe_newsletter', False)
+            subscribe_newsletter = request.data.get(
+                'subscribe_newsletter', False)
             if subscribe_newsletter:
                 send_signup_email(user.email, user.first_name)
                 message = "Signup successful! Welcome email sent."
             else:
                 message = "Signup successful!"
-                
+
             return Response({
                 'message': message,
                 'first_name': user.first_name
@@ -108,3 +114,30 @@ class UserProfileView(APIView):
             'first_name': user.first_name,
             'email': user.email
         })
+
+
+@never_cache
+@csrf_exempt
+def basic_auth_view(request):
+    auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    if not auth_header.startswith('Basic '):
+        response = HttpResponse('Unauthorized', status=401)
+        response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        return response
+    try:
+        encoded_credentials = auth_header.split(' ')[1]
+        decoded_credentials = base64.b64decode(
+            encoded_credentials).decode('utf-8')
+        username, password = decoded_credentials.split(':')
+    except (IndexError, UnicodeDecodeError, ValueError):
+        response = HttpResponse('Invalid credentials', status=401)
+        response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        return response
+    if username == 'admin' and password == 'admin':
+        # Render the React app's index.html
+        # Assumes React's build/index.html
+        return render(request, 'index.html')
+    else:
+        response = HttpResponse('Unauthorized', status=401)
+        response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        return response
