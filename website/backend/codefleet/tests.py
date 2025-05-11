@@ -15,7 +15,8 @@ class SignupViewTest(TestCase):
             'subscribe_newsletter': True
         }, format='json')
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data['message'], 'Signup successful! Welcome email sent.')
+        self.assertEqual(response.data['message'],
+                         'Signup successful! Welcome email sent.')
 
     def test_signup_success_without_newsletter(self):
         response = self.client.post(reverse('api_signup'), {
