@@ -233,7 +233,7 @@ jobs:
       # Step 21: Setup ChromeDriver
       - name: Setup ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        uses: actions/setup-chromedriver@v1
+        uses: browser-actions/setup-chromedriver@v1.0.0  # Updated to v1.0.0
         with:
           chromedriver-version: latest  # Automatically picks a compatible version
 
