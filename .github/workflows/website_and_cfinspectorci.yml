@@ -54,7 +54,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          bash -c "pip install -r /app/website/backend/requirements.txt &&
+          bash -c "python -m ensurepip &&
+                   python -m pip install --upgrade pip &&
+                   pip install -r /app/website/backend/requirements.txt &&
                    cd /app/website/backend &&
                    python manage.py migrate &&
                    python manage.py runserver 0.0.0.0:8000"
