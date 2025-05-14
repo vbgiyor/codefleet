@@ -26,8 +26,26 @@ describe('Header Component', () => {
         <Header />
       </MemoryRouter>
     );
-    const navLinks = ['Home', 'Java', 'Python', 'CI/CD', 'Automation', 'Contact'];
+    const navLinks = ['Home', 'Case Studies', 'Contact'];
     navLinks.forEach((link) => {
+      expect(screen.getByText(link)).toBeInTheDocument();
+    });
+  });
+
+  test('renders Case Studies dropdown with correct links', () => {
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+    const caseStudiesButton = screen.getByText('Case Studies');
+    expect(caseStudiesButton).toBeInTheDocument();
+
+    // Click to open dropdown
+    fireEvent.click(caseStudiesButton);
+
+    const dropdownLinks = ['Java', 'Python', 'Automation'];
+    dropdownLinks.forEach((link) => {
       expect(screen.getByText(link)).toBeInTheDocument();
     });
   });

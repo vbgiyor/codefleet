@@ -44,9 +44,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=password
         )
-        user_profile = UserProfile.objects.create(user=user, **validated_data)
+        user_profile = UserProfile.objects.create(
+            user=user,
+            **validated_data
+        )
         if validated_data.get('subscribe_newsletter', False):
-            send_signup_email(user.email, user.username)
+            send_signup_email(user.email, user.first_name)
         return user_profile
 
 

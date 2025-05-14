@@ -2,16 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const BasicAuth = () => {
-  // Note: Authentication is handled server-side via HTTP Basic Auth.
-  // The frontend assumes the user has passed authentication (e.g., via browser prompt or URL like http://admin:admin@localhost:3000/basicauth).
-  // If unauthenticated, the server should return a 401 status, and the browser will show a login prompt or error.
-
   return (
     <div className="container mx-auto py-8 bg-gray-100 min-h-full">
       {/* Back Link */}
       <div className="mb-4">
         <Link
-          to="/automation"
+          to="/case-studies/automation"
           className="text-blue-600 hover:text-blue-800 underline"
           id="back_to_automation_link"
         >
