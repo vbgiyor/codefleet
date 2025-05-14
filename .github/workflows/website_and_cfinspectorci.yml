@@ -2,7 +2,7 @@ name: Website and CFInspector CI
 description: |
   This workflow builds the Codefleet website (backend and frontend) and runs Selenium tests for the CFInspector project.
   It triggers on pushes and pull requests to the main branch for changes in the website or CFInspector directories,
-  as well as manually via workflow dispatch. The workflow runs on the latest Ubuntu environment, sets up PostgreSQL
+  as well as manually via workflow_dispatch. The workflow runs on the latest Ubuntu environment, sets up PostgreSQL
   and Redis services, builds the Django backend and React frontend, and executes Selenium tests for CFInspector.
 
 on:
@@ -10,12 +10,12 @@ on:
     branches: [main]
     paths:
       - 'website/**'
-      - 'automation/ui/selenium/java/cfinspector/**'
+      - 'automation/ui/selenium/java/CFInspector/**'  # Updated path to match correct case
   pull_request:
     branches: [main]
     paths:
       - 'website/**'
-      - 'automation/ui/selenium/java/cfinspector/**'
+      - 'automation/ui/selenium/java/CFInspector/**'  # Updated path to match correct case
   workflow_dispatch:
 
 jobs:
@@ -54,7 +54,7 @@ jobs:
         with:
           files: |
             website/**
-            automation/ui/selenium/java/cfinspector/**
+            automation/ui/selenium/java/CFInspector/**  # Updated path to match correct case
 
       # Step 3: Debug changed files output
       - name: Debug changed files
@@ -162,17 +162,25 @@ jobs:
         run: |
           python manage.py collectstatic --noinput
 
-      # Step 14: Verify Maven project for CFInspector
+      # Step 14: Debug CFInspector directory
+      - name: Debug CFInspector directory
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: automation/ui/selenium/java
+        run: |
+          echo "Listing contents of automation/ui/selenium/java/:"
+          ls -la
+
+      # Step 15: Verify Maven project for CFInspector
       - name: Verify Maven project for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/cfinspector
+        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
         run: |
           echo "Listing pom.xml files:"
           ls -la pom.xml
           if [ -f pom.xml ]; then
-            echo "Found pom.xml in automation/ui/selenium/java/cfinspector"
+            echo "Found pom.xml in automation/ui/selenium/java/CFInspector"
           else
-            echo "No pom.xml found in automation/ui/selenium/java/cfinspector" >&2
+            echo "No pom.xml found in automation/ui/selenium/java/CFInspector" >&2
             exit 1
           fi
           echo "Listing testng.xml:"
@@ -180,16 +188,16 @@ jobs:
           echo "Contents of testng.xml:"
           cat testng.xml
 
-      # Step 15: Run linting for CFInspector
+      # Step 16: Run linting for CFInspector
       - name: Run linting for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/cfinspector
+        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
         run: |
           mvn checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
         env:
           MAVEN_OPTS: -Xmx512m
 
-      # Step 16: Set up JDK 17
+      # Step 17: Set up JDK 17
       - name: Set up JDK 17
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-java@v4
@@ -198,24 +206,24 @@ jobs:
           distribution: 'temurin'
           check-latest: true
 
-      # Step 17: Debug Java setup
+      # Step 18: Debug Java setup
       - name: Debug Java setup
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           java -version
           echo "JAVA_HOME: $JAVA_HOME"
 
-      # Step 18: Cache Maven dependencies for CFInspector
+      # Step 19: Cache Maven dependencies for CFInspector
       - name: Cache Maven dependencies for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-cfinspector-${{ hashFiles('automation/ui/selenium/java/cfinspector/pom.xml') }}
+          key: ${{ runner.os }}-maven-cfinspector-${{ hashFiles('automation/ui/selenium/java/CFInspector/pom.xml') }}  # Updated to correct case
           restore-keys: |
             ${{ runner.os }}-maven-cfinspector-
 
-      # Step 19: Install Chrome and ChromeDriver
+      # Step 20: Install Chrome and ChromeDriver
       - name: Install Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
@@ -228,17 +236,17 @@ jobs:
           sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-      # Step 20: Debug Chrome and ChromeDriver
+      # Step 21: Debug Chrome and ChromeDriver
       - name: Debug Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           google-chrome --version || echo "Chrome not found"
           chromedriver --version || echo "ChromeDriver not found"
 
-      # Step 21: Create logback-test.xml to suppress verbose logs
+      # Step 22: Create logback-test.xml to suppress verbose logs
       - name: Create logback-test.xml
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/cfinspector
+        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
         run: |
           cat << 'EOF' > logback-test.xml
           <configuration>
@@ -254,30 +262,30 @@ jobs:
           </configuration>
           EOF
 
-      # Step 22: Build and test CFInspector
+      # Step 23: Build and test CFInspector
       - name: Build and test CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/cfinspector
+        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
         run: mvn clean test -Dtestng.xml=testng.xml -Dlogback.configurationFile=logback-test.xml
         env:
           BROWSER: chrome
           HEADLESS: true
           BASE_URL: http://localhost:8000
 
-      # Step 23: Upload TestNG reports
+      # Step 24: Upload TestNG reports
       - name: Upload TestNG reports
         if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
         with:
           name: selenium-cfinspector-testng-reports
-          path: automation/ui/selenium/java/cfinspector/target/surefire-reports/
+          path: automation/ui/selenium/java/CFInspector/target/surefire-reports/  # Updated to correct case
           retention-days: 7
 
-      # Step 24: Upload screenshots
+      # Step 25: Upload screenshots
       - name: Upload screenshots
         if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
         with:
           name: selenium-cfinspector-screenshots
-          path: automation/ui/selenium/java/cfinspector/target/screenshots/
+          path: automation/ui/selenium/java/CFInspector/target/screenshots/  # Updated to correct case
           retention-days: 7
