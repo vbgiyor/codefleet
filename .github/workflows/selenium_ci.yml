@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [PageInspector, CFInspector]
+        project: [CFInspector]
 
     steps:
       # Step 1: Checkout code
