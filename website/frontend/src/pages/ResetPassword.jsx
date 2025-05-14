@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useParams, Link } from 'react-router-dom';
 
 const ResetPassword = () => {
-  const [email, setEmail] = useState('');
+  const [setEmail] = useState('');
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
