@@ -78,19 +78,32 @@ jobs:
           echo "Any changed: ${{ steps.changed-files.outputs.any_changed }}"
           echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
 
-      # Step 4: Make start-django.sh executable
+      # Step 4: Debug script presence
+      - name: Debug script presence
+        run: |
+          echo "Listing files in website/backend:"
+          ls -la website/backend/
+          if [ -f website/backend/start-django.sh ]; then
+            echo "start-django.sh found"
+            cat website/backend/start-django.sh
+          else
+            echo "start-django.sh not found" >&2
+            exit 1
+          fi
+
+      # Step 5: Make start-django.sh executable
       - name: Make start-django.sh executable
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: chmod +x website/backend/start-django.sh
 
-      # Step 5: Set up Python
+      # Step 6: Set up Python
       - name: Set up Python
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # Step 6: Cache Python dependencies
+      # Step 7: Cache Python dependencies
       - name: Cache Python dependencies
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
@@ -100,21 +113,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # Step 7: Install backend dependencies
+      # Step 8: Install backend dependencies
       - name: Install backend dependencies
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           python -m pip install --upgrade pip
           pip install -r website/backend/requirements.txt
 
-      # Step 8: Set up Node.js for frontend build
+      # Step 9: Set up Node.js for frontend build
       - name: Set up Node.js
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Step 9: Cache Node.js dependencies
+      # Step 10: Cache Node.js dependencies
       - name: Cache Node.js dependencies
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
@@ -124,26 +137,26 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # Step 10: Install frontend dependencies
+      # Step 11: Install frontend dependencies
       - name: Install frontend dependencies
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: ./website/frontend
         run: npm install
 
-      # Step 11: Build React app
+      # Step 12: Build React app
       - name: Build React app
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: ./website/frontend
         run: npm run build
 
-      # Step 12: Collect static files
+      # Step 13: Collect static files
       - name: Collect static files
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: ./website/backend
         run: |
           python manage.py collectstatic --noinput
 
-      # Step 13: Verify Maven project for CFInspector
+      # Step 14: Verify Maven project for CFInspector
       - name: Verify Maven project for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/cfinspector
@@ -161,7 +174,7 @@ jobs:
           echo "Contents of testng.xml:"
           cat testng.xml
 
-      # Step 14: Run linting for CFInspector
+      # Step 15: Run linting for CFInspector
       - name: Run linting for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/cfinspector
@@ -170,7 +183,7 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx512m
 
-      # Step 15: Set up JDK 17
+      # Step 16: Set up JDK 17
       - name: Set up JDK 17
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-java@v4
@@ -179,14 +192,14 @@ jobs:
           distribution: 'temurin'
           check-latest: true
 
-      # Step 16: Debug Java setup
+      # Step 17: Debug Java setup
       - name: Debug Java setup
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           java -version
           echo "JAVA_HOME: $JAVA_HOME"
 
-      # Step 17: Cache Maven dependencies for CFInspector
+      # Step 18: Cache Maven dependencies for CFInspector
       - name: Cache Maven dependencies for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
@@ -196,7 +209,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-cfinspector-
 
-      # Step 18: Install Chrome and ChromeDriver
+      # Step 19: Install Chrome and ChromeDriver
       - name: Install Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
@@ -209,14 +222,14 @@ jobs:
           sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-      # Step 19: Debug Chrome and ChromeDriver
+      # Step 20: Debug Chrome and ChromeDriver
       - name: Debug Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           google-chrome --version || echo "Chrome not found"
           chromedriver --version || echo "ChromeDriver not found"
 
-      # Step 20: Create logback-test.xml to suppress verbose logs
+      # Step 21: Create logback-test.xml to suppress verbose logs
       - name: Create logback-test.xml
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/cfinspector
@@ -235,7 +248,7 @@ jobs:
           </configuration>
           EOF
 
-      # Step 21: Build and test CFInspector
+      # Step 22: Build and test CFInspector
       - name: Build and test CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/cfinspector
@@ -245,7 +258,7 @@ jobs:
           HEADLESS: true
           BASE_URL: http://django:8000
 
-      # Step 22: Upload TestNG reports
+      # Step 23: Upload TestNG reports
       - name: Upload TestNG reports
         if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
@@ -254,7 +267,7 @@ jobs:
           path: automation/ui/selenium/java/cfinspector/target/surefire-reports/
           retention-days: 7
 
-      # Step 23: Upload screenshots
+      # Step 24: Upload screenshots
       - name: Upload screenshots
         if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
