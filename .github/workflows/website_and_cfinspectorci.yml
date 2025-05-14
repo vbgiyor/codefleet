@@ -54,7 +54,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --entrypoint /app/website/backend/start-django.sh
+          --workdir /app/website/backend
+          --entrypoint ./start-django.sh
 
     steps:
       # Step 1: Checkout code
@@ -82,19 +83,26 @@ jobs:
       - name: Debug script presence
         run: |
           echo "Listing files in website/backend:"
-          ls -la ./website/backend/
-          if [ -f ./website/backend/start-django.sh ]; then
+          ls -la website/backend/
+          if [ -f website/backend/start-django.sh ]; then
             echo "start-django.sh found"
-            cat ./website/backend/start-django.sh
+            cat website/backend/start-django.sh
           else
             echo "start-django.sh not found" >&2
             exit 1
           fi
 
-      # Step 5: Make start-django.sh executable
-      - name: Make start-django.sh executable
+      # Step 5: Verify start-django.sh presence and permissions
+      - name: Verify start-django.sh presence and permissions
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        run: chmod +x ./website/backend/start-django.sh
+        run: |
+          if [ -f ./website/backend/start-django.sh ]; then
+            chmod +x ./website/backend/start-django.sh
+            echo "start-django.sh is present and executable"
+          else
+            echo "start-django.sh not found or not executable" >&2
+            exit 1
+          fi
 
       # Step 6: Set up Python
       - name: Set up Python
