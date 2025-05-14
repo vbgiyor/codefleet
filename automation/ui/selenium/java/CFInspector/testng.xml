@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="CFInspectorSuite" parallel="methods" thread-count="4">
+<suite name="CFInspectorSuite" parallel="tests" thread-count="1">
     <test name="Setup">
         <classes>
             <class name="com.codefleet.cfinspector.modules.tests.TestSetup"/>
@@ -10,9 +10,9 @@
             <class name="com.codefleet.cfinspector.modules.tests.homepage.HomePageTest"/>
         </classes>
     </test>
-<!--    <test name="ABTestPageTests">-->
-<!--        <classes>-->
-<!--            <class name="com.codefleet.cfinspector.modules.tests.automationpage.abtestpage.ABTestPageTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <test name="ABTestPageTests">
+        <classes>
+            <class name="com.codefleet.cfinspector.modules.tests.automationpage.abtestpage.ABTestPageTest"/>
+        </classes>
+    </test>
 </suite>

@@ -25,7 +25,7 @@ public class HomePageTest extends BasePageTest {
         Assert.assertEquals(actualUrl, expectedUrl, "Home page did not load successfully");
 
         String expectedTitle = "Welcome to Codefleet";
-        String actualTitle = homePage.getTitleText();
+        String actualTitle = homePage.getHomeTitleText();
         Assert.assertEquals(actualTitle, expectedTitle, "Home page title is incorrect");
 
         String expectedDescription = "Your one-stop platform for learning Java, Python and Automation.";
@@ -42,7 +42,7 @@ public class HomePageTest extends BasePageTest {
         homePage.navigateTo(baseUrl);
         AutomationPage automationPage = homePage.clickAutomationLink();
 
-        String expectedUrl = baseUrl + "/automation";
+        String expectedUrl = baseUrl + "/case-studies/automation"; // Updated to match new route
         String actualUrl = automationPage.getCurrentUrl();
         Assert.assertEquals(actualUrl, expectedUrl, "Navigation to Automation page failed");
 
