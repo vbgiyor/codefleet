@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
+  const [isCaseStudiesOpen, setIsCaseStudiesOpen] = useState(false);
   const [firstName, setFirstName] = useState(localStorage.getItem('first_name') || null);
   const logo = '/static/images/logo.png';
   const navigate = useNavigate();
+  const location = useLocation();
+  const caseStudiesRef = useRef(null);
+  const authDropdownRef = useRef(null);
+
+  const caseStudiesItems = [
+    { name: 'Java', path: '/case-studies/java' },
+    { name: 'Python', path: '/case-studies/python' },
+    { name: 'Automation', path: '/case-studies/automation' },
+  ];
+
+  const isCaseStudiesActive = location.pathname.startsWith('/case-studies');
 
   useEffect(() => {
     const updateFirstName = () => {
@@ -15,13 +27,10 @@ const Header = () => {
       setFirstName(storedFirstName || null);
     };
 
-    // Initial check
     updateFirstName();
 
-    // Listen for storage changes (e.g., login/logout)
     window.addEventListener('storage', updateFirstName);
 
-    // Fetch profile if token exists but no first name
     const fetchUserProfile = async () => {
       const accessToken = localStorage.getItem('access_token');
       if (accessToken && !firstName) {
@@ -49,6 +58,20 @@ const Header = () => {
     return () => window.removeEventListener('storage', updateFirstName);
   }, [firstName]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (caseStudiesRef.current && !caseStudiesRef.current.contains(event.target)) {
+        setIsCaseStudiesOpen(false);
+      }
+      if (authDropdownRef.current && !authDropdownRef.current.contains(event.target)) {
+        setIsAuthDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleSignOut = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -71,11 +94,11 @@ const Header = () => {
               loading="lazy"
               onError={() => console.error('Logo failed to load')}
             />
-            <h1 className="text-2xl font-bold ml-2" id="company_name">Codefleet</h1>
+            <h1 className="text-2xl font-bold ml-2 bauhaus-font" id="company_name">Codefleet</h1>
           </div>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="sm:hidden focus:outline-none"
+            className="sm:hidden focus:outline-none hover:bg-transparent"
             id="menu_btn"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,63 +116,56 @@ const Header = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
+                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'}`
               }
               id="menu_home"
             >
               Home
             </NavLink>
-            <NavLink
-              to="/java"
-              className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
-              }
-              id="menu_java"
-            >
-              Java
-            </NavLink>
-            <NavLink
-              to="/python"
-              className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
-              }
-              id="menu_python"
-            >
-              Python
-            </NavLink>
-            <NavLink
-              to="/cicd"
-              className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
-              }
-              id="menu_cicd"
-            >
-              CI/CD
-            </NavLink>
-            <NavLink
-              to="/automation"
-              className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
-              }
-              id="menu_automation"
-            >
-              Automation
-            </NavLink>
+            <div className="relative" ref={caseStudiesRef}>
+              <NavLink
+                to="/case-studies"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsCaseStudiesOpen(!isCaseStudiesOpen);
+                }}
+                className={() =>
+                  `w-24 text-center h-10 flex items-center justify-center ${isCaseStudiesActive ? 'text-white' : 'text-primary-blue'} hover:text-bluish-black hover:bg-transparent hover:rounded`
+                }
+                id="menu_case_studies"
+              >
+                Case Studies
+              </NavLink>
+              {isCaseStudiesOpen && (
+                <div className="absolute left-0 mt-2 w-48 rounded shadow-lg sm:block" id="case_studies_dropdown">
+                  {caseStudiesItems.map((item) => (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      className={({ isActive }) =>
+                        `block px-4 py-2 ${isActive ? 'text-primary-blue font-bold' : 'text-primary-blue hover:bg-white'}`
+                      }
+                      onClick={() => setIsCaseStudiesOpen(false)}
+                    >
+                      {item.name}
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'hover:text-bluish-black'}`
+                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'}`
               }
               id="menu_contact"
             >
               Contact
             </NavLink>
-            <div className="relative">
+            <div className="relative" ref={authDropdownRef}>
               <button
                 onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
-                className="btn w-28 text-center h-10 flex items-center justify-center"
-                id="auth_dropdown_btn"
-              >
+                className="btn w-28 text-center h-10 flex items-center justify-center text-bluish-black hover:bg-white" id="auth_dropdown_btn">
                 {firstName ? `${firstName}` : 'Account'}
               </button>
               {isAuthDropdownOpen && (

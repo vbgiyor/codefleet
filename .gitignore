@@ -81,3 +81,21 @@ node_modules/
 # Coverage reports
 coverage/
 *.lcov
+
+# Node modules
+node_modules/
+
+# Build and static directories
+build/
+dist/
+static/
+staticfiles/
+
+# Temporary files
+*.log
+.env
+.DS_Store
+
+webenv/
+.webenv/
+.webenv*/
