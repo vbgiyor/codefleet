@@ -1,6 +1,6 @@
 name: Selenium CI
 description: |
-  This workflow runs Selenium tests for the HerokuApp project using Maven and TestNG.
+  This workflow runs Selenium tests for specified projects under automation/ui/selenium/java.
   It includes linting, building, and testing steps, with caching for Maven dependencies.
   Screenshots are uploaded on failure, and TestNG reports are uploaded regardless of the outcome.
   The workflow is triggered on pushes and pull requests to the main branch, as well as manually via workflow dispatch.
@@ -8,15 +8,18 @@ description: |
   The Maven dependencies are cached to speed up the build process.
   The workflow installs Google Chrome for headless testing and verifies the presence of the pom.xml file before proceeding with the build and test steps.
   The workflow uploads TestNG reports and screenshots as artifacts, with retention set to 7 days.
+
 on:
   push:
     branches: [main]
     paths:
-      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
+      - 'automation/ui/selenium/java/PageInspector/**'
+      - 'automation/ui/selenium/java/CFInspector/**'
   pull_request:
     branches: [main]
     paths:
-      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
+      - 'automation/ui/selenium/java/PageInspector/**'
+      - 'automation/ui/selenium/java/CFInspector/**'
   workflow_dispatch:
 
 jobs:
@@ -24,68 +27,94 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [HerokuApp]
+        project: [PageInspector, CFInspector]
+
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for path filtering
 
+      # Step 2: Determine changed files
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            automation/ui/selenium/java/${{ matrix.project }}/**
+
+      # Step 3: Run linting if project files changed
       - name: Run linting
-        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
+        if: steps.changed-files.outputs.any_changed == 'true'
+        working-directory: automation/ui/selenium/java/${{ matrix.project }}
         run: |
           mvn checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
         env:
           MAVEN_OPTS: -Xmx512m
 
+      # Step 4: Set up JDK 17
       - name: Set up JDK 17
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # Step 5: Cache Maven dependencies
       - name: Cache Maven dependencies
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('automation/ui/selenium/java/PageInspector/HerokuApp/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ matrix.project }}-${{ hashFiles('automation/ui/selenium/java/${{ matrix.project }}/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-maven-${{ matrix.project }}-
 
+      # Step 6: Install Chrome for headless testing
       - name: Install Chrome for headless testing
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
+      # Step 7: Verify Maven project
       - name: Verify Maven project
-        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
+        if: steps.changed-files.outputs.any_changed == 'true'
+        working-directory: automation/ui/selenium/java/${{ matrix.project }}
         run: |
           echo "Listing pom.xml files:"
           ls -la pom.xml
           if [ -f pom.xml ]; then
-            echo "Found pom.xml in automation/ui/selenium/java/PageInspector/HerokuApp"
+            echo "Found pom.xml in automation/ui/selenium/java/${{ matrix.project }}"
           else
-            echo "No pom.xml found in automation/ui/selenium/java/PageInspector/HerokuApp" >&2
+            echo "No pom.xml found in automation/ui/selenium/java/${{ matrix.project }}" >&2
             exit 1
           fi
 
+      # Step 8: Build and test Selenium
       - name: Build and test Selenium
-        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
+        if: steps.changed-files.outputs.any_changed == 'true'
+        working-directory: automation/ui/selenium/java/${{ matrix.project }}
         run: mvn clean test -Dtestng.xml=testng.xml
         env:
           BROWSER: chrome
           HEADLESS: true
 
+      # Step 9: Upload TestNG reports
       - name: Upload TestNG reports
-        if: always()
+        if: always() && steps.changed-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-testng-reports
-          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/surefire-reports/
+          path: automation/ui/selenium/java/${{ matrix.project }}/target/surefire-reports/
           retention-days: 7
 
+      # Step 10: Upload screenshots
       - name: Upload screenshots
-        if: failure()
+        if: failure() && steps.changed-files.outputs.any_changed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-screenshots
-          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/screenshots/
+          path: automation/ui/selenium/java/${{ matrix.project }}/target/screenshots/
           retention-days: 7

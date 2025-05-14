@@ -1,5 +1,3 @@
-# CI/CD for website (ReactJS + Node.js)
-
 name: Website CI
 
 on:
@@ -17,6 +15,24 @@ jobs:
   backend:
     runs-on: ubuntu-latest
 
+    services:
+      # PostgreSQL service for Django
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: codefleet_db
+          POSTGRES_USER: codefleet_user
+          POSTGRES_PASSWORD: codefleet_pass
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      # Redis service for Django
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
     # Step 1: Checkout the code
     - name: Checkout code
@@ -28,18 +44,36 @@ jobs:
       with:
         python-version: '3.11'
 
-    # Step 3: Install backend dependencies
+    # Step 3: Cache Python dependencies
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    # Step 4: Install backend dependencies
     - name: Install backend dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r website/backend/requirements.txt
 
-    # Step 4: Run Django tests
-    - name: Run Django tests
+    # Step 5: Apply migrations
+    - name: Apply migrations
+      working-directory: ./website/backend
       env:
+        DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
+      run: |
+        python manage.py migrate
+
+    # Step 6: Run Django tests
+    - name: Run Django tests
+      working-directory: ./website/backend
+      env:
+        DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
         CI: true
       run: |
-        cd website/backend
         python manage.py test
 
   frontend:
@@ -56,20 +90,89 @@ jobs:
       with:
         node-version: '18'
 
-    # Step 3: Install frontend dependencies
+    # Step 3: Cache Node.js dependencies
+    - name: Cache Node.js dependencies
+      uses: actions/cache@v3
+      with:
+        path: website/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('website/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    # Step 4: Install frontend dependencies
     - name: Install frontend dependencies
-      run: |
-        cd website/frontend
-        npm install
+      working-directory: ./website/frontend
+      run: npm install
 
-    # Step 4: Run React tests
+    # Step 5: Run React tests
     - name: Run React tests
-      run: |
-        cd website/frontend
-        npm test -- --watchAll=false
+      working-directory: ./website/frontend
+      run: npm test -- --watchAll=false
 
-    # Step 5: Build React app
+    # Step 6: Build React app
     - name: Build React app
+      working-directory: ./website/frontend
+      run: npm run build
+
+  collect-static:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+
+    services:
+      # PostgreSQL service for Django (included to ensure collectstatic works if database access is needed)
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: codefleet_db
+          POSTGRES_USER: codefleet_user
+          POSTGRES_PASSWORD: codefleet_pass
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      # Redis service for Django (included to match production environment)
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    # Step 3: Cache Python dependencies
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    # Step 4: Install backend dependencies
+    - name: Install backend dependencies
       run: |
-        cd website/frontend
-        npm run build
+        python -m pip install --upgrade pip
+        pip install -r website/backend/requirements.txt
+
+    # Step 5: Collect static files
+    - name: Collect static files
+      working-directory: ./website/backend
+      env:
+        DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
+      run: |
+        python manage.py collectstatic --noinput
+
+    # Step 6: Archive build artifacts
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: static-files
+        path: website/backend/staticfiles/

@@ -1,0 +1,19 @@
+1. A/B Testing Page (/abtest)
+Test Case 1: Verify the A/B Testing page loads successfully from the Automation page.
+Test Case 2: Verify the headline text is "A/B Test Variation 1" or "A/B Test Control".
+Test Case 3: Verify the paragraph text contains "Also known as split testing...".
+Test Case 4: Verify navigating back to the Automation page from the A/B Testing page.
+2. Add/Remove Elements Page (/addremoveelements)
+Test Case 1: Verify the Add/Remove Elements page loads successfully from the Automation page.
+Test Case 2: Verify the "Add Element" button is present and clickable.
+Test Case 3: Verify clicking "Add Element" adds a new "Delete" button.
+Test Case 4: Verify multiple "Delete" buttons can be added (e.g., add 5 elements).
+Test Case 5: Verify clicking a "Delete" button removes that specific element.
+Test Case 6: Verify all added elements can be removed by clicking their "Delete" buttons.
+Test Case 7: Verify navigating back to the Automation page from the Add/Remove Elements page.
+3. Basic Auth Page (/basicauth)
+Test Case 1: Verify navigating to the Basic Auth page from the Automation page triggers the Basic Auth prompt.
+Test Case 2: Verify entering correct credentials (admin:admin) displays the success message ("Congratulations! You have successfully authenticated…").
+Test Case 3: Verify canceling the Basic Auth prompt redirects the user back to the Automation page.
+Test Case 4: Verify entering incorrect credentials (e.g., user:pass) redirects the user back to the Automation page.
+Test Case 5: Verify navigating back to the Automation page after successful authentication.

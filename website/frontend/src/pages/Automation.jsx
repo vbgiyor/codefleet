@@ -1,16 +1,33 @@
 import React from 'react';
+import { Link, Outlet } from "react-router-dom";
 
 const Automation = () => {
   return (
     <div className="container mx-auto">
       <h2 className="text-3xl font-bold text-center my-8" id="automation_title">Automation Testing</h2>
       <div className="prose max-w-none" id="automation_content">
-        <h3 id="internet_title">The Internet</h3>
-        <p id="internet_description">Below is a collection of resources for practicing automation testing, inspired by <a href="https://the-internet.herokuapp.com/" id="internet_link">the-internet.herokuapp.com</a>.</p>
-        <ul id="test_resources">
-          <li><a href="/abtest" id="abtest_link">A/B Testing</a></li>
-          <li><a href="/add_remove_elements" id="add_remove_link">Add/Remove Elements</a></li>
-          <li><a href="/basic_auth" id="basic_auth_link">Basic Auth</a></li>
+        <p id="internet_description">
+          Below is a collection of resources for practicing automation testing, inspired by{' '}
+          <a href="https://the-internet.herokuapp.com/" id="internet_link" className="text-red-400 hover:text-red-600 border-b border-gray-300 pb-1">
+            the-internet.herokuapp.com
+          </a>.
+        </p>
+        <ul id="test_resources" className="list-disc list-inside">
+          <li>
+            <Link to="abtest" className="text-blue-600 hover:text-blue-800 underline" id="abtest_link">
+              A/B Testing
+            </Link>
+          </li>
+          <li>
+            <Link to="addremoveelements" className="text-blue-600 hover:text-blue-800 underline" id="add_remove_link">
+              Add / Remove Elements
+            </Link>
+          </li>
+          <li>
+            <Link to="/basicauth" className="text-blue-600 hover:text-blue-800 underline" id="basic_auth_link">
+              Basic Auth
+            </Link>
+          </li>
           <li><a href="/broken_images" id="broken_images_link">Broken Images</a></li>
           <li><a href="/challenging_dom" id="challenging_dom_link">Challenging DOM</a></li>
           <li><a href="/checkboxes" id="checkboxes_link">Checkboxes</a></li>
@@ -55,8 +72,15 @@ const Automation = () => {
           <li><a href="/typos" id="typos_link">Typos</a></li>
           <li><a href="/windows" id="windows_link">Windows</a></li>
         </ul>
-        <p id="footer_note">Note: These links are placeholders for future implementation. Visit <a href="https://the-internet.herokuapp.com/" id="original_internet_link">the-internet.herokuapp.com</a> for live examples.</p>
+        <p id="footer_note">
+          Note: These links are placeholders for future implementation. Visit{' '}
+          <a href="https://the-internet.herokuapp.com/" id="original_internet_link">
+            the-internet.herokuapp.com
+          </a>{' '}
+          for live examples.
+        </p>
       </div>
+      <Outlet />
     </div>
   );
 };
