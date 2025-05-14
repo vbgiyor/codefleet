@@ -223,28 +223,68 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-cfinspector-
 
-      # Step 20: Ensure Chrome is installed
-      - name: Ensure Chrome is installed
+      # Step 20: Install Chrome and ChromeDriver
+      - name: Install Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
+          # Install dependencies for Chrome
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y google-chrome-stable \
+            libxss1 \
+            libappindicator3-1 \
+            libindicator3-7 \
+            fonts-liberation \
+            libasound2t64 \
+            libnspr4 \
+            libnss3 \
+            libx11-xcb1 \
+            xdg-utils
 
-      # Step 21: Setup ChromeDriver
-      - name: Setup ChromeDriver
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        uses: browser-actions/setup-chromedriver@v1.0.0  # Updated to v1.0.0
-        with:
-          chromedriver-version: latest  # Automatically picks a compatible version
+          # Get Chrome version using dpkg
+          CHROME_VERSION=$(dpkg -l | grep google-chrome-stable | awk '{print $3}' | grep -oP '^\d+\.\d+\.\d+')
+          if [ -z "$CHROME_VERSION" ]; then
+            echo "Failed to determine Chrome version" >&2
+            google-chrome --version || echo "google-chrome --version failed"
+            exit 1
+          fi
+          echo "Detected Chrome version: $CHROME_VERSION"
 
-      # Step 22: Debug Chrome and ChromeDriver
+          # Get the major version of Chrome (e.g., 135 from 135.0.7049)
+          CHROME_MAJOR_VERSION=$(echo "$CHROME_VERSION" | cut -d'.' -f1)
+          if [ -z "$CHROME_MAJOR_VERSION" ]; then
+            echo "Failed to determine Chrome major version from $CHROME_VERSION" >&2
+            exit 1
+          fi
+          echo "Chrome major version: $CHROME_MAJOR_VERSION"
+
+          # Try to get ChromeDriver version for the exact Chrome version
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          if [ -z "$CHROMEDRIVER_VERSION" ] || [[ "$CHROMEDRIVER_VERSION" == *"NoSuchKey"* ]]; then
+            echo "No ChromeDriver found for exact version $CHROME_VERSION, falling back to major version $CHROME_MAJOR_VERSION"
+            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION")
+          fi
+
+          # Check if we successfully retrieved a ChromeDriver version
+          if [ -z "$CHROMEDRIVER_VERSION" ] || [[ "$CHROMEDRIVER_VERSION" == *"NoSuchKey"* ]]; then
+            echo "Failed to determine ChromeDriver version for Chrome $CHROME_VERSION or major version $CHROME_MAJOR_VERSION" >&2
+            exit 1
+          fi
+          echo "Detected ChromeDriver version: $CHROMEDRIVER_VERSION"
+
+          # Download and install ChromeDriver
+          wget -q "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      # Step 21: Debug Chrome and ChromeDriver
       - name: Debug Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           google-chrome --version || echo "Chrome not found"
           chromedriver --version || echo "ChromeDriver not found"
 
-      # Step 23: Create logback-test.xml to suppress verbose logs
+      # Step 22: Create logback-test.xml to suppress verbose logs
       - name: Create logback-test.xml
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -263,7 +303,7 @@ jobs:
           </configuration>
           EOF
 
-      # Step 24: Build and test CFInspector
+      # Step 23: Build and test CFInspector
       - name: Build and test CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -273,7 +313,7 @@ jobs:
           HEADLESS: true
           BASE_URL: http://localhost:8000
 
-      # Step 25: Upload TestNG reports
+      # Step 24: Upload TestNG reports
       - name: Upload TestNG reports
         if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
@@ -282,7 +322,7 @@ jobs:
           path: automation/ui/selenium/java/CFInspector/target/surefire-reports/
           retention-days: 7
 
-      # Step 26: Upload screenshots
+      # Step 25: Upload screenshots
       - name: Upload screenshots
         if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
