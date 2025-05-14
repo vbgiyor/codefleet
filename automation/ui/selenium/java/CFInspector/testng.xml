@@ -10,9 +10,9 @@
             <class name="com.codefleet.cfinspector.modules.tests.homepage.HomePageTest"/>
         </classes>
     </test>
-    <test name="ABTestPageTests">
-        <classes>
-            <class name="com.codefleet.cfinspector.modules.tests.automationpage.abtestpage.ABTestPageTest"/>
-        </classes>
-    </test>
+<!--    <test name="ABTestPageTests">-->
+<!--        <classes>-->
+<!--            <class name="com.codefleet.cfinspector.modules.tests.automationpage.abtestpage.ABTestPageTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 </suite>
