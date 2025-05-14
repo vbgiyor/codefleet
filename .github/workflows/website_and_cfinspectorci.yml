@@ -82,10 +82,10 @@ jobs:
       - name: Debug script presence
         run: |
           echo "Listing files in website/backend:"
-          ls -la website/backend/
-          if [ -f website/backend/start-django.sh ]; then
+          ls -la ./website/backend/
+          if [ -f ./website/backend/start-django.sh ]; then
             echo "start-django.sh found"
-            cat website/backend/start-django.sh
+            cat ./website/backend/start-django.sh
           else
             echo "start-django.sh not found" >&2
             exit 1
@@ -94,7 +94,7 @@ jobs:
       # Step 5: Make start-django.sh executable
       - name: Make start-django.sh executable
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        run: chmod +x website/backend/start-django.sh
+        run: chmod +x ./website/backend/start-django.sh
 
       # Step 6: Set up Python
       - name: Set up Python
