@@ -1,6 +1,6 @@
 name: Selenium CI
 description: |
-  This workflow runs Selenium tests for specified projects under automation/ui/selenium/java.
+  This workflow runs Selenium tests for the HerokuApp project using Maven and TestNG.
   It includes linting, building, and testing steps, with caching for Maven dependencies.
   Screenshots are uploaded on failure, and TestNG reports are uploaded regardless of the outcome.
   The workflow is triggered on pushes and pull requests to the main branch, as well as manually via workflow dispatch.
@@ -8,18 +8,15 @@ description: |
   The Maven dependencies are cached to speed up the build process.
   The workflow installs Google Chrome for headless testing and verifies the presence of the pom.xml file before proceeding with the build and test steps.
   The workflow uploads TestNG reports and screenshots as artifacts, with retention set to 7 days.
-
 on:
   push:
     branches: [main]
     paths:
-      - 'automation/ui/selenium/java/PageInspector/**'
-      - 'automation/ui/selenium/java/CFInspector/**'
+      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
   pull_request:
     branches: [main]
     paths:
-      - 'automation/ui/selenium/java/PageInspector/**'
-      - 'automation/ui/selenium/java/CFInspector/**'
+      - 'automation/ui/selenium/java/PageInspector/HerokuApp/**'
   workflow_dispatch:
 
 jobs:
@@ -27,139 +24,68 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [PageInspector, CFInspector]
-      fail-fast: false  # Ensure all matrix variants run even if one fails
-
+        project: [HerokuApp]
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch full history for path filtering
 
-      # Step 2: Determine changed files
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
-        with:
-          files: |
-            automation/ui/selenium/java/${{ matrix.project }}/**
-
-      # Step 3: Debug changed files output
-      - name: Debug changed files
-        run: |
-          echo "Any changed: ${{ steps.changed-files.outputs.any_changed }}"
-          echo "All changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
-
-      # Step 4: Run linting if project files changed or workflow dispatched manually
       - name: Run linting
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/${{ matrix.project }}
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
         run: |
           mvn checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
         env:
           MAVEN_OPTS: -Xmx512m
 
-      # Step 5: Set up JDK 17
       - name: Set up JDK 17
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-java@v4
         with:
-          java-version: '17.0.11'  # Specify a known stable version of Java 17
+          java-version: '17'
           distribution: 'temurin'
-          check-latest: true  # Allow fetching the latest patch version if 17.0.11 isn't available
 
-      # Step 6: Debug Java setup
-      - name: Debug Java setup
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          java -version
-          echo "JAVA_HOME: $JAVA_HOME"
-
-      # Step 7: Cache Maven dependencies
       - name: Cache Maven dependencies
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ matrix.project }}-${{ hashFiles('automation/ui/selenium/java/${{ matrix.project }}/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('automation/ui/selenium/java/PageInspector/HerokuApp/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-${{ matrix.project }}-
+            ${{ runner.os }}-maven-
 
-      # Step 8: Install Chrome for headless testing
       - name: Install Chrome for headless testing
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 9: Debug Chrome and ChromeDriver
-      - name: Debug Chrome and ChromeDriver
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          google-chrome --version || echo "Chrome not found"
-          chromedriver --version || echo "ChromeDriver not found"
-
-      # Step 10: Create logback-test.xml to suppress verbose logs
-      - name: Create logback-test.xml
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/${{ matrix.project }}
-        run: |
-          cat << 'EOF' > logback-test.xml
-          <configuration>
-              <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-                  <encoder>
-                      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-                  </encoder>
-              </appender>
-              <logger name="org.apache.hc.client5.http.wire" level="INFO" />
-              <root level="INFO">
-                  <appender-ref ref="STDOUT" />
-              </root>
-          </configuration>
-          EOF
-
-      # Step 11: Verify Maven project
       - name: Verify Maven project
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/${{ matrix.project }}
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
         run: |
           echo "Listing pom.xml files:"
           ls -la pom.xml
           if [ -f pom.xml ]; then
-            echo "Found pom.xml in automation/ui/selenium/java/${{ matrix.project }}"
+            echo "Found pom.xml in automation/ui/selenium/java/PageInspector/HerokuApp"
           else
-            echo "No pom.xml found in automation/ui/selenium/java/${{ matrix.project }}" >&2
+            echo "No pom.xml found in automation/ui/selenium/java/PageInspector/HerokuApp" >&2
             exit 1
           fi
-          echo "Listing testng.xml:"
-          ls -la testng.xml
-          echo "Contents of testng.xml:"
-          cat testng.xml
 
-      # Step 12: Build and test Selenium
       - name: Build and test Selenium
-        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/${{ matrix.project }}
-        run: mvn clean test -Dtestng.xml=testng.xml -Dlogback.configurationFile=logback-test.xml
+        working-directory: automation/ui/selenium/java/PageInspector/HerokuApp
+        run: mvn clean test -Dtestng.xml=testng.xml
         env:
           BROWSER: chrome
           HEADLESS: true
 
-      # Step 13: Upload TestNG reports
       - name: Upload TestNG reports
-        if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-testng-reports
-          path: automation/ui/selenium/java/${{ matrix.project }}/target/surefire-reports/
+          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/surefire-reports/
           retention-days: 7
 
-      # Step 14: Upload screenshots
       - name: Upload screenshots
-        if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: selenium-${{ matrix.project }}-screenshots
-          path: automation/ui/selenium/java/${{ matrix.project }}/target/screenshots/
+          path: automation/ui/selenium/java/PageInspector/HerokuApp/target/screenshots/
           retention-days: 7
