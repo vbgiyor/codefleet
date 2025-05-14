@@ -5,9 +5,11 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setError('');
     setSuccess('');
     try {
@@ -18,6 +20,8 @@ const Contact = () => {
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
       setError(err.response?.data?.message || 'An error occurred.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -60,7 +64,13 @@ const Contact = () => {
             required
           />
         </div>
-        <button type="submit" className="btn">Submit</button>
+        <button
+          type="submit"
+          className="btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Submit'}
+        </button>
       </form>
     </div>
   );

@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="CFInspectorSuite" parallel="methods" thread-count="4">
+    <test name="Setup">
+        <classes>
+            <class name="com.codefleet.cfinspector.modules.tests.TestSetup"/>
+        </classes>
+    </test>
+    <test name="HomePageTests">
+        <classes>
+            <class name="com.codefleet.cfinspector.modules.tests.homepage.HomePageTest"/>
+        </classes>
+    </test>
+    <test name="ABTestPageTests">
+        <classes>
+            <class name="com.codefleet.cfinspector.modules.tests.automationpage.abtestpage.ABTestPageTest"/>
+        </classes>
+    </test>
+</suite>

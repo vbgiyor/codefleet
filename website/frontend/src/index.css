@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'BauhausBold';
+  src: url('../public/fonts/BauhausBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.bauhaus-font {
+  font-family: 'BauHausBold', Arial, sans-serif;
+}

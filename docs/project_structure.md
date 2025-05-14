@@ -19,6 +19,52 @@ codefleet
 │   └── ui
 │       └── selenium
 │           └── java
+│               ├── CFInspector
+│               │   ├── checkstyle.xml
+│               │   ├── Dockerfile.txt
+│               │   ├── pom.xml
+│               │   ├── src
+│               │   │   ├── main
+│               │   │   │   ├── java
+│               │   │   │   │   └── com
+│               │   │   │   │       └── codefleet
+│               │   │   │   │           └── cfinspector
+│               │   │   │   │               └── modules
+│               │   │   │   │                   ├── config
+│               │   │   │   │                   │   └── ConfigManager.java
+│               │   │   │   │                   ├── core
+│               │   │   │   │                   │   ├── CoreActions.java
+│               │   │   │   │                   │   ├── LocatorParser.java
+│               │   │   │   │                   │   └── WebDriverFactory.java
+│               │   │   │   │                   ├── pages
+│               │   │   │   │                   │   ├── ABTestPage.java
+│               │   │   │   │                   │   ├── AutomationPage.java
+│               │   │   │   │                   │   ├── BasePage.java
+│               │   │   │   │                   │   └── HomePage.java
+│               │   │   │   │                   └── utils
+│               │   │   │   │                       ├── LoggerUtil.java
+│               │   │   │   │                       ├── ScreenShotUtil.java
+│               │   │   │   │                       └── WaitForElementsUtil.java
+│               │   │   │   └── resources
+│               │   │   │       ├── data.properties
+│               │   │   │       └── locators.properties
+│               │   │   ├── test
+│               │   │   │   └── java
+│               │   │   │       └── com
+│               │   │   │           └── codefleet
+│               │   │   │               └── cfinspector
+│               │   │   │                   └── modules
+│               │   │   │                       └── tests
+│               │   │   │                           ├── automationpage
+│               │   │   │                           │   └── abtestpage
+│               │   │   │                           │       └── ABTestPageTest.java
+│               │   │   │                           ├── BasePageTest.java
+│               │   │   │                           ├── homepage
+│               │   │   │                           │   └── HomePageTest.java
+│               │   │   │                           └── TestSetup.java
+│               │   │   └── testcases
+│               │   │       └── cases.txt
+│               │   └── testng.xml
 │               ├── GithubRepoListingDemo
 │               │   ├── allure-report.png
 │               │   ├── jenkins-plugin.png
@@ -185,10 +231,12 @@ codefleet
 │               └── wsgi.py
 ├── README.md
 ├── scripts
+│   ├── build_website.sh
 │   ├── clean_stray_bookstore.sh
 │   └── run_django.sh
 └── website
     ├── backend
+    │   ├── backup.sql
     │   ├── codefleet
     │   │   ├── __init__.py
     │   │   ├── asgi.py
@@ -196,7 +244,10 @@ codefleet
     │   │   ├── migrations
     │   │   │   ├── __init__.py
     │   │   │   ├── 0001_initial.py
-    │   │   │   └── 0002_alter_userprofile_email.py
+    │   │   │   ├── 0002_alter_userprofile_email.py
+    │   │   │   ├── 0003_userprofile_password.py
+    │   │   │   ├── 0004_alter_userprofile_password.py
+    │   │   │   └── 0005_remove_userprofile_password.py
     │   │   ├── models.py
     │   │   ├── serializers.py
     │   │   ├── settings.py
@@ -206,13 +257,38 @@ codefleet
     │   │   └── wsgi.py
     │   ├── docker-compose.yaml
     │   ├── Dockerfile
+    │   ├── init-db.sql
     │   ├── manage.py
     │   ├── requirements.txt
+    │   ├── static
+    │   │   ├── favicon.ico
+    │   │   └── images
+    │   │       ├── logo-100x100.png
+    │   │       └── logo-transparent.png
+    │   ├── staticfiles
     │   └── templates
     │       └── emails
     │           ├── contact_email.html
     │           └── signup_email.html
     └── frontend
+        ├── build
+        │   ├── asset-manifest.json
+        │   ├── favicon_ico
+        │   │   ├── android-chrome-192x192.png
+        │   │   ├── android-chrome-512x512.png
+        │   │   ├── apple-touch-icon.png
+        │   │   ├── favicon-16x16.png
+        │   │   ├── favicon-32x32.png
+        │   │   ├── favicon.ico
+        │   │   └── site.webmanifest
+        │   ├── favicon.ico
+        │   ├── fonts
+        │   │   ├── BauhausBold.ttf
+        │   │   ├── BauhausBoldItalic.ttf
+        │   │   ├── BauhausItalic.ttf
+        │   │   └── BauhausRegular.ttf
+        │   ├── index.html
+        │   └── static│       
         ├── Dockerfile.txt
         ├── package-lock.json
         ├── package.json
@@ -227,7 +303,15 @@ codefleet
         │   │   ├── favicon.ico
         │   │   └── site.webmanifest
         │   ├── favicon.ico
-        │   └── index.html
+        │   ├── fonts
+        │   │   ├── BauhausBold.ttf
+        │   │   ├── BauhausBoldItalic.ttf
+        │   │   ├── BauhausItalic.ttf
+        │   │   └── BauhausRegular.ttf
+        │   ├── index.html
+        │   └── static
+        │       └── images
+        │           └── logo.png
         ├── src
         │   ├── App.jsx
         │   ├── components
@@ -239,14 +323,18 @@ codefleet
         │   │   ├── logo-100x100.png
         │   │   ├── logo-transparent.png
         │   │   └── logo.png
+        │   ├── index.css
         │   ├── index.js
         │   ├── output.css
         │   ├── pages
         │   │   ├── Automation.jsx
-        │   │   ├── Cicd.jsx
         │   │   ├── Contact.jsx
         │   │   ├── Home.jsx
         │   │   ├── Java.jsx
+        │   │   ├── list
+        │   │   │   ├── ABTest.jsx
+        │   │   │   ├── AddRemoveElements.jsx
+        │   │   │   └── BasicAuth.jsx
         │   │   ├── Python.jsx
         │   │   ├── ResetPassword.jsx
         │   │   ├── SignIn.jsx
@@ -255,5 +343,5 @@ codefleet
         │   └── styles.css
         └── tailwind.config.js
 
-75 directories, 175 files
+140 directories, 1456 files
 ```

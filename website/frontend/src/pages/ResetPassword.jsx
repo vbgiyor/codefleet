@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useParams, Link } from 'react-router-dom';
 
 const ResetPassword = () => {
+  const [email, setEmail] = useState('');
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -23,6 +24,7 @@ const ResetPassword = () => {
       });
       setSuccess(response.data.message);
       setError('');
+      setEmail('');
     } catch (err) {
       console.log('Backend Error Response:', err.response?.data);
       const errorData = err.response?.data;
@@ -42,12 +44,28 @@ const ResetPassword = () => {
 
   return (
     <div className="container mx-auto max-w-md">
-      <h2 className="text-2xl font-bold text-center my-8" id="reset_password_title">Reset Password</h2>
-      {error && <p className="text-red-500 text-center text-base font-sans" id="reset_password_error">{error}</p>}
-      {success && <p className="text-green-500 text-center text-base font-sans" id="reset_password_success">{success}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow-md" id="reset_password_form">
+      <h2 className="text-2xl font-bold text-center my-8" id="reset_password_title">
+        Reset Password
+      </h2>
+      {error && (
+        <p className="text-red-500 text-center text-base font-sans" id="reset_password_error">
+          {error}
+        </p>
+      )}
+      {success && (
+        <p className="text-green-500 text-center text-base font-sans" id="reset_password_success">
+          {success}
+        </p>
+      )}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white p-6 rounded shadow-md"
+        id="reset_password_form"
+      >
         <div className="mb-4">
-          <label htmlFor="new_password" className="block text-gray-700">New Password</label>
+          <label htmlFor="new_password" className="block text-gray-700">
+            New Password
+          </label>
           <input
             type="password"
             id="new_password"
@@ -60,7 +78,11 @@ const ResetPassword = () => {
             })}
             className={`w-full p-2 border rounded ${errors.new_password ? 'border-red-500' : ''}`}
           />
-          {errors.new_password && <p className="text-red-500 text-base font-sans">{errors.new_password.message}</p>}
+          {errors.new_password && (
+            <p className="text-red-500 text-base font-sans">
+              {errors.new_password.message}
+            </p>
+          )}
         </div>
         <button
           type="submit"

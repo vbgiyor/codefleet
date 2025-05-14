@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
         <div className="flex items-center mb-2 sm:mb-0">
           <img src={logo} alt="Codefleet Logo" className="h-28 w-auto" id="footer_logo" loading="lazy" />
-          <p className="ml-2" id="copyright">© 2025 Codefleet. All rights reserved.</p>
+          <p className="ml-2" id="copyright">© {new Date().getFullYear()} Codefleet. All rights reserved.</p>
         </div>
         <NavLink
           to="/contact"
