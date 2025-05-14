@@ -27,7 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [CFInspector]
+        project: [PageInspector, CFInspector]
+      fail-fast: false  # Ensure all matrix variants run even if one fails
 
     steps:
       # Step 1: Checkout code
@@ -64,10 +65,18 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '17.0.11'  # Specify a known stable version of Java 17
           distribution: 'temurin'
+          check-latest: true  # Allow fetching the latest patch version if 17.0.11 isn't available
 
-      # Step 6: Cache Maven dependencies
+      # Step 6: Debug Java setup
+      - name: Debug Java setup
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          java -version
+          echo "JAVA_HOME: $JAVA_HOME"
+
+      # Step 7: Cache Maven dependencies
       - name: Cache Maven dependencies
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
@@ -77,14 +86,40 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-${{ matrix.project }}-
 
-      # Step 7: Install Chrome for headless testing
+      # Step 8: Install Chrome for headless testing
       - name: Install Chrome for headless testing
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 8: Verify Maven project
+      # Step 9: Debug Chrome and ChromeDriver
+      - name: Debug Chrome and ChromeDriver
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          google-chrome --version || echo "Chrome not found"
+          chromedriver --version || echo "ChromeDriver not found"
+
+      # Step 10: Create logback-test.xml to suppress verbose logs
+      - name: Create logback-test.xml
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: automation/ui/selenium/java/${{ matrix.project }}
+        run: |
+          cat << 'EOF' > logback-test.xml
+          <configuration>
+              <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                  <encoder>
+                      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                  </encoder>
+              </appender>
+              <logger name="org.apache.hc.client5.http.wire" level="INFO" />
+              <root level="INFO">
+                  <appender-ref ref="STDOUT" />
+              </root>
+          </configuration>
+          EOF
+
+      # Step 11: Verify Maven project
       - name: Verify Maven project
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/${{ matrix.project }}
@@ -97,17 +132,21 @@ jobs:
             echo "No pom.xml found in automation/ui/selenium/java/${{ matrix.project }}" >&2
             exit 1
           fi
+          echo "Listing testng.xml:"
+          ls -la testng.xml
+          echo "Contents of testng.xml:"
+          cat testng.xml
 
-      # Step 9: Build and test Selenium
+      # Step 12: Build and test Selenium
       - name: Build and test Selenium
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/${{ matrix.project }}
-        run: mvn clean test -Dtestng.xml=testng.xml
+        run: mvn clean test -Dtestng.xml=testng.xml -Dlogback.configurationFile=logback-test.xml
         env:
           BROWSER: chrome
           HEADLESS: true
 
-      # Step 10: Upload TestNG reports
+      # Step 13: Upload TestNG reports
       - name: Upload TestNG reports
         if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
@@ -116,7 +155,7 @@ jobs:
           path: automation/ui/selenium/java/${{ matrix.project }}/target/surefire-reports/
           retention-days: 7
 
-      # Step 11: Upload screenshots
+      # Step 14: Upload screenshots
       - name: Upload screenshots
         if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
