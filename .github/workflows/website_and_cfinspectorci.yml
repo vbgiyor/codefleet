@@ -10,12 +10,12 @@ on:
     branches: [main]
     paths:
       - 'website/**'
-      - 'automation/ui/selenium/java/CFInspector/**'  # Updated path to match correct case
+      - 'automation/ui/selenium/java/CFInspector/**'
   pull_request:
     branches: [main]
     paths:
       - 'website/**'
-      - 'automation/ui/selenium/java/CFInspector/**'  # Updated path to match correct case
+      - 'automation/ui/selenium/java/CFInspector/**'
   workflow_dispatch:
 
 jobs:
@@ -54,7 +54,7 @@ jobs:
         with:
           files: |
             website/**
-            automation/ui/selenium/java/CFInspector/**  # Updated path to match correct case
+            automation/ui/selenium/java/CFInspector/**
 
       # Step 3: Debug changed files output
       - name: Debug changed files
@@ -173,7 +173,7 @@ jobs:
       # Step 15: Verify Maven project for CFInspector
       - name: Verify Maven project for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
+        working-directory: automation/ui/selenium/java/CFInspector
         run: |
           echo "Listing pom.xml files:"
           ls -la pom.xml
@@ -191,7 +191,7 @@ jobs:
       # Step 16: Run linting for CFInspector
       - name: Run linting for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
+        working-directory: automation/ui/selenium/java/CFInspector
         run: |
           mvn checkstyle:check -Dcheckstyle.config.location=checkstyle.xml
         env:
@@ -219,7 +219,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-cfinspector-${{ hashFiles('automation/ui/selenium/java/CFInspector/pom.xml') }}  # Updated to correct case
+          key: ${{ runner.os }}-maven-cfinspector-${{ hashFiles('automation/ui/selenium/java/CFInspector/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-cfinspector-
 
@@ -227,10 +227,37 @@ jobs:
       - name: Install Chrome and ChromeDriver
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
+          # Install dependencies for Chrome
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+          sudo apt-get install -y google-chrome-stable \
+            libxss1 \
+            libappindicator3-1 \
+            libindicator3-7 \
+            fonts-liberation \
+            libasound2 \
+            libnspr4 \
+            libnss3 \
+            libx11-xcb1 \
+            xdg-utils
+
+          # Get Chrome version using dpkg
+          CHROME_VERSION=$(dpkg -l | grep google-chrome-stable | awk '{print $3}' | grep -oP '^\d+\.\d+\.\d+')
+          if [ -z "$CHROME_VERSION" ]; then
+            echo "Failed to determine Chrome version" >&2
+            google-chrome --version || echo "google-chrome --version failed"
+            exit 1
+          fi
+          echo "Detected Chrome version: $CHROME_VERSION"
+
+          # Get the latest ChromeDriver version for the installed Chrome version
           CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          if [ -z "$CHROMEDRIVER_VERSION" ]; then
+            echo "Failed to determine ChromeDriver version for Chrome $CHROME_VERSION" >&2
+            exit 1
+          fi
+          echo "Detected ChromeDriver version: $CHROMEDRIVER_VERSION"
+
+          # Download and install ChromeDriver
           wget -q "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
@@ -246,7 +273,7 @@ jobs:
       # Step 22: Create logback-test.xml to suppress verbose logs
       - name: Create logback-test.xml
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
+        working-directory: automation/ui/selenium/java/CFInspector
         run: |
           cat << 'EOF' > logback-test.xml
           <configuration>
@@ -265,7 +292,7 @@ jobs:
       # Step 23: Build and test CFInspector
       - name: Build and test CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-        working-directory: automation/ui/selenium/java/CFInspector  # Updated to correct case
+        working-directory: automation/ui/selenium/java/CFInspector
         run: mvn clean test -Dtestng.xml=testng.xml -Dlogback.configurationFile=logback-test.xml
         env:
           BROWSER: chrome
@@ -278,7 +305,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selenium-cfinspector-testng-reports
-          path: automation/ui/selenium/java/CFInspector/target/surefire-reports/  # Updated to correct case
+          path: automation/ui/selenium/java/CFInspector/target/surefire-reports/
           retention-days: 7
 
       # Step 25: Upload screenshots
@@ -287,5 +314,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: selenium-cfinspector-screenshots
-          path: automation/ui/selenium/java/CFInspector/target/screenshots/  # Updated to correct case
+          path: automation/ui/selenium/java/CFInspector/target/screenshots/
           retention-days: 7
