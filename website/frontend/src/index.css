@@ -3,6 +3,7 @@
   src: url('../public/fonts/BauhausBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+  font-size: large;
 }
 
 .bauhaus-font {

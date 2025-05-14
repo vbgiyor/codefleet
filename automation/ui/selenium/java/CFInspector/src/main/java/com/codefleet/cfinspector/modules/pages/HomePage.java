@@ -9,9 +9,9 @@ public class HomePage extends BasePage {
         super(driver);
     }
 
-    public String getTitleText() {
-        WebElement title = driver.findElement(locatorParser.getElementLocator("home.title"));
-        return getText(title);
+    public String getHomeTitleText() {
+        WebElement description = driver.findElement(locatorParser.getElementLocator("home.title"));
+        return getText(description);
     }
 
     public String getDescriptionText() {
@@ -19,15 +19,20 @@ public class HomePage extends BasePage {
         return getText(description);
     }
 
-    public HomePage clickHomeLink() {
-        WebElement homeLink = driver.findElement(locatorParser.getElementLocator("home.automation_link"));
-        click(homeLink);
-        return new HomePage(driver);
-    }
-
     public AutomationPage clickAutomationLink() {
-        WebElement automationLink = driver.findElement(locatorParser.getElementLocator("home.automation_link"));
+        // Click "Case Studies" to open dropdown
+        WebElement caseStudiesButton = driver.findElement(locatorParser.getElementLocator("header.menu_case_studies"));
+        click(caseStudiesButton);
+
+        // Click "Automation" link in dropdown
+        WebElement automationLink = driver.findElement(locatorParser.getElementLocator("header.case_studies_automation_link"));
         click(automationLink);
         return new AutomationPage(driver);
+    }
+
+    public ContactPage clickContactLink() {
+        WebElement contactLink = driver.findElement(locatorParser.getElementLocator("header.menu_contact"));
+        click(contactLink);
+        return new ContactPage(driver);
     }
 }

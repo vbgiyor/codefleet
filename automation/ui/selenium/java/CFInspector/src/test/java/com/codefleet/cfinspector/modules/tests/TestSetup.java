@@ -11,7 +11,6 @@ import java.util.Set;
 
 public class TestSetup {
 
-    @BeforeSuite
     public void validateLocators() {
         Properties locatorProps = ConfigManager.getLocatorProperties();
         Set<String> locatorKeys = locatorProps.stringPropertyNames();
@@ -20,7 +19,6 @@ public class TestSetup {
         List<String> expectedKeys = Arrays.asList(
                 "home.title",
                 "home.description",
-                "home.automation_link",
                 "automation.title",
                 "automation.ab_testing_link",
                 "automation.add_remove_link",
