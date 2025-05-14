@@ -234,7 +234,7 @@ jobs:
             libappindicator3-1 \
             libindicator3-7 \
             fonts-liberation \
-            libasound2 \
+            libasound2t64 \
             libnspr4 \
             libnss3 \
             libx11-xcb1 \
