@@ -49,12 +49,15 @@ jobs:
           - 8000:8000
         volumes:
           - .:/app
-        entrypoint: >
+        options: >-
+          --health-cmd "curl -f http://localhost:8000 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
           bash -c "pip install -r /app/website/backend/requirements.txt &&
                    cd /app/website/backend &&
                    python manage.py migrate &&
                    python manage.py runserver 0.0.0.0:8000"
-        options: --health-cmd "curl -f http://localhost:8000 || exit 1" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       # Step 1: Checkout code
