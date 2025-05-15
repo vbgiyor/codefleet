@@ -84,13 +84,26 @@ jobs:
       working-directory: ./website/frontend
       run: npm run build
 
-    # Step 9: Copy React build to backend
+    # Step 9: Debug React build output
+    - name: Debug React build output
+      working-directory: ./website/frontend
+      run: |
+        echo "Listing contents of website/frontend/build:"
+        ls -la build || echo "build directory not found"
+        if [ -d build ] && [ -f build/index.html ]; then
+          echo "index.html found"
+        else
+          echo "index.html not found" >&2
+          exit 1
+        fi
+
+    # Step 10: Copy React build to backend
     - name: Copy React build to backend
       run: |
         mkdir -p website/backend/frontend/build
         cp -r website/frontend/build/* website/backend/frontend/build/
 
-    # Step 10: Apply migrations
+    # Step 11: Apply migrations
     - name: Apply migrations
       working-directory: ./website/backend
       env:
@@ -98,7 +111,7 @@ jobs:
       run: |
         python manage.py migrate
 
-    # Step 11: Run Django tests
+    # Step 12: Run Django tests
     - name: Run Django tests
       working-directory: ./website/backend
       env:
