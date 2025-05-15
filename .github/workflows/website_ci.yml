@@ -59,7 +59,38 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r website/backend/requirements.txt
 
-    # Step 5: Apply migrations
+    # Step 5: Set up Node.js for frontend build
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # Step 6: Cache Node.js dependencies
+    - name: Cache Node.js dependencies
+      uses: actions/cache@v3
+      with:
+        path: website/frontend/node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('website/frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    # Step 7: Install frontend dependencies
+    - name: Install frontend dependencies
+      working-directory: ./website/frontend
+      run: npm install
+
+    # Step 8: Build React app
+    - name: Build React app
+      working-directory: ./website/frontend
+      run: npm run build
+
+    # Step 9: Copy React build to backend
+    - name: Copy React build to backend
+      run: |
+        mkdir -p website/backend/frontend/build
+        cp -r website/frontend/build/* website/backend/frontend/build/
+
+    # Step 10: Apply migrations
     - name: Apply migrations
       working-directory: ./website/backend
       env:
@@ -67,7 +98,7 @@ jobs:
       run: |
         python manage.py migrate
 
-    # Step 6: Run Django tests
+    # Step 11: Run Django tests
     - name: Run Django tests
       working-directory: ./website/backend
       env:
