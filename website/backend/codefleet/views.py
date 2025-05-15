@@ -8,13 +8,14 @@ from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from .email_utils import send_signup_email, send_contact_email
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import base64
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 import logging
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -112,21 +113,34 @@ class UserProfileView(APIView):
 @csrf_exempt
 def basic_auth_view(request):
     auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    logger.debug(f"Auth Header: {auth_header}")
+
+    # Check if request expects JSON (for frontend API call)
+    is_api_request = request.headers.get('Accept', '').startswith('application/json')
+
     if not auth_header.startswith('Basic '):
-        response = HttpResponse('Unauthorized', status=401)
+        response = HttpResponse('Unauthorized', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        logger.debug(f"Response Headers: {response.headers}")
         return response
+
     try:
         encoded_credentials = auth_header.split(' ')[1]
         decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8')
-        username, password = encoded_credentials.split(':')
+        username, password = decoded_credentials.split(':')
     except (IndexError, UnicodeDecodeError, ValueError):
-        response = HttpResponse('Invalid credentials', status=401)
+        response = HttpResponse('Invalid credentials', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        logger.debug(f"Response Headers: {response.headers}")
         return response
+
     if username == 'admin' and password == 'admin':
+        logger.debug("Authentication successful")
+        if is_api_request:
+            return JsonResponse({'authenticated': True})
         return render(request, 'index.html')
     else:
-        response = HttpResponse('Unauthorized', status=401)
+        response = HttpResponse('Unauthorized', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+        logger.debug(f"Response Headers: {response.headers}")
         return response
