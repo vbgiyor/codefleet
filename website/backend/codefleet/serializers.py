@@ -7,6 +7,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import authenticate
 from .models import UserProfile
 from .email_utils import send_signup_email, send_contact_email
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -49,7 +53,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             **validated_data
         )
         if validated_data.get('subscribe_newsletter', False):
-            send_signup_email(user.email, user.first_name)
+            try:
+                send_signup_email(user.email, user.first_name)
+            except Exception as e:
+                logger.error(f"Failed to send signup email to {user.email}: {str(e)}")
         return user_profile
 
 

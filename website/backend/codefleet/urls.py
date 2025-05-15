@@ -26,6 +26,6 @@ if settings.DEBUG:
 
 # Catch-all route for React SPA, excluding API, basicauth, and static routes
 urlpatterns += [
-    re_path(r'^(?!api/|static/|basicauth/).*',
-            TemplateView.as_view(template_name='index.html'), name='spa'),
+    re_path(r'^(?!api/|basicauth/|static/).*',
+            TemplateView.as_view(template_name='index.html'), name='spa'),    
 ]

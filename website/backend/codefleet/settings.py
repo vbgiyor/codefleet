@@ -135,18 +135,3 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 APPEND_SLASH = False
 
 FRONTEND_URL = 'http://localhost:3000'
-
-# Enable logging to debug issues
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-    },
-}
