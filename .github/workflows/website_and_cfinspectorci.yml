@@ -162,7 +162,14 @@ jobs:
         run: |
           python manage.py collectstatic --noinput
 
-      # Step 14: Debug CFInspector directory
+      # Step 14: Run Django unit tests
+      - name: Run Django unit tests
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: ./website/backend
+        run: |
+          python manage.py test
+
+      # Step 15: Debug CFInspector directory
       - name: Debug CFInspector directory
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java
@@ -170,7 +177,7 @@ jobs:
           echo "Listing contents of automation/ui/selenium/java/:"
           ls -la
 
-      # Step 15: Verify Maven project for CFInspector
+      # Step 16: Verify Maven project for CFInspector
       - name: Verify Maven project for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -188,7 +195,7 @@ jobs:
           echo "Contents of testng.xml:"
           cat testng.xml
 
-      # Step 16: Run linting for CFInspector
+      # Step 17: Run linting for CFInspector
       - name: Run linting for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -197,7 +204,7 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx512m
 
-      # Step 17: Set up JDK 17
+      # Step 18: Set up JDK 17
       - name: Set up JDK 17
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-java@v4
@@ -206,14 +213,14 @@ jobs:
           distribution: 'temurin'
           check-latest: true
 
-      # Step 18: Debug Java setup
+      # Step 19: Debug Java setup
       - name: Debug Java setup
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           java -version
           echo "JAVA_HOME: $JAVA_HOME"
 
-      # Step 19: Cache Maven dependencies for CFInspector
+      # Step 20: Cache Maven dependencies for CFInspector
       - name: Cache Maven dependencies for CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/cache@v4
@@ -223,20 +230,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-cfinspector-
 
-      # Step 20: Install Chrome
+      # Step 21: Install Chrome
       - name: Install Chrome
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 21: Debug Chrome
+      # Step 22: Debug Chrome
       - name: Debug Chrome
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           google-chrome --version || echo "Chrome not found"
 
-      # Step 22: Create logback-test.xml to suppress verbose logs
+      # Step 23: Create logback-test.xml to suppress verbose logs
       - name: Create logback-test.xml
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -255,7 +262,7 @@ jobs:
           </configuration>
           EOF
 
-      # Step 23: Build and test CFInspector
+      # Step 24: Build and test CFInspector
       - name: Build and test CFInspector
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         working-directory: automation/ui/selenium/java/CFInspector
@@ -265,7 +272,7 @@ jobs:
           HEADLESS: true
           BASE_URL: http://localhost:8000
 
-      # Step 24: Upload TestNG reports
+      # Step 25: Upload TestNG reports
       - name: Upload TestNG reports
         if: always() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
@@ -274,7 +281,7 @@ jobs:
           path: automation/ui/selenium/java/CFInspector/target/surefire-reports/
           retention-days: 7
 
-      # Step 25: Upload screenshots
+      # Step 26: Upload screenshots
       - name: Upload screenshots
         if: failure() && (steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-artifact@v4
