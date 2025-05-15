@@ -59,7 +59,35 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r website/backend/requirements.txt
 
-    # Step 5: Apply migrations
+    # Step 5: Download frontend build artifact
+    - name: Download frontend build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: react-build
+        path: website/frontend/build
+
+    # Step 6: Debug React build output
+    - name: Debug React build output
+      working-directory: ./website/frontend
+      run: |
+        echo "Listing contents of website/frontend:"
+        ls -la
+        echo "Listing contents of website/frontend/build:"
+        ls -la build || { echo "build directory not found" >&2; exit 1; }
+        if [ -d build ] && [ -f build/index.html ]; then
+          echo "index.html found"
+        else
+          echo "index.html not found" >&2
+          exit 1
+        fi
+
+    # Step 7: Copy React build to backend
+    - name: Copy React build to backend
+      run: |
+        mkdir -p website/backend/frontend/build
+        cp -r website/frontend/build/* website/backend/frontend/build/
+
+    # Step 8: Apply migrations
     - name: Apply migrations
       working-directory: ./website/backend
       env:
@@ -67,7 +95,7 @@ jobs:
       run: |
         python manage.py migrate
 
-    # Step 6: Run Django tests
+    # Step 9: Run Django tests
     - name: Run Django tests
       working-directory: ./website/backend
       env:
@@ -112,7 +140,17 @@ jobs:
     # Step 6: Build React app
     - name: Build React app
       working-directory: ./website/frontend
-      run: npm run build
+      run: |
+        echo "Running npm run build..."
+        npm run build || { echo "React build failed"; exit 1; }
+        echo "React build completed"
+
+    # Step 7: Upload frontend build artifact
+    - name: Upload frontend build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: react-build
+        path: website/frontend/build/
 
   collect-static:
     runs-on: ubuntu-latest
@@ -144,19 +182,32 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r website/backend/requirements.txt
 
-    # Step 5: Collect static files
+    # Step 5: Download frontend build artifact
+    - name: Download frontend build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: react-build
+        path: website/frontend/build
+
+    # Step 6: Copy React build to backend
+    - name: Copy React build to backend
+      run: |
+        mkdir -p website/backend/frontend/build
+        cp -r website/frontend/build/* website/backend/frontend/build/
+
+    # Step 7: Collect static files
     - name: Collect static files
       working-directory: ./website/backend
       run: |
         python manage.py collectstatic --noinput
 
-    # Step 6: Debug static files directory
+    # Step 8: Debug static files directory
     - name: List static files
       working-directory: ./website/backend
       run: |
         ls -la staticfiles/
 
-    # Step 7: Archive build artifacts
+    # Step 9: Archive build artifacts
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
       with:
