@@ -144,19 +144,25 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r website/backend/requirements.txt
 
-    # Step 5: Collect static files
+    # Step 5: Copy React build to backend
+    - name: Copy React build to backend
+      run: |
+        mkdir -p website/backend/frontend/build
+        cp -r website/frontend/build/* website/backend/frontend/build/
+
+    # Step 6: Collect static files
     - name: Collect static files
       working-directory: ./website/backend
       run: |
         python manage.py collectstatic --noinput
 
-    # Step 6: Debug static files directory
+    # Step 7: Debug static files directory
     - name: List static files
       working-directory: ./website/backend
       run: |
         ls -la staticfiles/
 
-    # Step 7: Archive build artifacts
+    # Step 8: Archive build artifacts
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
       with:
