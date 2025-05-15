@@ -1,7 +1,7 @@
 # Codefleet Website Documentation
 
 ## Overview
-The Codefleet website is a full-stack web application built with a Django backend and a React frontend. It provides a platform for users to learn about programming (Java, Python), CI/CD, and automation. Key features include user authentication (signup, login, password reset), a contact form, and responsive navigation.
+The Codefleet website is a full-stack web application built with a Django backend and a React frontend. It provides a platform for users to learn about programming (Java, Python), CI/CD, and automation. Key features include user authentication (signup, login, password reset, Basic Auth), a contact form, and responsive navigation.
 
 ## Project Structure
 
@@ -9,11 +9,14 @@ The Codefleet website is a full-stack web application built with a Django backen
 - **Framework**: Django with Django REST Framework (DRF)
 - **Key Files**:
   - `codefleet/models.py`: Defines the `UserProfile` model for user data.
-  - `codefleet/serializers.py`: Handles data validation and serialization for signup, login, contact, and password reset.
-  - `codefleet/views.py`: API views for signup, login, contact, password reset, and user profile retrieval.
-  - `codefleet/urls.py`: API endpoint routing.
+  - `codefleet/serializers.py`: Handles data validation and serialization for signup, login, contact, password reset, and Basic Auth.
+  - `codefleet/views.py`: API views for signup, login, contact, password reset, user profile retrieval, and Basic Auth.
+  - `codefleet/urls.py`: API endpoint routing, including `/basicauth/`.
   - `codefleet/email_utils.py`: Utility functions for sending emails (e.g., signup confirmation, contact form).
-  - `docker-compose.yml`: Configures PostgreSQL and Redis services for the backend.
+  - `codefleet/tests.py`: Unit tests for API endpoints and Basic Auth.
+  - `docker-compose.yaml`: Configures PostgreSQL and Redis services.
+  - `static/`: Contains static assets like `favicon.ico` and logos.
+  - `templates/emails/`: HTML templates for emails (e.g., `contact_email.html`, `signup_email.html`).
 
 ### Frontend (`website/frontend/`)
 - **Framework**: React with Tailwind CSS
@@ -24,7 +27,9 @@ The Codefleet website is a full-stack web application built with a Django backen
   - `src/pages/SignIn.jsx`: Login page with email/password form and forgot password functionality.
   - `src/pages/Signup.jsx`: Registration page with form validation.
   - `src/pages/ResetPassword.jsx`: Password reset confirmation page.
-  - `src/pages/Home.jsx`, `Java.jsx`, `Python.jsx`, `Cicd.jsx`, `Contact.jsx`: Static content pages (to be implemented).
+  - `src/pages/Home.jsx`, `Java.jsx`, `Python.jsx`, `Automation.jsx`, `Contact.jsx`: Static content pages.
+  - `src/pages/list/BasicAuth.jsx`: Basic Auth success page.
+  - `build/`: Contains compiled React output (e.g., `index.html`, `static/`).
 
 ## Setup Instructions
 
@@ -32,32 +37,37 @@ The Codefleet website is a full-stack web application built with a Django backen
 - Docker and Docker Compose (for backend services)
 - Node.js and npm (for frontend)
 - Python 3.9+ (for backend)
+- Local `logs/` directory for persistent logging
 
 ### Backend Setup
 1. Navigate to the backend directory:
    ```bash
    cd website/backend
    ```
-2. Create a virtual environment and install dependencies:
+2. Create a local `logs/` directory for logging:
+   ```bash
+   mkdir -p logs
+   ```
+3. Create a virtual environment and install dependencies:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. Start PostgreSQL and Redis using Docker:
+4. Start PostgreSQL and Redis using Docker:
    ```bash
    docker-compose up -d
    ```
-4. Apply migrations:
+5. Apply migrations:
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
-5. Create a superuser (optional, for admin access):
+6. Create a superuser (optional, for admin access):
    ```bash
    python manage.py createsuperuser
    ```
-6. Run the Django development server:
+7. Run the Django development server:
    ```bash
    python manage.py runserver
    ```
@@ -86,17 +96,20 @@ The Codefleet website is a full-stack web application built with a Django backen
   - Email validation: Must be unique.
   - Password: Minimum 6 characters.
   - On success, redirects to `/signin` after 2 seconds.
-  - Sends a confirmation email if the user subscribes to the newsletter.
+  - Sends a confirmation email if subscribed to newsletter.
 - **Login (`/signin`)**:
   - Form fields: Email, Password.
-  - On success, stores JWT tokens in `localStorage`, updates the Account button to "Hello <First Name>", and redirects to `/` after 2 seconds.
-  - Displays "Sign Out" in the Account dropdown when logged in.
+  - On success, stores JWT tokens in `localStorage`, updates Account button to "Hello <First Name>", redirects to `/` after 2 seconds.
+  - Displays "Sign Out" in Account dropdown when logged in.
 - **Sign Out**:
-  - Available in the Account dropdown when logged in.
-  - Clears JWT tokens and `first_name` from `localStorage`, updates the Account button to "Account", and redirects to `/`.
+  - Available in Account dropdown when logged in.
+  - Clears JWT tokens and `first_name` from `localStorage`, updates Account button to "Account", redirects to `/`.
 - **Password Reset**:
   - Forgot Password link on `/signin` sends a reset email.
-  - Reset link redirects to `/reset-password/<uid>/<token>/`, where users can set a new password (min 8 characters, alphanumeric).
+  - Reset link redirects to `/reset-password/<uid>/<token>/` for new password (min 8 characters, alphanumeric).
+- **Basic Auth (`/basicauth/`)**:
+  - Requires `admin:admin` credentials via browser pop-up.
+  - Displays success page (`BasicAuth.jsx`) on valid authentication.
 
 ### Contact Form (`/contact`)
 - Form fields: Name, Email, Message.
@@ -104,11 +117,11 @@ The Codefleet website is a full-stack web application built with a Django backen
 
 ### Navigation
 - **Header**:
-  - Links: Home, Java, Python, CI/CD, Automation, Contact, Account (dropdown).
-  - Account button displays "Hello <First Name>" after login, with consistent height (`h-10`) across all tabs.
-  - Dropdown shows "Sign In" and "Sign Up" when not logged in, and "Sign Out" when logged in.
+  - Links: Home, Java, Python, Automation, Contact, Account (dropdown).
+  - Account button shows "Hello <First Name>" after login, with consistent height (`h-10`).
+  - Dropdown shows "Sign In" and "Sign Up" when not logged in, "Sign Out" when logged in.
 - **Footer**:
-  - Displays the Codefleet logo , company name "Codefleet", and copyright notice "© 2025 Codefleet. All rights reserved."
+  - Displays Codefleet logo, company name "Codefleet", and "© 2025 Codefleet. All rights reserved."
 
 ## API Endpoints
 - `POST /api/signup/`: Register a new user.
@@ -116,7 +129,8 @@ The Codefleet website is a full-stack web application built with a Django backen
 - `POST /api/contact/`: Submit a contact form message.
 - `POST /api/password-reset/`: Request a password reset email.
 - `POST /api/password-reset-confirm/`: Confirm password reset with a new password.
-- `GET /api/user/`: Retrieve user profile details (e.g., first name) for authenticated users.
+- `GET /api/user/`: Retrieve user profile details for authenticated users.
+- `GET|POST /basicauth/`: Basic Auth endpoint (requires `admin:admin`).
 
 ## Testing Guidelines
 
@@ -127,7 +141,11 @@ The Codefleet website is a full-stack web application built with a Django backen
    docker-compose up -d
    python manage.py runserver
    ```
-2. Test API endpoints using Postman or curl:
+2. Run unit tests:
+   ```bash
+   python manage.py test
+   ```
+3. Test API endpoints using Postman or curl:
    - **Signup**: `POST http://localhost:8000/api/signup/`
      ```json
      {
@@ -141,7 +159,7 @@ The Codefleet website is a full-stack web application built with a Django backen
      }
      ```
      - Expect: 201 Created, "User created successfully".
-     - Test invalid contact number (e.g., "abc123"): Expect 400 Bad Request, "Contact number must contain only digits."
+     - Test invalid contact number (e.g., "abc123"): Expect 400 Bad Request.
    - **Login**: `POST http://localhost:8000/api/login/`
      ```json
      {
@@ -149,7 +167,7 @@ The Codefleet website is a full-stack web application built with a Django backen
        "password": "password123"
      }
      ```
-     - Expect: 200 OK, JWT tokens and first name in response.
+     - Expect: 200 OK, JWT tokens and first name.
    - **Contact**: `POST http://localhost:8000/api/contact/`
      ```json
      {
@@ -159,6 +177,9 @@ The Codefleet website is a full-stack web application built with a Django backen
      }
      ```
      - Expect: 200 OK, "Message sent successfully".
+   - **Basic Auth**: `GET http://localhost:8000/basicauth/`
+     - Without credentials: Expect 401 with `WWW-Authenticate: Basic`.
+     - With `admin:admin`: Expect 200 with HTML.
 
 ### Frontend Testing
 1. Start the frontend server:
@@ -168,30 +189,40 @@ The Codefleet website is a full-stack web application built with a Django backen
    ```
 2. Test features in the browser (`http://localhost:3000`):
    - **Signup**:
-     - Go to `/signup`, fill out the form, and submit.
-     - Verify the "Subscribe to newsletter" checkbox is checked by default.
-     - Test invalid inputs (e.g., contact number "abc123", expect "Contact number must contain only digits").
+     - Go to `/signup`, fill form, submit.
+     - Verify "Subscribe to newsletter" is checked by default.
+     - Test invalid inputs (e.g., contact number "abc123").
      - On success, confirm redirect to `/signin` and success message.
    - **Sign In**:
      - Go to `/signin`, log in with valid credentials.
-     - Verify the Account button updates to "<First Name>" immediately without refresh.
-     - Check the dropdown shows "Sign Out".
+     - Verify Account button updates to "<First Name>" without refresh.
+     - Check dropdown shows "Sign Out".
    - **Sign Out**:
-     - Click "Sign Out" in the Account dropdown.
-     - Confirm redirect to `/`, Account button reverts to "Account", and dropdown shows "Sign In" and "Sign Up".
+     - Click "Sign Out" in Account dropdown.
+     - Confirm redirect to `/`, Account button reverts to "Account".
+   - **Basic Auth**:
+     - Go to `/basicauth/`, enter `admin:admin` in pop-up.
+     - Verify success page ("Congratulations! You have successfully authenticated").
    - **Footer**:
-     - Verify the footer displays the Codefleet logo, "Codefleet", and "© 2025 Codefleet. All rights reserved."
-     - Ensure no navigation links are present in the footer.
+     - Verify footer displays logo, "Codefleet", and "© 2025 Codefleet. All rights reserved."
 
 ## Known Issues
-- Static pages (`/java`, `/python`, `/cicd`, `/automation`) are placeholders and need content.
-- Email functionality requires a configured email server (e.g., Gmail SMTP) in `settings.py`.
+- Static pages (`/java`, `/python`, `/automation`) are placeholders and need content.
+- Email functionality requires a configured email server in `settings.py`.
+- Password reset success message is incorrect.
+- CI pipeline occasionally fails with `TemplateDoesNotExist` for `index.html`.
+
+## Recent Changes
+- Added Basic Auth feature (`/basicauth/`) with `admin:admin` credentials, rendering `BasicAuth.jsx` on success.
+- Fixed logging issue by creating `/app/logs/` and mapping `./logs:/app/logs` in `docker-compose.yaml`.
+- Added Django unit tests for Basic Auth in `codefleet/tests.py`.
+- Updated CI pipeline (`website_and_cfinspector_ci.yml`) to run Django tests.
 
 ## Next Steps
-- Implement content for `/java`, `/python`, `/cicd`, and `/automation` pages.
-- Set up a production email server for sending emails.
-- Deploy the application to a hosting service (e.g., Heroku, AWS).
+- Implement content for `/java`, `/python`, `/automation` pages.
+- Configure production email server.
+- Fix password reset success message.
+- Resolve CI `TemplateDoesNotExist` issue.
+- Deploy to a hosting service (e.g., AWS, Azure).
 
----
-
-*Last Updated: May 10, 2025*
+*Last Updated: May 15, 2025*
