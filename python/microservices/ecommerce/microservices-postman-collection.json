@@ -1,0 +1,33 @@
+{
+	"info": {
+		"_postman_id": "6af819a6-48f0-4241-8b9b-59174fe7bc2a",
+		"name": "django-microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api/orders",
+			"id": "3d295a02-e50d-4e1c-8868-5c75e0088e8b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "api/users",
+			"id": "2ed33cdd-4920-4188-bcaa-0feec1e22f2d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
