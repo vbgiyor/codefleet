@@ -35,8 +35,6 @@ public class ABTestPage extends BasePage {
         return getText(description);
     }
 
-    // Since only one headline will be present, check which one is displayed
-
     public boolean isVersionA() {
         List<WebElement> versionAElements = driver.findElements(locatorParser.getElementLocator("abtest.version_a_headline"));
         if (!versionAElements.isEmpty()) {

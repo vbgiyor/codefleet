@@ -3,6 +3,9 @@ package com.codefleet.cfinspector.modules.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddRemoveElementsPage extends BasePage {
 
     public AddRemoveElementsPage(WebDriver driver) {
@@ -15,24 +18,33 @@ public class AddRemoveElementsPage extends BasePage {
         return new AutomationPage(driver);
     }
 
-    public String getTitleText() {
-        WebElement title = driver.findElement(locatorParser.getElementLocator("addremove.title"));
-        return getText(title);
+    public WebElement getHeadingText() {
+        return driver.findElement(locatorParser.getElementLocator("addremove.title"));
+    }
+
+    public WebElement insertTextField()
+    {
+        return driver.findElement(locatorParser.getElementLocator("addremove.input_field"));
     }
 
     public void insertInputFieldText(String text) {
-        WebElement inputField = driver.findElement(locatorParser.getElementLocator("addremove.input_field"));
-        insetText(inputField, text);
+        insetText(insertTextField(), text);
+    }
+
+    public WebElement displayAddButton() {
+        return driver.findElement(locatorParser.getElementLocator("addremove.add_button"));
     }
 
     public void clickAddButton() {
-        WebElement addButton = driver.findElement(locatorParser.getElementLocator("addremove.add_button"));
-        click(addButton);
+        displayAddButton().click();
+    }
+
+    public WebElement displayRemoveButton() {
+        return driver.findElement(locatorParser.getElementLocator("addremove.remove_button"));
     }
 
     public void clickRemoveButton() {
-        WebElement removeButton = driver.findElement(locatorParser.getElementLocator("addremove.remove_button"));
-        click(removeButton);
+        displayRemoveButton().click();
     }
 
     public boolean isListDisplayed() {
@@ -40,18 +52,22 @@ public class AddRemoveElementsPage extends BasePage {
         return isElementDisplayed(list);
     }
 
-    public String getListItemsText() {
-        WebElement listItems = driver.findElement(locatorParser.getElementLocator("addremove.list_items"));
-        return getText(listItems);
+    public List<String> getListItemsText() {
+        List<WebElement> listItems = driver.findElements(locatorParser.getElementLocator("addremove.list_items"));
+
+        List<String> listItem = new ArrayList<>();
+        for(WebElement element : listItems)
+        {
+            listItem.add(element.getText());
+        }
+        return listItem;
     }
 
-    public String getEmptyMessageText() {
-        WebElement emptyMessage = driver.findElement(locatorParser.getElementLocator("addremove.empty_message"));
-        return getText(emptyMessage);
+    public WebElement getEmptyMessageText() {
+        return driver.findElement(locatorParser.getElementLocator("addremove.empty_message"));
     }
 
-    public String getLimitMessageText() {
-        WebElement limitMessage = driver.findElement(locatorParser.getElementLocator("addremove.limit_message"));
-        return getText(limitMessage);
+    public WebElement getLimitMessageText() {
+        return driver.findElement(locatorParser.getElementLocator("addremove.limit_message"));
     }
 }

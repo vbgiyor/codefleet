@@ -6,11 +6,17 @@ Test Case 4: Verify navigating back to the Automation page from the A/B Testing 
 2. Add/Remove Elements Page (/addremoveelements)
 Test Case 1: Verify the Add/Remove Elements page loads successfully from the Automation page.
 Test Case 2: Verify the "Add Element" button is present and clickable.
-Test Case 3: Verify clicking "Add Element" adds a new "Delete" button.
-Test Case 4: Verify multiple "Delete" buttons can be added (e.g., add 5 elements).
-Test Case 5: Verify clicking a "Delete" button removes that specific element.
-Test Case 6: Verify all added elements can be removed by clicking their "Delete" buttons.
-Test Case 7: Verify navigating back to the Automation page from the Add/Remove Elements page.
+Test Case 3: Verify the "Remove Element" button is present and clickable.
+Test Case 4: Verify max 5 elements can be added.
+Test Case 5: Verify 'Add Element' button gets disabled after adding 5th element.
+Test Case 6: Verify User is prompted with message "Maximum limit of 5 elements reached." on adding 5 elements
+Test Case 7: Verify element input text box and 'Add Element' gets disabled after adding 5 elements.
+Test Case 8: Verify clicking a "Remove" button removes last element in displayed list.
+Test Case 9: Verify User is prompted with message "No elements to remove." after removing all 5 elements
+Test Case 10: Verify navigating back to the Automation page from the Add/Remove Elements page.
+Test Case 11: Verify element input text box is enabled after removing all 5 elements from page.
+Test Case 12: Hide "Maximum limit of 5 elements reached." messasge when number of items in the provided list are >=4.
+Test Case 13: Hide "No elements to remove." message when there is at least one element in the list.
 3. Basic Auth Page (/basicauth)
 Test Case 1: Verify navigating to the Basic Auth page from the Automation page triggers the Basic Auth prompt.
 Test Case 2: Verify entering correct credentials (admin:admin) displays the success message ("Congratulations! You have successfully authenticated…").

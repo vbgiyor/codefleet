@@ -15,7 +15,7 @@ const AddRemoveElements = () => {
   const handleAddElement = () => {
     const trimmedValue = inputValue.trim();
     if (trimmedValue.length >= 1 && trimmedValue.length <= 32 && list.length < MAX_ELEMENTS) {
-      setList([...list, `And I talk about ${trimmedValue}`]);
+      setList([...list, `New Element: ${trimmedValue}`]);
       setInputValue(""); // Clear input
     }
   };
