@@ -34,16 +34,19 @@ public abstract class BasePage implements CoreActions {
         while (attempts <= maxAttempts) {
             try {
                 WaitForElementsUtil.waitUntilElementToBeClickable(driver, element);
+                assert element != null;
+                LoggerUtil.info("Successful click for element: " + element.getText());
                 element.click();
-                LoggerUtil.info("Successful element click.");
-                return;
+                return; // Exit the method once the click is successful
             } catch (TimeoutException e) {
                 attempts++;
                 if (attempts > maxAttempts) {
-                    LoggerUtil.error("Unable to click element after " + maxAttempts + " retries.", e);
-                    throw e;
+                    LoggerUtil.error("Unable to click element: " + (element != null ? element.getText() : "null element") +
+                            " after " + maxAttempts + " retries.", e);
+                    throw e; // Throw the exception after the last attempt
                 }
-                LoggerUtil.info("Element is not clickable. Retrying in " + attempts + "/" + maxAttempts + ".");
+                LoggerUtil.info("Retry " + attempts + "/" + maxAttempts + " - Element: " +
+                        (element != null ? element.getText() : "null element") + " is not clickable yet.");
             }
         }
     }
@@ -72,17 +75,19 @@ public abstract class BasePage implements CoreActions {
                 WaitForElementsUtil.waitUntilElementToBeVisible(driver, element);
                 boolean displayed = element.isDisplayed();
                 if (displayed) {
-                    LoggerUtil.info("Element is displayed.");
+                    LoggerUtil.info("Element: "+ element.getText() +" is displayed.");
                 }
                 return displayed;
             } catch (TimeoutException e) {
                 attempts++;
                 if (attempts >= maxAttempts) {
-                    LoggerUtil.error("Element is not visible after " + maxAttempts + ".", e);
+                    LoggerUtil.error("Element: "+ element.getText() +" is not visible after "
+                            + maxAttempts + ".", e);
                     return false;
                 }
             }
-            LoggerUtil.info("Element is visible. Retrying (" + attempts + "/" + maxAttempts + ".");
+            LoggerUtil.info("Element: "+ element.getText() +" is visible. Retrying (" + attempts + "/"
+                    + maxAttempts + ".");
         }
         return false;
     }

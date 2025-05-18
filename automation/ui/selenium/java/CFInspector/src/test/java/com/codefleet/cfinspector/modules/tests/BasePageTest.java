@@ -12,9 +12,17 @@ import java.io.IOException;
 public class BasePageTest {
 
     @BeforeClass
-    public void setUp() {
+    @Parameters({"browser"})
+    public void setUp(@Optional String browser, ITestContext context) {
+        System.clearProperty("browser");
+        if (browser != null && !browser.isEmpty()) {
+            System.setProperty("browser", browser);
+            LoggerUtil.info("Setting browser property: " + browser);
+        } else {
+            LoggerUtil.info("No browser parameter provided, will use data.properties");
+        }
         WebDriverFactory.getDriverThreadLocal();
-        LoggerUtil.info("WebDriver initialised.");
+        LoggerUtil.info("WebDriver initialized.");
     }
 
     @AfterMethod
@@ -36,6 +44,7 @@ public class BasePageTest {
     public void tearDown(ITestContext context) {
         WebDriverFactory.quitDriver();
         LoggerUtil.info("WebDriver instance is closed.");
+        System.clearProperty("browser");
         // Add logic to write test results to CSV using ITestContext in the future
         // Example: String suiteName = context.getSuite().getName();
     }

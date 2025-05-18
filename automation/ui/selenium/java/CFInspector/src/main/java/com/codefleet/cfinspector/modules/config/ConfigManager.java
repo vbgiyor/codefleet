@@ -49,7 +49,15 @@ public class ConfigManager {
     }
 
     public static String getBrowser() {
-        return envProperties.getProperty("browser");
+        String browser = System.getProperty("browser");
+        LoggerUtil.info("System property browser: " + browser);
+        if (browser == null || browser.isEmpty()) {
+            browser = envProperties.getProperty("browser", "chrome");
+            LoggerUtil.info("Using browser from data.properties: " + browser);
+        } else {
+            LoggerUtil.info("Using browser from TestNG parameter: " + browser);
+        }
+        return browser;
     }
 
     public static int getImplicitTime() {

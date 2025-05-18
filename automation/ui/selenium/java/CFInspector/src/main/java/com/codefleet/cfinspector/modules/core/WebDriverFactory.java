@@ -21,6 +21,7 @@ public class WebDriverFactory {
         {
             String browser = ConfigManager.getBrowser();
             boolean headless = ConfigManager.isHeadless();
+            LoggerUtil.info("Current 'headless' mode set to: "+headless);
 
             switch(browser.toLowerCase())
             {
