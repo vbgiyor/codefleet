@@ -1,40 +1,37 @@
 services:
-  db:
-    image: postgres:13
+  web:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: codefleet_bookslibrary
+      USE_DOCKER: "1"
+    depends_on:
+      - db
+    networks:
+      - codefleet-network
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=bookslab_user
+      - POSTGRES_PASSWORD=bookslab_password
+      - POSTGRES_DB=bookslab_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U bookslab_user"]
       interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 10s
-    ports:
-      - "5433:5432"
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: gunicorn wsgi:application --bind 0.0.0.0:8003
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=codefleet_bookslibrary
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_PORT=5432
-      - DJANGO_SETTINGS_MODULE=settings
-    depends_on:
-      db:
-        condition: service_healthy
-
+    networks:
+      - codefleet-network
+networks:
+  codefleet-network:
+    driver: bridge
 volumes:
   postgres_data:

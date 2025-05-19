@@ -10,6 +10,7 @@ codefleet
 │       ├── bookslibrary_ci.yml
 │       ├── ecommerce_ci.yml
 │       ├── selenium_ci.yml
+│       ├── website_and_cfinspectorci.yml
 │       └── website_ci.yml
 ├── .gitignore
 ├── automation
@@ -22,6 +23,7 @@ codefleet
 │               ├── CFInspector
 │               │   ├── checkstyle.xml
 │               │   ├── Dockerfile.txt
+│               │   ├── log4j2.xml
 │               │   ├── pom.xml
 │               │   ├── src
 │               │   │   ├── main
@@ -38,9 +40,15 @@ codefleet
 │               │   │   │   │                   │   └── WebDriverFactory.java
 │               │   │   │   │                   ├── pages
 │               │   │   │   │                   │   ├── ABTestPage.java
+│               │   │   │   │                   │   ├── AddRemoveElementsPage.java
 │               │   │   │   │                   │   ├── AutomationPage.java
 │               │   │   │   │                   │   ├── BasePage.java
-│               │   │   │   │                   │   └── HomePage.java
+│               │   │   │   │                   │   ├── BasicAuthPage.java
+│               │   │   │   │                   │   ├── ContactPage.java
+│               │   │   │   │                   │   ├── HomePage.java
+│               │   │   │   │                   │   ├── JavaPage.java
+│               │   │   │   │                   │   ├── PageNavigationUtility.java
+│               │   │   │   │                   │   └── PythonPage.java
 │               │   │   │   │                   └── utils
 │               │   │   │   │                       ├── LoggerUtil.java
 │               │   │   │   │                       ├── ScreenShotUtil.java
@@ -55,15 +63,15 @@ codefleet
 │               │   │   │               └── cfinspector
 │               │   │   │                   └── modules
 │               │   │   │                       └── tests
-│               │   │   │                           ├── automationpage
-│               │   │   │                           │   └── abtestpage
-│               │   │   │                           │       └── ABTestPageTest.java
+│               │   │   │                           ├── ABTestPageTest.java
+│               │   │   │                           ├── AddRemoveElementsPageTest.java
 │               │   │   │                           ├── BasePageTest.java
-│               │   │   │                           ├── homepage
-│               │   │   │                           │   └── HomePageTest.java
+│               │   │   │                           ├── HomePageTest.java
 │               │   │   │                           └── TestSetup.java
 │               │   │   └── testcases
 │               │   │       └── cases.txt
+│               │   ├── testng-firefox.xml
+│               │   ├── testng-parallel.xml
 │               │   └── testng.xml
 │               ├── GithubRepoListingDemo
 │               │   ├── allure-report.png
@@ -106,6 +114,7 @@ codefleet
 │               │               │       └── GitHubRepoListTests.java
 │               │               └── resources
 │               │                   └── testng.xml
+│               ├── logback-test.xml
 │               └── PageInspector
 │                   └── HerokuApp
 │                       ├── .gitignore
@@ -145,42 +154,46 @@ codefleet
 ├── docs
 │   ├── architecture.md
 │   ├── bookslibrary.md
+│   ├── codefleet-web-app-dev-journey.md
 │   ├── djangocommerce.md
 │   ├── project_structure.md
 │   ├── selenium.md
 │   ├── solutions
-│   │   └── git-checkout-conflict-branch.md
+│   │   ├── basic-auth-browser-prompt-issue-resolution.md
+│   │   ├── git-checkout-conflict-branch.md
+│   │   └── selenium-test-independence-guide.md
 │   └── website.md
 ├── LICENSE
-├── project_structure.txt
+├── project_tree.txt
 ├── pyproject.toml
 ├── python
 │   ├── django-framework
 │   │   ├── .flake8
-│   │   ├── bookslibrary
-│   │   │   ├── __init__.py
-│   │   │   ├── asgi.py
-│   │   │   ├── bookstore
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── apps.py
-│   │   │   │   ├── migrations
-│   │   │   │   │   ├── __init__.py
-│   │   │   │   │   ├── 0001_initial.py
-│   │   │   │   │   ├── 0002_alter_book_isbn_alter_book_price_and_more.py
-│   │   │   │   │   └── 0003_alter_book_isbn.py
-│   │   │   │   ├── models.py
-│   │   │   │   ├── serializers.py
-│   │   │   │   ├── urls.py
-│   │   │   │   └── views.py
-│   │   │   ├── docker-compose.yml
-│   │   │   ├── Dockerfile
-│   │   │   ├── manage.py
-│   │   │   ├── requirements.txt
-│   │   │   ├── settings.py
-│   │   │   ├── urls.py
-│   │   │   └── wsgi.py
-│   │   └── postman-collection
-│   │       └── post.json
+│   │   └── bookslibrary
+│   │       ├── bookslab
+│   │       │   ├── __init__.py
+│   │       │   ├── apps.py
+│   │       │   ├── asgi.py
+│   │       │   ├── init_db.sh
+│   │       │   ├── initial_data.json
+│   │       │   ├── migrations
+│   │       │   │   ├── __init__.py
+│   │       │   │   └── 0001_initial.py
+│   │       │   ├── models.py
+│   │       │   ├── serializers.py
+│   │       │   ├── settings.py
+│   │       │   ├── tests.py
+│   │       │   ├── urls.py
+│   │       │   ├── views.py
+│   │       │   └── wsgi.py
+│   │       ├── bookslab_backup.sql
+│   │       ├── docker-compose.yml
+│   │       ├── Dockerfile
+│   │       ├── entrypoint.sh
+│   │       ├── initial_data.json
+│   │       ├── manage.py
+│   │       ├── project_structure.txt
+│   │       └── requirements.txt
 │   └── microservices
 │       └── ecommerce
 │           ├── db.sqlite3
@@ -233,10 +246,11 @@ codefleet
 ├── scripts
 │   ├── build_website.sh
 │   ├── clean_stray_bookstore.sh
+│   ├── entrypoint.sh
 │   └── run_django.sh
 └── website
     ├── backend
-    │   ├── backup.sql
+    │   ├── .gitignore
     │   ├── codefleet
     │   │   ├── __init__.py
     │   │   ├── asgi.py
@@ -260,12 +274,6 @@ codefleet
     │   ├── init-db.sql
     │   ├── manage.py
     │   ├── requirements.txt
-    │   ├── static
-    │   │   ├── favicon.ico
-    │   │   └── images
-    │   │       ├── logo-100x100.png
-    │   │       └── logo-transparent.png
-    │   ├── staticfiles
     │   └── templates
     │       └── emails
     │           ├── contact_email.html
@@ -287,8 +295,7 @@ codefleet
         │   │   ├── BauhausBoldItalic.ttf
         │   │   ├── BauhausItalic.ttf
         │   │   └── BauhausRegular.ttf
-        │   ├── index.html
-        │   └── static│       
+        │   └── index.html
         ├── Dockerfile.txt
         ├── package-lock.json
         ├── package.json
@@ -308,10 +315,7 @@ codefleet
         │   │   ├── BauhausBoldItalic.ttf
         │   │   ├── BauhausItalic.ttf
         │   │   └── BauhausRegular.ttf
-        │   ├── index.html
-        │   └── static
-        │       └── images
-        │           └── logo.png
+        │   └── index.html
         ├── src
         │   ├── App.jsx
         │   ├── components
@@ -343,5 +347,5 @@ codefleet
         │   └── styles.css
         └── tailwind.config.js
 
-140 directories, 1456 files
+100 directories, 242 files
 ```

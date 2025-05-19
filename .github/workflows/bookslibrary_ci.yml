@@ -1,5 +1,4 @@
 name: BooksLibrary CI
-
 on:
   push:
     branches: [main]
@@ -14,21 +13,28 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_DB: bookslab_db
+      POSTGRES_USER: bookslab_user
+      POSTGRES_PASSWORD: bookslab_password
+      POSTGRES_PORT: 5432
 
     services:
-      postgres:
-        image: postgres:13
+      postgresdb:
+        image: postgres:15
         env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: codefleet_bookslibrary
+          POSTGRES_DB: bookslab_db
+          POSTGRES_USER: bookslab_user
+          POSTGRES_PASSWORD: bookslab_password
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U bookslab_user -d bookslab_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --name postgresdb
 
     steps:
       - uses: actions/checkout@v3
@@ -38,22 +44,61 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Create Static Directory
+        run: mkdir -p python/django-framework/bookslibrary/static
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r python/django-framework/bookslibrary/requirements.txt
 
+      - name: Wait for PostgreSQL
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..10}; do
+            pg_isready -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
+            echo "Waiting for PostgreSQL... Attempt $i/10"
+            sleep 5
+          done
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 -c "SELECT 1" || exit 1
+
+      - name: Debug Docker Network and Container
+        run: |
+          echo "Listing Docker containers:"
+          docker ps -a
+          echo "Inspecting Docker network:"
+          docker network ls
+          docker network inspect $(docker network ls -q) || true
+          echo "Checking postgresdb container logs:"
+          docker logs postgresdb || true
+
+      - name: Verify Environment Variables
+        run: |
+          echo "POSTGRES_HOST: $POSTGRES_HOST"
+          echo "POSTGRES_DB: $POSTGRES_DB"
+          echo "POSTGRES_USER: $POSTGRES_USER"
+          echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+          echo "POSTGRES_PORT: $POSTGRES_PORT"
+
+      - name: Debug Before Migrations
+        run: |
+          echo "Checking PostgreSQL availability before migrations:"
+          pg_isready -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 || echo "PostgreSQL not available"
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 -c "SELECT 1" || echo "PostgreSQL connection failed"
+          echo "Listing Docker containers:"
+          docker ps -a
+          echo "Checking postgresdb container logs:"
+          docker logs postgresdb || true
+
       - name: Run migrations
         run: |
           cd python/django-framework/bookslibrary
           python manage.py migrate
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: codefleet_bookslibrary
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_PORT: 5432
-          DJANGO_SETTINGS_MODULE: settings
 
       - name: Run tests
         run: |
@@ -63,4 +108,4 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 python/django-framework/bookslibrary --max-line-length=120 --exclude=migrations
+          flake8 python/django-framework/bookslibrary/bookslab --max-line-length=120 --exclude=migrations
