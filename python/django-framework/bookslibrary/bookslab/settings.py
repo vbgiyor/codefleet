@@ -68,8 +68,8 @@ DATABASES = {
         'NAME': env("POSTGRES_DB"),
         'USER': env("POSTGRES_USER"),
         'PASSWORD': env("POSTGRES_PASSWORD"),
-        'PORT': env("POSTGRES_PORT"),
-        'HOST': env("DOCKER_POSTGRES_HOST", default="postgresdb"),
+        'PORT': env("POSTGRES_PORT", default="5432"),
+        'HOST': env("DOCKER_POSTGRES_HOST", default="postgresdb"),  # Defaults to service name
     }
 }
 

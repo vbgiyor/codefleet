@@ -64,20 +64,6 @@ jobs:
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
-          POSTGRES_HOST: postgresdb
-          DJANGO_SETTINGS_MODULE: bookslab.settings
-
-      - name: Load initial data
-        run: |
-          cd python/django-framework/bookslibrary
-          python manage.py loaddata bookslab/initial_data.json
-        env:
-          POSTGRES_DB: bookslab_db
-          POSTGRES_USER: bookslab_user
-          POSTGRES_PASSWORD: bookslab_password
-          POSTGRES_PORT: 5432
-          POSTGRES_HOST: postgresdb
-          DJANGO_SETTINGS_MODULE: bookslab.settings
 
       - name: Run tests
         run: |
@@ -88,8 +74,6 @@ jobs:
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
-          POSTGRES_HOST: postgresdb
-          DJANGO_SETTINGS_MODULE: bookslab.settings
 
       - name: Lint with flake8
         run: |
