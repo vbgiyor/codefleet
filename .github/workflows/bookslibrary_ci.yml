@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgresdb:
-        image: postgres:15
+        image: postgres:13
         env:
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
@@ -52,16 +52,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r python/django-framework/bookslibrary/requirements.txt
 
-      - name: Wait for PostgreSQL
-        run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..30}; do
-            pg_isready -h postgresdb -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
-            echo "Waiting for PostgreSQL... Attempt $i/30"
-            sleep 5
-          done
-          # Verify connectivity
-          psql -h postgresdb -U bookslab_user -d bookslab_db -c "SELECT 1" || exit 1
+      # - name: Wait for PostgreSQL
+      #   run: |
+      #     echo "Waiting for PostgreSQL to be ready..."
+      #     for i in {1..30}; do
+      #       pg_isready -h postgresdb -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
+      #       echo "Waiting for PostgreSQL... Attempt $i/30"
+      #       sleep 5
+      #     done
+      #     # Verify connectivity
+      #     psql -h postgresdb -U bookslab_user -d bookslab_db -c "SELECT 1" || exit 1
 
       - name: Debug Docker Network and Container
         run: |
