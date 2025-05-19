@@ -69,7 +69,7 @@ DATABASES = {
         'USER': env("POSTGRES_USER"),
         'PASSWORD': env("POSTGRES_PASSWORD"),
         'PORT': env("POSTGRES_PORT"),
-        'HOST': env("DOCKER_POSTGRES_HOST") if os.getenv('USE_DOCKER') == '1' else env("POSTGRES_HOST"),
+        'HOST': env("DOCKER_POSTGRES_HOST", default="postgresdb"),
     }
 }
 
