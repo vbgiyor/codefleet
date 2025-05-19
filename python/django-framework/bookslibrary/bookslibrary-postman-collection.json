@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Post data Copy",
+			"name": "Add Books",
 			"event": [
 				{
 					"listen": "test",
@@ -57,7 +57,7 @@
 			"response": []
 		},
 		{
-			"name": "Get data Copy",
+			"name": "Get Books",
 			"event": [
 				{
 					"listen": "test",
@@ -83,7 +83,7 @@
 			"response": []
 		},
 		{
-			"name": "Update data Copy",
+			"name": "Update Books",
 			"event": [
 				{
 					"listen": "test",
@@ -117,7 +117,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"New Title {{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"language\": \"{{$randomLocale}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"pages\": \"{{$randomInt}}\"\n}",
+					"raw": "{\n    \"title\": \"New_Title_{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"price\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -125,12 +125,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}books/5",
+					"raw": "{{base_url}}books/3",
 					"host": [
 						"{{base_url}}books"
 					],
 					"path": [
-						"5"
+						"3"
 					],
 					"query": [
 						{
@@ -150,7 +150,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete data Copy",
+			"name": "Delete Books",
 			"event": [
 				{
 					"listen": "test",
