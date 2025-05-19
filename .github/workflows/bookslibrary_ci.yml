@@ -17,7 +17,7 @@ jobs:
       POSTGRES_HOST: 127.0.0.1
       POSTGRES_DB: bookslab_db
       POSTGRES_USER: bookslab_user
-      POSTGRES_PASSWORD: bookYNslab_password
+      POSTGRES_PASSWORD: bookslab_password
       POSTGRES_PORT: 5432
 
     services:
