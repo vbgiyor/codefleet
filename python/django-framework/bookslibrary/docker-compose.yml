@@ -13,6 +13,8 @@ services:
       USE_DOCKER: "1"
     depends_on:
       - db
+    networks:
+      - codefleet-network
   db:
     image: postgres:15
     environment:
@@ -26,5 +28,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - codefleet-network
+networks:
+  codefleet-network:
+    driver: bridge
 volumes:
   postgres_data:
