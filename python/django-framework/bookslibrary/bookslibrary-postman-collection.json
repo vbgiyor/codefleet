@@ -117,34 +117,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\": \"New_Title_{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"price\": \"{{$randomInt}}\"\n}",
+					"raw": "{\n    \"id\" : \"3\",\n    \"title\": \"New_Title_{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFirstName}}{{$randomLastName}}\",\n    \"published_date\": \"{{today}}\",\n    \"isbn\": \"{{isbn}}\",\n    \"price\": \"{{$randomInt}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": {
-					"raw": "{{base_url}}books/3",
-					"host": [
-						"{{base_url}}books"
-					],
-					"path": [
-						"3"
-					],
-					"query": [
-						{
-							"key": "name",
-							"value": "Django API Methods",
-							"disabled": true
-						},
-						{
-							"key": "description",
-							"value": "Django API Methods Update",
-							"disabled": true
-						}
-					]
-				},
+				"url": "{{base_url}}books/3",
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
 			},
 			"response": []
@@ -173,7 +153,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\n    \"id\": \"3\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
