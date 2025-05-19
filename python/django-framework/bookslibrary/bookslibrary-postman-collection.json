@@ -7,13 +7,29 @@
 	"item": [
 		{
 			"name": "api/books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "034fb4e9-334e-4c54-95bf-57ae4c1bf5be",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "8f7cfbd7-8e04-44ae-b9eb-a9135cc39efe",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": "http://localhost:8000/books/"
 			},
 			"response": []
 		}
