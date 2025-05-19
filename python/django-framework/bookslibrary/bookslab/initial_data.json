@@ -1,0 +1,128 @@
+[
+  {
+    "model": "bookslab.book",
+    "pk": 1,
+    "fields": {
+      "title": "Django for Beginners",
+      "author": "William S. Vincent",
+      "published_date": "2020-01-01",
+      "isbn": "9781735467207",
+      "price": "29.99",
+      "description": "A comprehensive guide to learning Django from scratch.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 2,
+    "fields": {
+      "title": "Two Scoops of Django",
+      "author": "Daniel Roy Greenfeld",
+      "published_date": "2021-05-15",
+      "isbn": "9781735467214",
+      "price": "39.99",
+      "description": "Best practices and tips for Django development.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 3,
+    "fields": {
+      "title": "Django REST Framework",
+      "author": "Tom Christie",
+      "published_date": "2022-03-10",
+      "isbn": "9781735467221",
+      "price": "49.99",
+      "description": "Building web APIs with Django REST Framework.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 4,
+    "fields": {
+      "title": "Django Unleashed",
+      "author": "Andrew Pinkham",
+      "published_date": "2023-07-20",
+      "isbn": "9780136742000",
+      "price": "59.99",
+      "description": "A deep dive into Django's features and capabilities.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 5,
+    "fields": {
+      "title": "Django for APIs",
+      "author": "William S. Vincent",
+      "published_date": "2024-02-14",
+      "isbn": "9781735467238",
+      "price": "34.99",
+      "description": "A guide to building APIs with Django.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+},
+  {
+    "model": "bookslab.book",
+    "pk": 6,
+    "fields": {
+      "title": "Django Design Patterns and Best Practices",
+      "author": "Arjan Egges",
+      "published_date": "2024-09-01",
+      "isbn": "9781788831234",
+      "price": "44.99",
+      "description": "Learn how to use design patterns in Django.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 7,
+    "fields": {
+      "title": "Django 4 By Example",
+      "author": "Antonio Melé",
+      "published_date": "2025-01-01",
+      "isbn": "9781839211234",
+      "price": "54.99",
+      "description": "Build real-world web applications with Django.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 8,
+    "fields": {
+      "title": "Django for Professionals",
+      "author": "William S. Vincent",
+      "published_date": "2025-03-01",
+      "isbn": "9781735467245",
+      "price": "39.99",
+      "description": "Advanced techniques for professional Django development.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  },
+  {
+    "model": "bookslab.book",
+    "pk": 9,
+    "fields": {
+      "title": "Django for Data Science",
+      "author": "William S. Vincent",
+      "published_date": "2025-04-01",
+      "isbn": "9781735467252",
+      "price": "49.99",
+      "description": "Using Django for data science projects.",
+      "created_at": "2025-05-01",
+      "updated_at": "2025-05-01"
+    }
+  }
+]

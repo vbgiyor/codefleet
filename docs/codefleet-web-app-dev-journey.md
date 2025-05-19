@@ -5,7 +5,7 @@ This document captures the development journey of the Codefleet website, a React
 ## Project Overview
 
 - **Repository:** [https://github.com/vbgivor/codefleet/](https://github.com/vbgivor/codefleet/)
-- **Team:** Shekhar (primary developer), with assistance from Grok (xAI).
+- **Team:** Shekhar (primary developer)
 - **Tech Stack:**
   - **Frontend:** React (with `react-router-dom`, Tailwind CSS), running at `http://localhost:3000` (development) or served via Django at `http://localhost:8000` (production/testing).
   - **Backend:** Django with PostgreSQL, Redis, running at `http://localhost:8000`.

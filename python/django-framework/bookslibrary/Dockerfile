@@ -2,11 +2,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+ENV PYTHONPATH=/app
+
+COPY bookslab/initial_data.json bookslab/
+
+COPY ./requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY ./ .
 
-EXPOSE 8008
+# Make scripts executable
+RUN chmod +x entrypoint.sh
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8003", "wsgi:application"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
