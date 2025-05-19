@@ -17,11 +17,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:13
+        image: postgres:15
         env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: codefleet_bookslibrary
+          POSTGRES_DB: bookslab_db
+          POSTGRES_USER: bookslab_user
+          POSTGRES_PASSWORD: bookslab_password          
         ports:
           - 5432:5432
         options: >-
@@ -48,10 +48,11 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py migrate
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: codefleet_bookslibrary
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: postgres
+          POSTGRES_DB: bookslab_db
+          DB_NAME: bookslab_db
+          POSTGRES_USER: bookslab_user
+          POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
           DJANGO_SETTINGS_MODULE: bookslab.settings
 
@@ -60,10 +61,11 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py loaddata bookslab/initial_data.json
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: codefleet_bookslibrary
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: postgres
+          POSTGRES_DB: bookslab_db
+          DB_NAME: bookslab_db
+          POSTGRES_USER: bookslab_user
+          POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
           DJANGO_SETTINGS_MODULE: bookslab.settings
 
@@ -72,10 +74,11 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py test
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: codefleet_bookslibrary
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: postgres
+          POSTGRES_DB: bookslab_db
+          DB_NAME: bookslab_db
+          POSTGRES_USER: bookslab_user
+          POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
           DJANGO_SETTINGS_MODULE: bookslab.settings
 
