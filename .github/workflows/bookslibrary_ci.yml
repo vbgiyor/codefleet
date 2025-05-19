@@ -60,6 +60,7 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py migrate
         env:
+          POSTGRES_HOST: postgresdb
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
@@ -70,6 +71,7 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py test
         env:
+          POSTGRES_HOST: postgresdb
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
