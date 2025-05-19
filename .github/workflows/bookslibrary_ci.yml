@@ -14,7 +14,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_HOST: postgresdb  # Use the service name
+      POSTGRES_HOST: postgresdb
       POSTGRES_DB: bookslab_db
       POSTGRES_USER: bookslab_user
       POSTGRES_PASSWORD: bookslab_password
@@ -30,10 +30,11 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U bookslab_user"
+          --health-cmd "pg_isready -U bookslab_user -d bookslab_db"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+          --name postgresdb
 
     steps:
       - uses: actions/checkout@v3
@@ -54,11 +55,23 @@ jobs:
       - name: Wait for PostgreSQL
         run: |
           echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..10}; do
-            pg_isready -h postgresdb -U bookslab_user -d bookslab_db && echo "PostgreSQL is ready!" && break
-            echo "Waiting for PostgreSQL..."
+          for i in {1..30}; do
+            pg_isready -h postgresdb -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
+            echo "Waiting for PostgreSQL... Attempt $i/30"
             sleep 5
           done
+          # Verify connectivity
+          psql -h postgresdb -U bookslab_user -d bookslab_db -c "SELECT 1" || exit 1
+
+      - name: Debug Docker Network and Container
+        run: |
+          echo "Listing Docker containers:"
+          docker ps -a
+          echo "Inspecting Docker network:"
+          docker network ls
+          docker network inspect $(docker network ls -q) || true
+          echo "Checking postgresdb container logs:"
+          docker logs postgresdb || true
 
       - name: Verify Environment Variables
         run: |
