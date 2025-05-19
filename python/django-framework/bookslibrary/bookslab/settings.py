@@ -69,7 +69,7 @@ DATABASES = {
         'USER': env("POSTGRES_USER"),
         'PASSWORD': env("POSTGRES_PASSWORD"),
         'PORT': env("POSTGRES_PORT", default="5432"),
-        'HOST': env("POSTGRES_HOST", default="postgresdb"), 
+        'HOST': env("POSTGRES_HOST", default="127.0.0.1"),  # Fallback to 127.0.0.1
     }
 }
 

@@ -14,7 +14,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_HOST: postgresdb
+      POSTGRES_HOST: 127.0.0.1  # Fallback to localhost due to hostname resolution issues
       POSTGRES_DB: bookslab_db
       POSTGRES_USER: bookslab_user
       POSTGRES_PASSWORD: bookslab_password
@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgresdb:
-        image: postgres:13
+        image: postgres:15
         env:
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
@@ -44,6 +44,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
       - name: Create Static Directory
         run: mkdir -p python/django-framework/bookslibrary/static
 
@@ -52,16 +57,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r python/django-framework/bookslibrary/requirements.txt
 
-      # - name: Wait for PostgreSQL
-      #   run: |
-      #     echo "Waiting for PostgreSQL to be ready..."
-      #     for i in {1..30}; do
-      #       pg_isready -h postgresdb -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
-      #       echo "Waiting for PostgreSQL... Attempt $i/30"
-      #       sleep 5
-      #     done
-      #     # Verify connectivity
-      #     psql -h postgresdb -U bookslab_user -d bookslab_db -c "SELECT 1" || exit 1
+      - name: Wait for PostgreSQL
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..5}; do
+            pg_isready -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 && echo "PostgreSQL is ready!" && break
+            echo "Waiting for PostgreSQL... Attempt $i/5"
+            sleep 5
+          done
+          psql -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 -c "SELECT 1" || exit 1
 
       - name: Debug Docker Network and Container
         run: |
@@ -80,6 +84,16 @@ jobs:
           echo "POSTGRES_USER: $POSTGRES_USER"
           echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
           echo "POSTGRES_PORT: $POSTGRES_PORT"
+
+      - name: Debug Before Migrations
+        run: |
+          echo "Checking PostgreSQL availability before migrations:"
+          pg_isready -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 || echo "PostgreSQL not available"
+          psql -h 127.0.0.1 -U bookslab_user -d bookslab_db -p 5432 -c "SELECT 1" || echo "PostgreSQL connection failed"
+          echo "Listing Docker containers:"
+          docker ps -a
+          echo "Checking postgresdb container logs:"
+          docker logs postgresdb || true
 
       - name: Run migrations
         run: |
