@@ -50,7 +50,6 @@ jobs:
         env:
           POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
-          DB_NAME: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
@@ -63,7 +62,6 @@ jobs:
         env:
           POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
-          DB_NAME: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
@@ -76,7 +74,6 @@ jobs:
         env:
           POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
-          DB_NAME: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
           POSTGRES_PORT: 5432
