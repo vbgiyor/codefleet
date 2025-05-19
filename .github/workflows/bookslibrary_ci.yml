@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      postgresdb:
         image: postgres:15
         env:
           POSTGRES_DB: bookslab_db
@@ -60,7 +60,6 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py migrate
         env:
-          POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
@@ -72,7 +71,6 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py loaddata bookslab/initial_data.json
         env:
-          POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
@@ -84,7 +82,6 @@ jobs:
           cd python/django-framework/bookslibrary
           python manage.py test
         env:
-          POSTGRES_HOST: postgres
           POSTGRES_DB: bookslab_db
           POSTGRES_USER: bookslab_user
           POSTGRES_PASSWORD: bookslab_password
