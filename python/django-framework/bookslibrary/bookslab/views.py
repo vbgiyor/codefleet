@@ -54,13 +54,13 @@ class BookListCreateUpdateView(generics.RetrieveUpdateAPIView, generics.ListCrea
         serializer.is_valid(raise_exception=True)
         book = serializer.save()
         return Response({"id": book.id, **serializer.data}, status=status.HTTP_200_OK)
-    
+
 
 class BookDeleteView(generics.DestroyAPIView):
     """
     API view to delete a book by its ID.
     """
-    queryset = Book.objects.all()    
+    queryset = Book.objects.all()
 
     def delete(self, request, *args, **kwargs):
         """

@@ -4,8 +4,8 @@ from django.utils import timezone
 
 class Book(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255) #mandatory
-    author = models.CharField(max_length=255) #mandatory
+    title = models.CharField(max_length=255)  # mandatory
+    author = models.CharField(max_length=255)  # mandatory
     published_date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     isbn = models.CharField(max_length=13, unique=False, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -15,4 +15,3 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.author}"
-    
