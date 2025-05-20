@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
     networks:
-      - codefleet-network
+      - bookslab-network
   db:
     image: postgres:15
     environment:
@@ -29,9 +29,9 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - codefleet-network
+      - bookslab-network
 networks:
-  codefleet-network:
+  bookslab-network:
     driver: bridge
 volumes:
   postgres_data:
