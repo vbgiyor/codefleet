@@ -14,11 +14,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_HOST: 127.0.0.1
-      POSTGRES_DB: bookslab_db
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
       POSTGRES_USER: bookslab_user
       POSTGRES_PASSWORD: bookslab_password
-      POSTGRES_PORT: 5432
+      POSTGRES_DB: bookslab_db
 
     services:
       postgresdb:

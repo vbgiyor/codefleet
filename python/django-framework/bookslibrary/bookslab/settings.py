@@ -69,7 +69,7 @@ DATABASES = {
         'USER': env("POSTGRES_USER"),
         'PASSWORD': env("POSTGRES_PASSWORD"),
         'PORT': env("POSTGRES_PORT", default="5432"),
-        'HOST': env("POSTGRES_HOST", default="127.0.0.1"),  # Fallback to 127.0.0.1
+        'HOST': env("POSTGRES_HOST", default="localhost"),
     }
 }
 
@@ -99,5 +99,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 APPEND_SLASH = False
-
-print("DB SETTINGS:", DATABASES['default'])
