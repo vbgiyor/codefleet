@@ -65,11 +65,12 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Add back since website/backend/static/ exists
-    BASE_DIR / './frontend/build/static',  # Correct path for React static files
+    BASE_DIR / 'static',
+    BASE_DIR / 'backend' / 'static',
+    BASE_DIR / 'frontend' / 'build' / 'static',
 ]
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
