@@ -1,3 +1,4 @@
+import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -144,3 +145,18 @@ def basic_auth_view(request):
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
         logger.debug(f"Response Headers: {response.headers}")
         return response
+
+
+def serve_markdown(request, filename):
+    logger.info(f"Requested filename: {filename}")
+    if not filename.endswith('.md'):
+        filename = f"{filename}.md"
+    file_path = os.path.join("/app/static/markdown", filename)
+    logger.info(f"Checking file path: {file_path}")
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+        logger.info(f"File found, serving content")
+        return HttpResponse(content, content_type='text/plain; charset=utf-8')
+    logger.error(f"File not found at: {file_path}")
+    return HttpResponse("File not found", status=404)

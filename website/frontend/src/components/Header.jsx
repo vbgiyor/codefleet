@@ -26,9 +26,7 @@ const Header = () => {
       const storedFirstName = localStorage.getItem('first_name');
       setFirstName(storedFirstName || null);
     };
-
     updateFirstName();
-
     window.addEventListener('storage', updateFirstName);
 
     const fetchUserProfile = async () => {
@@ -36,9 +34,7 @@ const Header = () => {
       if (accessToken && !firstName) {
         try {
           const response = await axios.get('http://localhost:8000/api/user/', {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
+            headers: { Authorization: `Bearer ${accessToken}` },
           });
           setFirstName(response.data.first_name);
           localStorage.setItem('first_name', response.data.first_name);
@@ -54,7 +50,6 @@ const Header = () => {
       }
     };
     fetchUserProfile();
-
     return () => window.removeEventListener('storage', updateFirstName);
   }, [firstName]);
 
@@ -67,7 +62,6 @@ const Header = () => {
         setIsAuthDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -89,12 +83,14 @@ const Header = () => {
             <img
               src={logo}
               alt="Codefleet Logo"
-              className="h-28 w-auto"
+              className="h-28 w-auto" // Reverted to original size
               id="logo"
               loading="lazy"
               onError={() => console.error('Logo failed to load')}
             />
-            <h1 className="text-2xl font-bold ml-2 bauhaus-font" id="company_name">Codefleet</h1>
+            <h1 className="text-2xl font-bold ml-2 bauhaus-font" id="company_name">
+              Codefleet
+            </h1>
           </div>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -102,12 +98,7 @@ const Header = () => {
             id="menu_btn"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
         </div>
@@ -116,7 +107,9 @@ const Header = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'}`
+                `w-24 text-center h-10 flex items-center justify-center ${
+                  isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'
+                }`
               }
               id="menu_home"
             >
@@ -130,7 +123,9 @@ const Header = () => {
                   setIsCaseStudiesOpen(!isCaseStudiesOpen);
                 }}
                 className={() =>
-                  `w-24 text-center h-10 flex items-center justify-center ${isCaseStudiesActive ? 'text-white' : 'text-primary-blue'} hover:text-bluish-black hover:bg-transparent hover:rounded`
+                  `w-24 text-center h-10 flex items-center justify-center ${
+                    isCaseStudiesActive ? 'text-white' : 'text-primary-blue'
+                  } hover:text-bluish-black hover:bg-transparent hover:rounded`
                 }
                 id="menu_case_studies"
               >
@@ -156,7 +151,9 @@ const Header = () => {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                `w-24 text-center h-10 flex items-center justify-center ${isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'}`
+                `w-24 text-center h-10 flex items-center justify-center ${
+                  isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'
+                }`
               }
               id="menu_contact"
             >
@@ -165,11 +162,16 @@ const Header = () => {
             <div className="relative" ref={authDropdownRef}>
               <button
                 onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
-                className="btn w-28 text-center h-10 flex items-center justify-center text-bluish-black hover:bg-white" id="auth_dropdown_btn">
+                className="btn w-28 text-center h-10 flex items-center justify-center text-bluish-black hover:bg-white"
+                id="auth_dropdown_btn"
+              >
                 {firstName ? `${firstName}` : 'Account'}
               </button>
               {isAuthDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-glass-bg text-primary-blue rounded shadow-lg sm:block" id="auth_dropdown">
+                <div
+                  className="absolute right-0 mt-2 w-48 bg-glass-bg text-primary-blue rounded shadow-lg sm:block"
+                  id="auth_dropdown"
+                >
                   {firstName ? (
                     <button
                       onClick={handleSignOut}
