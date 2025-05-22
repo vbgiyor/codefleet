@@ -82,7 +82,7 @@ public class HomePageTest extends BasePageTest {
         String actualUrl = pythonPage.getCurrentUrl();
         Assert.assertEquals(actualUrl, expected_url, "Navigation to Python page failed.");
         Assert.assertTrue(pythonPage.isPythonPageLoaded(), "Python page didn't load properly.");
-        String expectedHeading = "Python Case Study";
+        String expectedHeading = "Python Content Library";
         String actualHeading = pythonPage.getTitleText();
         Assert.assertEquals(actualHeading, expectedHeading, "Python page heading displayed incorrectly.");
     }
