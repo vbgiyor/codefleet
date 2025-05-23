@@ -10,7 +10,7 @@ const Footer = () => {
           <img
             src={logo}
             alt="Codefleet Logo"
-            className="h-28 w-auto" // Reverted to original size
+            className="h-14 w-auto" // Reverted to original size
             id="footer_logo"
             loading="lazy"
           />

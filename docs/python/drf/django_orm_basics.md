@@ -1,6 +1,6 @@
-## 🤔 What is `default_auto_field` in Django?
+## 🤔 What is `DEFAULT_AUTO_FIELD` in Django?
 
-`default_auto_field` is a setting introduced in **Django 3.2** that determines the default type of auto-generated primary key fields (`id`) for your models — unless explicitly defined in the model.
+`DEFAULT_AUTO_FIELD` is a setting introduced in **Django 3.2** that determines the default type of auto-generated primary key fields (`id`) for your models — unless explicitly defined in the model.
 
 ---
 

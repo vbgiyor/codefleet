@@ -149,14 +149,28 @@ def basic_auth_view(request):
 
 def serve_markdown(request, filename):
     logger.info(f"Requested filename: {filename}")
+    
     if not filename.endswith('.md'):
         filename = f"{filename}.md"
-    file_path = os.path.join("/app/static/markdown", filename)
-    logger.info(f"Checking file path: {file_path}")
-    if os.path.exists(file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-        logger.info(f"File found, serving content")
-        return HttpResponse(content, content_type='text/plain; charset=utf-8')
-    logger.error(f"File not found at: {file_path}")
+
+    base_path = "/app/static/markdown"
+
+    # Dynamically discover subdirectories in markdown folder
+    try:
+        subdirs = [name for name in os.listdir(base_path)
+                   if os.path.isdir(os.path.join(base_path, name))]
+    except FileNotFoundError:
+        logger.error(f"Markdown base path not found: {base_path}")
+        return HttpResponse("Markdown base path not found", status=500)
+
+    for subdir in subdirs:
+        file_path = os.path.join(base_path, subdir, filename)
+        logger.info(f"Checking path: {file_path}")
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+                logger.info(f"File found in {subdir}, serving content")
+                return HttpResponse(content, content_type='text/plain; charset=utf-8')
+
+    logger.error(f"File not found in any subdir: {filename}")
     return HttpResponse("File not found", status=404)

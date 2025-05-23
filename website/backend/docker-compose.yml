@@ -14,7 +14,8 @@ services:
     volumes:
       - .:/app
       - ../frontend/build:/app/frontend/build
-      - ../../docs:/app/static/markdown:ro
+      - ../../docs/python/journal:/app/static/markdown/journal:ro
+      - ../../docs/python/drf:/app/static/markdown/drf:ro
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 codefleet.wsgi:application"
