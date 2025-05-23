@@ -123,7 +123,7 @@ function App() {
                   <BasicAuth />
                 </>
               } />
-              <Route path="/documentation/:filename" element={
+              <Route path="/documentation/*" element={
                 <>
                   <Helmet>
                     <title>Codefleet - Documentation</title>

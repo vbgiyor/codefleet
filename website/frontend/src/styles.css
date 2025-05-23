@@ -30,8 +30,11 @@ body {
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow);
   padding: 1rem 2rem;
-  position: sticky; /* Reverted to sticky */
+  position: sticky;
   z-index: 1000;
+  left: 0;
+  right: 0;
+  height: 115px;
 }
 
 .navbar {
@@ -40,6 +43,15 @@ body {
 
 .footer {
   bottom: 0;
+}
+
+.navbar .container,
+.footer .container {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* vertical centering */
+  height: 80px;
 }
 
 .navbar a,

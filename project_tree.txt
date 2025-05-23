@@ -1,9 +1,3 @@
-# Codefleet Project Structure
-
-The `codefleet` repository is a monorepo, organizing multiple projects for the `codefleet` web app. Below is the detailed structure:
-
-```
-codefleet
 .
 ├── .github
 │   └── workflows
@@ -152,17 +146,27 @@ codefleet
 │                       │                   └── HerokuappHomePageTest.java
 │                       └── testng.xml
 ├── docs
-│   ├── architecture.md
-│   ├── bookslibrary.md
-│   ├── codefleet-web-app-dev-journey.md
-│   ├── djangocommerce.md
-│   ├── project_structure.md
-│   ├── selenium.md
-│   ├── solutions
-│   │   ├── basic-auth-browser-prompt-issue-resolution.md
-│   │   ├── git-checkout-conflict-branch.md
-│   │   └── selenium-test-independence-guide.md
-│   └── website.md
+│   ├── projects
+│   │   ├── architecture.md
+│   │   ├── bookslibrary.md
+│   │   ├── codefleet-web-app-dev-journey.md
+│   │   ├── djangocommerce.md
+│   │   ├── project_structure.md
+│   │   ├── selenium.md
+│   │   ├── simple-DRF-projects.md
+│   │   └── website.md
+│   ├── python
+│   │   ├── drf
+│   │   │   ├── django_orm_basics.md
+│   │   │   └── variables.md
+│   │   └── learn-to-code
+│   │       └── rendering_markdown_doc_as_html.md
+│   └── solutions
+│       ├── aws-deployment-and-hosting.md
+│       ├── basic-auth-browser-prompt-issue-resolution.md
+│       ├── git-checkout-conflict-branch.md
+│       ├── markdown-file-benefits.md
+│       └── selenium-test-independence-guide.md
 ├── LICENSE
 ├── project_tree.txt
 ├── pyproject.toml
@@ -186,14 +190,33 @@ codefleet
 │   │       │   ├── urls.py
 │   │       │   ├── views.py
 │   │       │   └── wsgi.py
-│   │       ├── bookslab_backup.sql
 │   │       ├── docker-compose.yml
 │   │       ├── Dockerfile
 │   │       ├── entrypoint.sh
 │   │       ├── initial_data.json
 │   │       ├── manage.py
-│   │       ├── project_structure.txt
 │   │       └── requirements.txt
+│   ├── drfsessions
+│   │   └── warmup
+│   │       ├── basics
+│   │       │   ├── __init__.py
+│   │       │   ├── admin.py
+│   │       │   ├── apps.py
+│   │       │   ├── migrations
+│   │       │   │   └── __init__.py
+│   │       │   ├── models.py
+│   │       │   ├── tests.py
+│   │       │   └── views.py
+│   │       ├── db.sqlite3
+│   │       ├── manage.py
+│   │       ├── templates
+│   │       │   └── drfsessions.html
+│   │       └── warmup
+│   │           ├── __init__.py
+│   │           ├── asgi.py
+│   │           ├── settings.py
+│   │           ├── urls.py
+│   │           └── wsgi.py
 │   └── microservices
 │       └── ecommerce
 │           ├── db.sqlite3
@@ -247,6 +270,7 @@ codefleet
 │   ├── build_website.sh
 │   ├── clean_stray_bookstore.sh
 │   ├── entrypoint.sh
+│   ├── run_bookslab.sh
 │   └── run_django.sh
 └── website
     ├── backend
@@ -269,7 +293,7 @@ codefleet
     │   │   ├── urls.py
     │   │   ├── views.py
     │   │   └── wsgi.py
-    │   ├── docker-compose.yaml
+    │   ├── docker-compose.yml
     │   ├── Dockerfile
     │   ├── init-db.sql
     │   ├── manage.py
@@ -296,7 +320,6 @@ codefleet
         │   │   ├── BauhausItalic.ttf
         │   │   └── BauhausRegular.ttf
         │   └── index.html
-        ├── Dockerfile.txt
         ├── package-lock.json
         ├── package.json
         ├── postcss.config.js
@@ -338,7 +361,8 @@ codefleet
         │   │   ├── list
         │   │   │   ├── ABTest.jsx
         │   │   │   ├── AddRemoveElements.jsx
-        │   │   │   └── BasicAuth.jsx
+        │   │   │   ├── BasicAuth.jsx
+        │   │   │   └── Documentation.jsx
         │   │   ├── Python.jsx
         │   │   ├── ResetPassword.jsx
         │   │   ├── SignIn.jsx
@@ -347,5 +371,4 @@ codefleet
         │   └── styles.css
         └── tailwind.config.js
 
-100 directories, 242 files
-```
+110 directories, 262 files

@@ -214,15 +214,12 @@ The Codefleet website is a full-stack web application built with a Django backen
 
 ## Recent Changes
 - Added Basic Auth feature (`/basicauth/`) with `admin:admin` credentials, rendering `BasicAuth.jsx` on success.
-- Fixed logging issue by creating `/app/logs/` and mapping `./logs:/app/logs` in `docker-compose.yaml`.
 - Added Django unit tests for Basic Auth in `codefleet/tests.py`.
 - Updated CI pipeline (`website_and_cfinspector_ci.yml`) to run Django tests.
 
 ## Next Steps
 - Implement content for `/java`, `/python`, `/automation` pages.
 - Configure production email server.
-- Fix password reset success message.
-- Resolve CI `TemplateDoesNotExist` issue.
 - Deploy to a hosting service (e.g., AWS, Azure).
 
 *Last Updated: May 15, 2025*
