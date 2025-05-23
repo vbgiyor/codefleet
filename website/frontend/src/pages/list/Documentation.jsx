@@ -12,12 +12,13 @@ const Documentation = () => {
   const modalRef = useRef(null); 
   const fullscreenButtonRef = useRef(null); // Reference to the fullscreen button
   const location = useLocation();
-  const fullPath = location.pathname.replace(/^\/documentation\//, '');
+  
 
   // Fetch markdown content
   useEffect(() => {
     const fetchMarkdown = async () => {
       try {
+        const fullPath = location.pathname.replace(/^\/documentation\//, '');
         const cleanPath = fullPath.endsWith('.md') ? fullPath : `${fullPath}.md`;
         const response = await fetch(`/markdown/${cleanPath}?ts=${new Date().getTime()}`, {
           cache: 'no-store'
@@ -31,7 +32,7 @@ const Documentation = () => {
       }
     };
     fetchMarkdown();
-  }, [filename]);
+  }, [filename, location.pathname]); 
 
   // Handle click outside of the modal
   useEffect(() => {
