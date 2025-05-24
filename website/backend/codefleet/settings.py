@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from decouple import config
+import logging.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,16 +137,11 @@ APPEND_SLASH = False
 
 FRONTEND_URL = 'http://localhost:3000'
 
-# Set Django's timezone to IST
 TIME_ZONE = 'Asia/Kolkata'
-
-# Ensure Django uses the specified timezone
 USE_TZ = True
-
-# If USE_TZ is set to False, Django will use the system’s local timezone, which may require setting TZ environment variable 
-# in docker-compose.yaml or the system environment.
-# environment:
-#   - TZ=Asia/Kolkata
+# Ensure log directories exist
+os.makedirs('/app/logs', exist_ok=True)
+os.makedirs('/app/logs_backup', exist_ok=True)
 
 LOGGING = {
     'version': 1,
@@ -184,3 +180,6 @@ LOGGING = {
         },
     },
 }
+
+# Apply logging configuration
+logging.config.dictConfig(LOGGING)
