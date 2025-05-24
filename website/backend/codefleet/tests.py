@@ -54,13 +54,13 @@ class BasicAuthViewTest(TestCase):
         credentials = base64.b64encode(b'admin:admin').decode('utf-8')
         response = self.client.get(self.url, HTTP_AUTHORIZATION=f'Basic {credentials}', HTTP_ACCEPT='text/html')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('<!doctype html>', response.content.decode().lower())
+        self.assertEqual(response.content.decode(), 'Success: You are authenticated via Basic Auth.')
 
     def test_basic_auth_valid_credentials_json(self):
         credentials = base64.b64encode(b'admin:admin').decode('utf-8')
         response = self.client.get(self.url, HTTP_AUTHORIZATION=f'Basic {credentials}', HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'authenticated': True})
+        self.assertEqual(response.content.decode(), 'Success: You are authenticated via Basic Auth.')
 
 class UserProfileViewTest(TestCase):
     def setUp(self):

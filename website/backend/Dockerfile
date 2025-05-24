@@ -3,5 +3,6 @@ WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/static/markdown
+RUN mkdir -p /app/logs
 EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "codefleet.wsgi:application", "--preload", "--access-logfile", "-", "--error-logfile", "-"]

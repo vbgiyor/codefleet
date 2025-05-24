@@ -26,7 +26,6 @@ jobs:
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
       # Redis service for Django
       redis:
         image: redis:latest
@@ -34,182 +33,169 @@ jobs:
           - 6379:6379
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Python
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    # Step 3: Cache Python dependencies
-    - name: Cache Python dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    # Step 4: Install backend dependencies
-    - name: Install backend dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r website/backend/requirements.txt
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r website/backend/requirements.txt
 
-    # Step 5: Download frontend build artifact
-    - name: Download frontend build artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: react-build
-        path: website/frontend/build
+      - name: Create log directories
+        run: |
+          mkdir -p ./logs
+          mkdir -p ./logs_backup
 
-    # Step 6: Debug React build output
-    - name: Debug React build output
-      working-directory: ./website/frontend
-      run: |
-        echo "Listing contents of website/frontend:"
-        ls -la
-        echo "Listing contents of website/frontend/build:"
-        ls -la build || { echo "build directory not found" >&2; exit 1; }
-        if [ -d build ] && [ -f build/index.html ]; then
-          echo "index.html found"
-        else
-          echo "index.html not found" >&2
-          exit 1
-        fi
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: website/frontend/build
 
-    # Step 7: Copy React build to backend
-    - name: Copy React build to backend
-      run: |
-        mkdir -p website/backend/frontend/build
-        cp -r website/frontend/build/* website/backend/frontend/build/
+      - name: Debug React build output
+        working-directory: ./website/frontend
+        run: |
+          echo "Listing contents of website/frontend:"
+          ls -la
+          echo "Listing contents of website/frontend/build:"
+          ls -la build || { echo "build directory not found; artifact download may have failed" >&2; exit 1; }
+          if [ -d build ] && [ -f build/index.html ]; then
+            echo "index.html found"
+          else
+            echo "index.html not found" >&2
+            exit 1
+          fi
 
-    # Step 8: Apply migrations
-    - name: Apply migrations
-      working-directory: ./website/backend
-      env:
-        DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
-      run: |
-        python manage.py migrate
+      - name: Copy React build to backend
+        run: |
+          mkdir -p website/backend/frontend/build
+          cp -r website/frontend/build/* website/backend/frontend/build/
 
-    # Step 9: Run Django tests
-    - name: Run Django tests
-      working-directory: ./website/backend
-      env:
-        DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
-        CI: true
-      run: |
-        python manage.py test
+      - name: Run migrations
+        working-directory: ./website/backend
+        env:
+          DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
+        run: |
+          python manage.py migrate
+
+      - name: Run Django tests
+        working-directory: ./website/backend
+        env:
+          DATABASE_URL: postgresql://codefleet_user:codefleet_pass@postgres:5432/codefleet_db
+          CI: true
+        run: |
+          python manage.py test
 
   frontend:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    # Step 3: Cache Node.js dependencies
-    - name: Cache Node.js dependencies
-      uses: actions/cache@v3
-      with:
-        path: website/frontend/node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('website/frontend/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: website/frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('website/frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    # Step 4: Install frontend dependencies
-    - name: Install frontend dependencies
-      working-directory: ./website/frontend
-      run: npm install
+      - name: Install frontend dependencies
+        working-directory: ./website/frontend
+        run: npm install
 
-    # Step 5: Run React tests
-    - name: Run React tests
-      working-directory: ./website/frontend
-      run: npm test -- --watchAll=false
+      - name: Run React tests
+        working-directory: ./website/frontend
+        run: npm test -- --watchAll=false
 
-    # Step 6: Build React app
-    - name: Build React app
-      working-directory: ./website/frontend
-      run: |
-        echo "Running npm run build..."
-        npm run build || { echo "React build failed"; exit 1; }
-        echo "React build completed"
+      - name: Build React app
+        working-directory: ./website/frontend
+        run: |
+          echo "Running npm run build..."
+          npm run build || { echo "React build failed"; exit 1; }
+          echo "Listing contents of build directory:"
+          ls -la build
+          echo "React build completed"
 
-    # Step 7: Upload frontend build artifact
-    - name: Upload frontend build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: react-build
-        path: website/frontend/build/
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: website/frontend/build/
 
   collect-static:
     runs-on: ubuntu-latest
     needs: [backend, frontend]
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Python
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    # Step 3: Cache Python dependencies
-    - name: Cache Python dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('website/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    # Step 4: Install backend dependencies
-    - name: Install backend dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r website/backend/requirements.txt
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r website/backend/requirements.txt
 
-    # Step 5: Download frontend build artifact
-    - name: Download frontend build artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: react-build
-        path: website/frontend/build
+      - name: Create log directories
+        run: |
+          mkdir -p ./logs
+          mkdir -p ./logs_backup
 
-    # Step 6: Copy React build to backend
-    - name: Copy React build to backend
-      run: |
-        mkdir -p website/backend/frontend/build
-        cp -r website/frontend/build/* website/backend/frontend/build/
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: website/frontend/build
 
-    # Step 7: Collect static files
-    - name: Collect static files
-      working-directory: ./website/backend
-      run: |
-        python manage.py collectstatic --noinput
+      - name: Copy React build to backend
+        run: |
+          mkdir -p website/backend/frontend/build
+          cp -r website/frontend/build/* website/backend/frontend/build/
 
-    # Step 8: Debug static files directory
-    - name: List static files
-      working-directory: ./website/backend
-      run: |
-        ls -la staticfiles/
+      - name: Collect static files
+        working-directory: ./website/backend
+        run: |
+          python manage.py collectstatic --noinput
 
-    # Step 9: Archive build artifacts
-    - name: Archive build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: static-files
-        path: website/backend/staticfiles/
+      - name: List static files
+        working-directory: ./website/backend
+        run: |
+          ls -la staticfiles/
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-files
+          path: website/backend/staticfiles/

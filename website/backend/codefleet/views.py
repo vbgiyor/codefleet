@@ -113,38 +113,38 @@ class UserProfileView(APIView):
 @never_cache
 @csrf_exempt
 def basic_auth_view(request):
+    logger.debug("Received request to basic_auth_view")
+    
     auth_header = request.META.get('HTTP_AUTHORIZATION', '')
-    logger.debug(f"Auth Header: {auth_header}")
-
-    # Check if request expects JSON (for frontend API call)
-    is_api_request = request.headers.get('Accept', '').startswith('application/json')
+    logger.debug(f"Authorization header: {auth_header}")
 
     if not auth_header.startswith('Basic '):
-        response = HttpResponse('Unauthorized', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
+        logger.warning("Missing or invalid Authorization header format")
+        response = HttpResponse('Unauthorized', status=401)
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-        logger.debug(f"Response Headers: {response.headers}")
         return response
 
     try:
         encoded_credentials = auth_header.split(' ')[1]
+        logger.debug(f"Encoded credentials: {encoded_credentials}")
         decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8')
+        logger.debug(f"Decoded credentials: {decoded_credentials}")
         username, password = decoded_credentials.split(':')
-    except (IndexError, UnicodeDecodeError, ValueError):
-        response = HttpResponse('Invalid credentials', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
+        logger.debug(f"Extracted username: {username}")
+    except Exception as e:
+        logger.error(f"Error decoding credentials: {str(e)}", exc_info=True)
+        response = HttpResponse('Invalid credentials', status=401)
         response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-        logger.debug(f"Response Headers: {response.headers}")
         return response
 
     if username == 'admin' and password == 'admin':
-        logger.debug("Authentication successful")
-        if is_api_request:
-            return JsonResponse({'authenticated': True})
-        return render(request, 'index.html')
-    else:
-        response = HttpResponse('Unauthorized', status=401) if not is_api_request else JsonResponse({'authenticated': False}, status=401)
-        response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-        logger.debug(f"Response Headers: {response.headers}")
-        return response
+        logger.info("Authentication successful for user: admin")
+        return HttpResponse("Success: You are authenticated via Basic Auth.")
+
+    logger.warning(f"Authentication failed for username: {username}")
+    response = HttpResponse('Unauthorized', status=401)
+    response['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    return response
 
 
 def serve_markdown(request, filename):

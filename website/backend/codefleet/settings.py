@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from decouple import config
+import logging.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,3 +136,51 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 APPEND_SLASH = False
 
 FRONTEND_URL = 'http://localhost:3000'
+
+TIME_ZONE = 'Asia/Kolkata'
+USE_TZ = True
+
+# Ensure log directories exist
+os.makedirs('logs', exist_ok=True)
+os.makedirs('logs_backup', exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S %Z',  # Include %Z for timezone name
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/django.log',
+            'formatter': 'verbose',
+        },
+        'file_backup': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs_backup/django.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Apply logging configuration
+logging.config.dictConfig(LOGGING)
