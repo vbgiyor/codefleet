@@ -33,17 +33,14 @@ jobs:
           - 6379:6379
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # Step 3: Cache Python dependencies
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -52,33 +49,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # Step 4: Install backend dependencies
       - name: Install backend dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r website/backend/requirements.txt
 
-      # Step 5: Create log directories
       - name: Create log directories
         run: |
           mkdir -p ./logs
           mkdir -p ./logs_backup
 
-      # Step 6: Download frontend build artifact
       - name: Download frontend build artifact
         uses: actions/download-artifact@v4
         with:
           name: react-build
           path: website/frontend/build
 
-      # Step 7: Debug React build output
       - name: Debug React build output
         working-directory: ./website/frontend
         run: |
           echo "Listing contents of website/frontend:"
           ls -la
           echo "Listing contents of website/frontend/build:"
-          ls -la build || { echo "build directory not found" >&2; exit 1; }
+          ls -la build || { echo "build directory not found; artifact download may have failed" >&2; exit 1; }
           if [ -d build ] && [ -f build/index.html ]; then
             echo "index.html found"
           else
@@ -86,13 +79,11 @@ jobs:
             exit 1
           fi
 
-      # Step 8: Copy React build to backend
       - name: Copy React build to backend
         run: |
           mkdir -p website/backend/frontend/build
           cp -r website/frontend/build/* website/backend/frontend/build/
 
-      # Step 9: Run migrations
       - name: Run migrations
         working-directory: ./website/backend
         env:
@@ -100,7 +91,6 @@ jobs:
         run: |
           python manage.py migrate
 
-      # Step 10: Run Django tests
       - name: Run Django tests
         working-directory: ./website/backend
         env:
@@ -113,17 +103,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Step 3: Cache Node.js dependencies
       - name: Cache Node.js dependencies
         uses: actions/cache@v3
         with:
@@ -132,25 +119,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # Step 4: Install frontend dependencies
       - name: Install frontend dependencies
         working-directory: ./website/frontend
         run: npm install
 
-      # Step 5: Run React tests
       - name: Run React tests
         working-directory: ./website/frontend
         run: npm test -- --watchAll=false
 
-      # Step 6: Build React app
       - name: Build React app
         working-directory: ./website/frontend
         run: |
           echo "Running npm run build..."
           npm run build || { echo "React build failed"; exit 1; }
+          echo "Listing contents of build directory:"
+          ls -la build
           echo "React build completed"
 
-      # Step 7: Upload frontend build artifact
       - name: Upload frontend build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -162,17 +147,14 @@ jobs:
     needs: [backend, frontend]
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      # Step 3: Cache Python dependencies
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -181,44 +163,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # Step 4: Install backend dependencies
       - name: Install backend dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r website/backend/requirements.txt
 
-      # Step 5: Create log directories
       - name: Create log directories
         run: |
           mkdir -p ./logs
           mkdir -p ./logs_backup
 
-      # Step 6: Download frontend build artifact
       - name: Download frontend build artifact
         uses: actions/download-artifact@v4
         with:
           name: react-build
           path: website/frontend/build
 
-      # Step 7: Copy React build to backend
       - name: Copy React build to backend
         run: |
           mkdir -p website/backend/frontend/build
           cp -r website/frontend/build/* website/backend/frontend/build/
 
-      # Step 8: Collect static files
       - name: Collect static files
         working-directory: ./website/backend
         run: |
           python manage.py collectstatic --noinput
 
-      # Step 9: Debug static files directory
       - name: List static files
         working-directory: ./website/backend
         run: |
           ls -la staticfiles/
 
-      # Step 10: Archive build artifacts
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
