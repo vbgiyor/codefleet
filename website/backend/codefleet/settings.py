@@ -139,9 +139,10 @@ FRONTEND_URL = 'http://localhost:3000'
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
+
 # Ensure log directories exist
-os.makedirs('/app/logs', exist_ok=True)
-os.makedirs('/app/logs_backup', exist_ok=True)
+os.makedirs('logs', exist_ok=True)
+os.makedirs('logs_backup', exist_ok=True)
 
 LOGGING = {
     'version': 1,
@@ -157,15 +158,15 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/app/logs/django.log',
+            'filename': 'logs/django.log',
             'formatter': 'verbose',
         },
         'file_backup': {
-        'level': 'DEBUG',
-        'class': 'logging.FileHandler',
-        'filename': '/app/logs_backup/django.log',
-        'formatter': 'verbose',
-    },
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs_backup/django.log',
+            'formatter': 'verbose',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
