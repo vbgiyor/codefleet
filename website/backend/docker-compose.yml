@@ -16,6 +16,8 @@ services:
       - ../frontend/build:/app/frontend/build
       - ../../docs/python/journal:/app/static/markdown/journal:ro
       - ../../docs/python/drf:/app/static/markdown/drf:ro
+      - ./logs:/app/logs  # bind mount for real-time host access
+      - logs_backup:/app/logs_backup  # optional backup volume
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 codefleet.wsgi:application"
@@ -48,3 +50,4 @@ networks:
 volumes:
   postgres_data:
     external: true
+  logs_backup:

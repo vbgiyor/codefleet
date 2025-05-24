@@ -21,7 +21,7 @@ const Python = () => {
               to="/documentation/django_orm_basics.md"
               className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
             >
-              📄 Django ORM Basics
+              🧩 Django ORM Basics
             </NavLink>
           </li>
           <li>
@@ -29,7 +29,7 @@ const Python = () => {
               to="/documentation/variables.md"
               className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
             >
-              📄 Python Variables
+              🐍 Python Variables
             </NavLink>
           </li>
           <li>
@@ -37,7 +37,15 @@ const Python = () => {
               to="/documentation/rendering_markdown_doc_as_html.md"
               className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
             >
-              📄 Rendering Markdown as HTML
+              🌐 Rendering Markdown as HTML
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/documentation/django_logging_configuration.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              📋 Django Logging Configuration
             </NavLink>
           </li>
         </ul>

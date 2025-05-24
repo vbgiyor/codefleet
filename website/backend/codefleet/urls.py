@@ -17,7 +17,7 @@ urlpatterns = [
     path('api/user/', UserProfileView.as_view(), name='user_profile'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('basicauth/', basic_auth_view, name='basic_auth'),
+    path('basic-auth-protected/', basic_auth_view, name='basic_auth'),
     path('markdown/<str:filename>', serve_markdown, name='serve_markdown'),
 ]
 

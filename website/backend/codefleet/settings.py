@@ -135,3 +135,52 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 APPEND_SLASH = False
 
 FRONTEND_URL = 'http://localhost:3000'
+
+# Set Django's timezone to IST
+TIME_ZONE = 'Asia/Kolkata'
+
+# Ensure Django uses the specified timezone
+USE_TZ = True
+
+# If USE_TZ is set to False, Django will use the system’s local timezone, which may require setting TZ environment variable 
+# in docker-compose.yaml or the system environment.
+# environment:
+#   - TZ=Asia/Kolkata
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S %Z',  # Include %Z for timezone name
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/app/logs/django.log',
+            'formatter': 'verbose',
+        },
+        'file_backup': {
+        'level': 'DEBUG',
+        'class': 'logging.FileHandler',
+        'filename': '/app/logs_backup/django.log',
+        'formatter': 'verbose',
+    },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
