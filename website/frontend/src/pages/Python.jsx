@@ -48,6 +48,30 @@ const Python = () => {
               📋 Django Logging Configuration
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/documentation/diff-between-django_repr_and_str.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              🐍 Django: `__repr__` vs `__str__` Comparison
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/documentation/django-models-and-app-config-guide.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              🌟 Django Models and App Configuration Guide
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/documentation/django-simple-restful-api-guide.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              ⚙️ Building a Simple RESTful API with DRF
+            </NavLink>
+          </li>
         </ul>
       </div>
     </div>

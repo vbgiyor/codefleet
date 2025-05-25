@@ -1,4 +1,73 @@
-# The pyproject.toml is placed at the root of codefleet/ because it’s the standard, centralized location for Python project configurations in a monorepo, 
-# serving both django/ and python/ modules. It ensures consistent tooling, dependency management, and CI/CD integration across Python projects without 
-# affecting non-Python modules (website/, java/, selenium/). This placement aligns with Python best practices, monorepo conventions, 
-# and the codefleet structure’s need for unified Python settings.
+[project]
+name = "codefleet"
+version = "0.1.0"
+description = "A collection of Python projects including bookslibrary, drfsessions, ecommerce, and website backend"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"},
+]
+dependencies = [
+    "Django>=4.2,<5.0",
+    "djangorestframework>=3.14,<4.0",
+    "psycopg2-binary>=2.9,<3.0",
+    "python-dotenv>=1.0,<2.0",
+    "requests>=2.31,<3.0",
+]
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4,<8.0",
+    "pytest-django>=4.5,<5.0",
+    "black>=23.0,<24.0",
+    "isort>=5.12,<6.0",
+    "ruff>=0.6,<0.7",
+    "coverage>=7.3,<8.0",
+]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip = ["migrations"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = [".git", "__pycache__", "migrations", "*/migrations/*", ".venv", "venv", "env"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "D",   # pydocstyle
+]
+ignore = [
+    "E203",  # Whitespace before ':', ignored for black compatibility
+    "D100",  # Missing docstring in public module
+    "D104",  # Missing docstring in public package
+    "D211",  # No blank line before class
+    "D212",  # Multi-line docstring summary should start at the first line
+    "D101",  # Missing docstring in public class
+    "D102",  # Missing docstring in public method
+    "D105",  # Missing docstring in magic method
+    "D107",  # Missing docstring in __init__
+    "D103", # Missing docstring in public function
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "codefleet.settings"
+python_files = ["tests.py", "test_*.py"]
+addopts = "--cov --cov-report=html"
