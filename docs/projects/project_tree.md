@@ -1,3 +1,9 @@
+# Codefleet Project Structure
+
+The `codefleet` repository is a monorepo, organizing multiple projects for the `codefleet` web app. Below is the detailed structure:
+
+```
+codefleet
 .
 ├── .github
 │   └── workflows
@@ -151,22 +157,28 @@
 │   │   ├── bookslibrary.md
 │   │   ├── codefleet-web-app-dev-journey.md
 │   │   ├── djangocommerce.md
-│   │   ├── project_structure.md
+│   │   ├── project_tree.md
 │   │   ├── selenium.md
 │   │   ├── simple-DRF-projects.md
 │   │   └── website.md
 │   ├── python
 │   │   ├── drf
+│   │   │   ├── diff-between-django_repr_and_str.md
+│   │   │   ├── django_logging_configuration.md
 │   │   │   ├── django_orm_basics.md
+│   │   │   ├── django-models-and-app-config-guide.md
+│   │   │   ├── django-simple-restful-api-guide.md
 │   │   │   └── variables.md
-│   │   └── learn-to-code
+│   │   └── journal
 │   │       └── rendering_markdown_doc_as_html.md
 │   └── solutions
 │       ├── aws-deployment-and-hosting.md
 │       ├── basic-auth-browser-prompt-issue-resolution.md
+│       ├── docker_postgres_tutorial.md
 │       ├── git-checkout-conflict-branch.md
 │       ├── markdown-file-benefits.md
-│       └── selenium-test-independence-guide.md
+│       ├── selenium-test-independence-guide.md
+│       └── strategy_to_manage_git_branches_releases.md
 ├── LICENSE
 ├── project_tree.txt
 ├── pyproject.toml
@@ -199,12 +211,15 @@
 │   ├── drfsessions
 │   │   └── warmup
 │   │       ├── basics
-│   │       │   ├── __init__.py
 │   │       │   ├── admin.py
 │   │       │   ├── apps.py
+│   │       │   ├── customdjangomodel.py
 │   │       │   ├── migrations
 │   │       │   │   └── __init__.py
+│   │       │   ├── models
+│   │       │   │   └── __init__.py
 │   │       │   ├── models.py
+│   │       │   ├── quickbits.py
 │   │       │   ├── tests.py
 │   │       │   └── views.py
 │   │       ├── db.sqlite3
@@ -266,6 +281,7 @@
 │               │   └── views.py
 │               └── wsgi.py
 ├── README.md
+├── ruff_report.txt
 ├── scripts
 │   ├── build_website.sh
 │   ├── clean_stray_bookstore.sh
@@ -296,6 +312,8 @@
     │   ├── docker-compose.yml
     │   ├── Dockerfile
     │   ├── init-db.sql
+    │   ├── logs
+    │   │   └── django.log
     │   ├── manage.py
     │   ├── requirements.txt
     │   └── templates
@@ -371,4 +389,7 @@
         │   └── styles.css
         └── tailwind.config.js
 
-110 directories, 262 files
+112 directories, 272 files
+```
+
+*Last Updated: May 25, 2025*
