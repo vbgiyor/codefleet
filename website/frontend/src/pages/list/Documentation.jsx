@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'; 
-import { useParams, useNavigate, useLocation} from 'react-router-dom'; 
-import { marked } from 'marked'; 
-import 'github-markdown-css/github-markdown-light.css'; 
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { marked } from 'marked';
+import 'github-markdown-css/github-markdown-light.css';
 import '../../styles.css';
 
 const Documentation = () => {
-  const { filename } = useParams(); 
-  const navigate = useNavigate(); 
-  const [markdownContent, setMarkdownContent] = useState(''); 
+  const { filename } = useParams();
+  const navigate = useNavigate();
+  const [markdownContent, setMarkdownContent] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false); // Fullscreen state
-  const modalRef = useRef(null); 
+  const modalRef = useRef(null);
   const fullscreenButtonRef = useRef(null); // Reference to the fullscreen button
   const location = useLocation();
-  
 
   // Fetch markdown content
   useEffect(() => {
@@ -20,9 +19,7 @@ const Documentation = () => {
       try {
         const fullPath = location.pathname.replace(/^\/documentation\//, '');
         const cleanPath = fullPath.endsWith('.md') ? fullPath : `${fullPath}.md`;
-        const response = await fetch(`/markdown/${cleanPath}?ts=${new Date().getTime()}`, {
-          cache: 'no-store'
-        });
+        const response = await fetch(`/markdown/${cleanPath}?ts=${new Date().getTime()}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`File not found: ${response.statusText}`);
         const text = await response.text();
         setMarkdownContent(marked(text, { gfm: true, breaks: true }));
@@ -32,37 +29,46 @@ const Documentation = () => {
       }
     };
     fetchMarkdown();
-  }, [filename, location.pathname]); 
+  }, [filename, location.pathname]);
 
   // Handle click outside of the modal
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only handle clicks outside if the modalRef and fullscreenButtonRef are available
       if (modalRef.current && fullscreenButtonRef.current) {
-        if (
-          !modalRef.current.contains(event.target) &&
-          !fullscreenButtonRef.current.contains(event.target)
-        ) {
+        if (!modalRef.current.contains(event.target) && !fullscreenButtonRef.current.contains(event.target)) {
           navigate(-1);
         }
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [navigate]);
+
+  // Handle fullscreen change events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   // Handle Escape key to exit fullscreen
   useEffect(() => {
     const handleEscapeKey = (event) => {
       if (event.key === 'Escape' && isFullscreen) {
-        // Exit fullscreen if in fullscreen mode
-        if (
-          document.fullscreenElement ||
-          document.mozFullScreenElement ||
-          document.webkitFullscreenElement ||
-          document.msFullscreenElement
-        ) {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
           if (document.exitFullscreen) {
             document.exitFullscreen();
           } else if (document.mozCancelFullScreen) {
@@ -76,7 +82,6 @@ const Documentation = () => {
         }
       }
     };
-
     document.addEventListener('keydown', handleEscapeKey);
     return () => document.removeEventListener('keydown', handleEscapeKey);
   }, [isFullscreen]);
@@ -86,7 +91,7 @@ const Documentation = () => {
     event.stopPropagation(); // Prevent the click from triggering handleClickOutside
     if (!isFullscreen) {
       if (modalRef.current.requestFullscreen) {
-        modalRef.current.requestFullscreen(); // Only modal goes fullscreen
+        modalRef.current.requestFullscreen();
       } else if (modalRef.current.mozRequestFullScreen) {
         modalRef.current.mozRequestFullScreen();
       } else if (modalRef.current.webkitRequestFullscreen) {
@@ -94,7 +99,7 @@ const Documentation = () => {
       } else if (modalRef.current.msRequestFullscreen) {
         modalRef.current.msRequestFullscreen();
       }
-      setIsFullscreen(true); // Set fullscreen state to true
+      setIsFullscreen(true);
     }
   };
 
@@ -108,20 +113,20 @@ const Documentation = () => {
         >
           Close
         </button>
-
         {/* Fullscreen Button */}
-        {!isFullscreen && (
-          <button
-            ref={fullscreenButtonRef}
-            onClick={toggleFullscreen} // Enter fullscreen
-            className="absolute top-[-40px] left-0 text-white bg-blue-500 px-3 py-1 rounded hover:bg-blue-700 z-[1002]"
-          >
-            Enter Fullscreen
-          </button>
-        )}
-
+        <button
+          ref={fullscreenButtonRef}
+          onClick={toggleFullscreen}
+          className="absolute top-[-40px] left-0 text-white bg-blue-500 px-3 py-1 rounded hover:bg-blue-700 z-[1002]"
+          style={{ display: isFullscreen ? 'none' : 'block' }} // Ensure button is hidden in fullscreen
+        >
+          Enter Fullscreen
+        </button>
         {/* Modal Content */}
-        <div ref={modalRef} className={`bg-white h-full overflow-auto p-6 rounded-lg shadow-lg ${isFullscreen ? 'w-full' : ''}`}>
+        <div
+          ref={modalRef}
+          className={`bg-white h-full overflow-auto p-6 rounded-lg shadow-lg ${isFullscreen ? 'w-full' : ''}`}
+        >
           <div className="markdown-body" dangerouslySetInnerHTML={{ __html: markdownContent }} />
         </div>
       </div>
