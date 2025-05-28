@@ -15,6 +15,9 @@ const Python = () => {
       </div>
 
       <div className="container mx-auto mt-8">
+        <h4 className="custom-font-size font-bold text-left text-blue-600 my-8" id="drf_resource_title">
+          Django Rest Framework (DRF) Resources
+        </h4>
         <ul className="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
           <li>
             <NavLink
@@ -22,6 +25,22 @@ const Python = () => {
               className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
             >
               🧩 Django ORM Basics
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/documentation/django-migrations-fundamentals.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              📘 Django Migrations Fundamentals
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/documentation/django-migrations-examples-guide.md"
+              className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
+            >
+              🗄️ Django Migrations Examples
             </NavLink>
           </li>
           <li>
@@ -53,7 +72,7 @@ const Python = () => {
               to="/documentation/diff-between-django_repr_and_str.md"
               className="cursor-pointer text-dark-blue text-center hover:text-blue-700"
             >
-              🐍 Django: `__repr__` vs `__str__` Comparison
+              🔤 `__repr__` vs `__str__` Comparison
             </NavLink>
           </li>
           <li>
@@ -72,6 +91,7 @@ const Python = () => {
               ⚙️ Building a Simple RESTful API with DRF
             </NavLink>
           </li>
+          
         </ul>
       </div>
     </div>

@@ -99,3 +99,6 @@ staticfiles/
 webenv/
 .webenv/
 .webenv*/
+
+ruff_report.txt
+project_tree.txt
