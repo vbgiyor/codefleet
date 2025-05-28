@@ -2,6 +2,7 @@
 
 In Django, `__repr__` and `__str__` define how a model like `DjangoModel` is represented as a string, each serving a unique purpose. __repr__ and __str__ are not standalone Python functions but special methods (also called magic methods or dunder methods) in Python. They are used to define how objects of a class are represented as strings, typically for debugging (__repr__) or user-friendly display (__str__).
 
+
 ## 🔍 `__repr__(self)`
 
 - **Purpose**: Detailed, unambiguous string for developers and debugging.
@@ -19,6 +20,7 @@ In Django, `__repr__` and `__str__` define how a model like `DjangoModel` is rep
      obj = MyClass()
      print(repr(obj))  # Outputs: MyClass()
 ```
+=======
 
 ## 📝 `__str__(self)`
 
@@ -37,6 +39,7 @@ In Django, `__repr__` and `__str__` define how a model like `DjangoModel` is rep
      obj = MyClass()
      print(obj)  # Outputs: MyClass object
 ```
+=======
 
 ## ⚖️ Key Differences
 
@@ -47,7 +50,6 @@ In Django, `__repr__` and `__str__` define how a model like `DjangoModel` is rep
 | **Django Usage**  | 🔄 Fallback, less customized            | 🌟 Primary for admin, templates, logs   |
 | **Output**        | 📜 Technical, e.g., `DjangoModel(id=1)` | 📋 Readable, e.g., `Name (ID: 1)`      |
 
-
 - `__repr__` is for developers and debugging; `__str__` is for user-facing output.
 
 - If `__str__` is missing, `__repr__` is used as a fallback, but not vice versa.
@@ -55,3 +57,4 @@ In Django, `__repr__` and `__str__` define how a model like `DjangoModel` is rep
 **Why They're Not Functions**: They are class methods you define, not built-in functions like `len()` or `print()`. They're part of Python's data model, invoked implicitly by `str()` or `repr()`.
 
 *Last Updated: May 27, 2025*
+=======

@@ -91,7 +91,6 @@ const Python = () => {
               ⚙️ Building a Simple RESTful API with DRF
             </NavLink>
           </li>
-          
         </ul>
       </div>
     </div>
