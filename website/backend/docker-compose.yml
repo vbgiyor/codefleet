@@ -13,17 +13,38 @@ services:
       - EMAIL_HOST_PASSWORD=kfmwmepqablmfnfp
     volumes:
       - .:/app
+      - ../frontend/src/styles.css:/app/frontend/src/styles.css
       - ../frontend/build:/app/frontend/build
       - ../../docs/python/journal:/app/static/markdown/journal:ro
       - ../../docs/python/drf:/app/static/markdown/drf:ro
       - ./logs:/app/logs  # bind mount for real-time host access
-      - logs_backup:/app/logs_backup  # optional backup volume
+      - ./logs_backup:/app/logs_backup  # optional backup volume
+      - ../frontend/public/static/md_to_html:/app/frontend/public/static/md_to_html
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 codefleet.wsgi:application"
     depends_on:
       db:
         condition: service_healthy
+      md-to-html:
+        condition: service_started
+    networks:
+      - codefleet-network
+  md-to-html:
+    image: python:3.11-slim
+    volumes:
+      - ../../docs:/app/docs:ro
+      - ../../scripts/md_to_html.py:/app/md_to_html.py
+      - ./static/markdown/md_to_html:/app/static/markdown/md_to_html
+    working_dir: /app
+    command: >
+      sh -c "apt-get update && apt-get install -y inotify-tools &&
+            pip install markdown pymdown-extensions &&
+            python md_to_html.py &&  # Run once at startup to ensure the script runs at least once when the container starts, generating the HTML files.
+            while true; do
+              inotifywait -r -e modify -e create -e delete /app/docs &&
+              python md_to_html.py;
+            done"
     networks:
       - codefleet-network
   db:

@@ -1,7 +1,7 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles.css";
-const Python = () => {
+const MarkDownToHTML = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {" "}
@@ -38,40 +38,36 @@ const Python = () => {
               <ul className="ml-9 list-disc">
                 {" "}
                 <li>
-                  {" "}
-                  <NavLink
-                    to="/documentation/data_types_type_conversion.md"
+                  <Link
+                    to="/docs/python/journal/data_types_type_conversion"
                     className="hover:text-blue-800"
                   >
                     {" "}
                     📊 Data Types and Type Conversions{" "}
-                  </NavLink>{" "}
+                  </Link>
                 </li>{" "}
               </ul>{" "}
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/variables.md"
+              <Link
+                to="/docs/python/journal/variables"
                 className="hover:text-blue-800"
               >
                 {" "}
                 🔄 Variables{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/diff-between-django_repr_and_str.md"
+              <Link
+                to="/docs/python/drf/diff-between-django_repr_and_str"
                 className="hover:text-blue-800"
               >
                 {" "}
                 🔤 `__repr__` vs `__str__` Comparison{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
           </ul>{" "}
         </div>{" "}
-        {/* Django Resources Column */}{" "}
         <div className="flex flex-col" id="django_index">
           {" "}
           <h4
@@ -84,80 +80,73 @@ const Python = () => {
           <ul className="cursor-pointer text-dark-blue list-disc list-inside space-y-2 text-gray-700">
             {" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/django_orm_basics.md"
+              <Link
+                to="/docs/python/drf/django_orm_basics"
                 className="hover:text-blue-800"
               >
                 {" "}
                 🧩 Django ORM Basics{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
             <li>
               📝 Django Migrations{" "}
               <ul className="ml-9 list-disc">
                 {" "}
                 <li>
-                  {" "}
-                  <NavLink
-                    to="/documentation/django-migrations-fundamentals.md"
+                  <Link
+                    to="/docs/python/drf/django-migrations-fundamentals"
                     className="hover:text-blue-800"
                   >
                     {" "}
                     📘 Django Migrations Fundamentals{" "}
-                  </NavLink>{" "}
+                  </Link>
                 </li>{" "}
                 <li>
-                  {" "}
-                  <NavLink
-                    to="/documentation/django-migrations-examples-guide.md"
+                  <Link
+                    to="/docs/python/drf/django-migrations-examples-guide"
                     className="hover:text-blue-800"
                   >
                     {" "}
                     🗄️ Django Migrations Examples{" "}
-                  </NavLink>{" "}
+                  </Link>
                 </li>{" "}
               </ul>{" "}
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/django_logging_configuration.md"
+              <Link
+                to="/docs/python/drf/django_logging_configuration"
                 className="hover:text-blue-800"
               >
                 {" "}
                 📋 Django Logging Configuration{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/django-models-and-app-config-guide.md"
+              <Link
+                to="/docs/python/drf/django-models-and-app-config-guide"
                 className="hover:text-blue-800"
               >
                 {" "}
                 🏗️ Django Models and App Configuration Guide{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/django-simple-restful-api-guide.md"
+              <Link
+                to="/docs/python/drf/django-simple-restful-api-guide"
                 className="hover:text-blue-800"
               >
                 {" "}
                 ⚙️ Building a Simple RESTful API with DRF{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
             <li>
-              {" "}
-              <NavLink
-                to="/documentation/rendering_markdown_doc_as_html.md"
+              <Link
+                to="/docs/python/journal/rendering_markdown_doc_as_html"
                 className="hover:text-blue-800"
               >
                 {" "}
                 🌐 Rendering Markdown as HTML{" "}
-              </NavLink>{" "}
+              </Link>
             </li>{" "}
           </ul>{" "}
         </div>{" "}
@@ -165,4 +154,4 @@ const Python = () => {
     </div>
   );
 };
-export default Python;
+export default MarkDownToHTML;

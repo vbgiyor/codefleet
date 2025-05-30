@@ -1,4 +1,4 @@
-## 📚 Django Migrations (`django.db.migrations`)
+# 📚 Django Migrations
 
 ## 🛠 Responsibilities of `django.db.migrations`
 
@@ -129,7 +129,7 @@
 
 ***
 
-# Django State Management Simplified 🗄️
+## Django State Management Simplified 🗄️
 
 ## 📖 What is State Management in Django?
 

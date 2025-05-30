@@ -16,6 +16,7 @@ const Header = () => {
   const caseStudiesItems = [
     { name: 'Java', path: '/case-studies/java' },
     { name: 'Python', path: '/case-studies/python' },
+    { name: 'MarkdownToHTML', path: '/case-studies/markdowntohtml' },
     { name: 'Automation', path: '/case-studies/automation' },
   ];
 

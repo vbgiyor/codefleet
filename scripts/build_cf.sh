@@ -27,5 +27,9 @@ echo "Copying built frontend to backend static files..."
 cd ../backend
 echo "Collecting static files..."
 docker-compose exec codefleet python manage.py collectstatic --noinput
+echo $pwd
+
+cd ../../scripts
+bash ./copy_markdown_files.sh
 
 echo "Build complete! Access the app at http://localhost:8000"
