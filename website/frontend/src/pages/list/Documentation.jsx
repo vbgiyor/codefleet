@@ -23,7 +23,6 @@ const Documentation = () => {
         if (!response.ok)
           throw new Error(`File not found: ${response.statusText}`);        
         const text = await response.text();
-        console.log("Raw response:", text);
         setMarkdownContent(marked(text, { gfm: true, breaks: true }));
       } catch (error) {
         console.error("Error fetching markdown:", error);
