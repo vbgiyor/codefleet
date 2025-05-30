@@ -131,6 +131,7 @@
 
 ## Django State Management Simplified 🗄️
 
+
 ## 📖 What is State Management in Django?
 
 Django's migration system translates changes in your Python model definitions (e.g., adding a field, modifying a relationship) into database schema changes. To do this reliably, Django maintains a **migration state**—a snapshot of your models' structure at each migration point. This state is stored in the migration files and helps Django understand the model definitions during migration execution, even if the actual model code changes later.
