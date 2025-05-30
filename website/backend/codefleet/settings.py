@@ -52,7 +52,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / 'templates',
-            BASE_DIR / './frontend/build',  # Correct path for React build output
+            BASE_DIR / 'frontend' / 'build',  # Correct path for React build output
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -69,6 +69,8 @@ TEMPLATES = [
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
     BASE_DIR / 'frontend' / 'build' / 'static',
+    BASE_DIR / 'frontend' / 'src',
+    BASE_DIR / 'static' / 'markdown' / 'md_to_html',
 ]
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
