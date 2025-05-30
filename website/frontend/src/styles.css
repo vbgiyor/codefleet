@@ -26,6 +26,10 @@ body {
   font-size: 20px; /* Or any size, e.g., 24px, 2rem */
 }
 
+.square-bullets {
+  list-style-type: square;
+}
+
 .navbar,
 .footer {
   background: var(--glass-bg);
