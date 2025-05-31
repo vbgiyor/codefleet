@@ -1,6 +1,6 @@
 # Codefleet Web Application Development Journey
 
-This document captures the development journey of the Codefleet website, a React and Django-based application, over the period of May 12–14, 2025. It details the problems faced, solutions implemented, recommendations, implementation approaches, and key learnings. The website was developed to include basic functionalities like navigation, case studies, authentication (Sign In/Sign Out, Basic Auth), and password reset, while ensuring compatibility with Selenium automation testing via the CFInspector module.
+This document captures the development journey of the Codefleet website, a React and Django-based application, over the period of May 12–14, 2025. It details the problems faced, solutions implemented, recommendations, implementation approaches, and key learnings. The website was developed to include basic functionalities like navigation, Resources, authentication (Sign In/Sign Out, Basic Auth), and password reset, while ensuring compatibility with Selenium automation testing via the CFInspector module.
 
 ## Project Overview
 
@@ -39,12 +39,12 @@ This document captures the development journey of the Codefleet website, a React
 **Approach:** Shekhar moved the font to the `public/` directory and updated the CSS, ensuring the font loaded without bundling interference.
 
 ### 2. Blank Pages for A/B Testing, Add/Remove Elements, and Basic Auth
-**Problem:** Links on the Automation page (`/case-studies/automation`) for A/B Testing, Add/Remove Elements, and Basic Auth led to blank pages.
+**Problem:** Links on the Automation page (`/resources/selenium`) for A/B Testing, Add/Remove Elements, and Basic Auth led to blank pages.
 
 **Solution:**
-- **Diagnosis:** The links in `Automation.jsx` (`/abtest`, `/addremoveelements`, `/basicauth/`) did not match the routes in `App.jsx` (`/case-studies/automation/abtest`, etc.). The Basic Auth link used `<a>` instead of `<Link>`, causing a full page reload.
+- **Diagnosis:** The links in `Automation.jsx` (`/abtest`, `/addremoveelements`, `/basicauth/`) did not match the routes in `App.jsx` (`/resources/selenium/abtest`, etc.). The Basic Auth link used `<a>` instead of `<Link>`, causing a full page reload.
 - **Fix:**
-  - Updated `App.jsx` to define nested routes under `/case-studies/automation`:
+  - Updated `App.jsx` to define nested routes under `/resources/selenium`:
     ```jsx
     <Route path="automation">
       <Route index element={<Automation />} />
@@ -63,7 +63,7 @@ This document captures the development journey of the Codefleet website, a React
     <Link to="/basicauth">Basic Auth</Link>
     ```
   - Added `<Outlet />` in `Automation.jsx` to render nested routes.
-- **Verification:** The pages loaded correctly at `/case-studies/automation/abtest`, `/case-studies/automation/addremoveelements`, and `/basicauth`.
+- **Verification:** The pages loaded correctly at `/resources/selenium/abtest`, `/resources/selenium/addremoveelements`, and `/basicauth`.
 
 **Recommendation:** Use `<Link>` for client-side navigation in React to prevent full page reloads. Define routes hierarchically with nested routes for better organization.
 
@@ -256,24 +256,24 @@ This document captures the development journey of the Codefleet website, a React
 
 **Approach:** Shekhar confirmed the CORS settings were correct and relied on `@csrf_exempt` to bypass CSRF issues, resolving the 403 errors.
 
-### 9. Case Studies Dropdown in Header
-**Problem:** The header needed a “Case Studies” tab with a dropdown for Java, Python, and Automation pages, with flexibility for future additions.
+### 9. Resources Dropdown in Header
+**Problem:** The header needed a “Resources” tab with a dropdown for Java, Python, and Automation pages, with flexibility for future additions.
 
 **Solution:**
 - **Fix:**
   - Created `Header.jsx` with a click-based dropdown using React state:
     ```jsx
-    const [isCaseStudiesOpen, setIsCaseStudiesOpen] = useState(false);
-    const caseStudies = [
-      { name: "Java", path: "/case-studies/java" },
-      { name: "Python", path: "/case-studies/python" },
-      { name: "Automation", path: "/case-studies/automation" },
+    const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+    const Resources = [
+      { name: "Java", path: "/resources/java" },
+      { name: "Python", path: "/resources/python" },
+      { name: "Automation", path: "/resources/selenium" },
     ];
     ```
   - Updated `App.jsx` to include new routes:
     ```jsx
-    <Route path="case-studies">
-      <Route index element={<CaseStudies />} />
+    <Route path="resources">
+      <Route index element={<Resources />} />
       <Route path="java" element={<JavaCaseStudy />} />
       <Route path="python" element={<PythonCaseStudy />} />
       <Route path="automation" element={<AutomationCaseStudy />}>
@@ -283,8 +283,8 @@ This document captures the development journey of the Codefleet website, a React
     </Route>
     ```
   - Created placeholder components (`JavaCaseStudy.jsx`, `PythonCaseStudy.jsx`, `AutomationCaseStudy.jsx`).
-  - Updated `Home.jsx` to link to `/case-studies/automation` with the new ID `case_studies_automation_link`.
-- **Verification:** The header displayed Home, Case Studies (with dropdown), Contact, and Account tabs. Clicking Case Studies showed the dropdown with Java, Python, and Automation links.
+  - Updated `Home.jsx` to link to `/resources/selenium` with the new ID `resources_selenium_link`.
+- **Verification:** The header displayed Home, Resources (with dropdown), Contact, and Account tabs. Clicking Resources showed the dropdown with Java, Python, and Automation links.
 
 **Recommendation:** Use an array for dropdown items to ensure extensibility. Consider a backend API for dynamic case study data in the future.
 
