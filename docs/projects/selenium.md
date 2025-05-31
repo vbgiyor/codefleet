@@ -137,7 +137,7 @@ The `selenium` project is a Java-based UI testing framework using Selenium WebDr
   - `LoggerUtil`, `ScreenShotUtil`, `WaitForElementsUtil`: Utility classes.
 - **Tests**:
   - `HomePageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/homepage`).
-  - `ABTestPageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/automationpage/abtestpage`).
+  - `ABTestPageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/selenium/page/abtestpage`).
 - **Configuration**:
   - `data.properties`: Test data.
   - `locators.properties`: Element locators.

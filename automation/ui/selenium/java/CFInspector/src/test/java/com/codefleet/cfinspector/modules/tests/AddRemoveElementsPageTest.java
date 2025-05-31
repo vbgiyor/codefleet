@@ -25,7 +25,7 @@ public class AddRemoveElementsPageTest extends BasePageTest {
 
     @Test
     public void testAddRemovePageLoadsSuccessfully() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation/addremoveelements";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/addremoveelements";
         String actualUrl = addRemoveElementsPage.getCurrentUrl();
         LoggerUtil.info("Current URL: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "Add Remove Elements page did not load successfully");
@@ -167,7 +167,7 @@ public class AddRemoveElementsPageTest extends BasePageTest {
         AutomationPage returnedPage = addRemoveElementsPage.clickBackLink();
         Assert.assertTrue(returnedPage.isAutomationPageLoaded(),
                 "Navigation back to Automation page failed; A/B Testing link is not displayed.");
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium";
         String actualUrl = returnedPage.getCurrentUrl();
         LoggerUtil.info("Expected URL: " + expectedUrl);
         LoggerUtil.info("Actual URL: " + actualUrl);

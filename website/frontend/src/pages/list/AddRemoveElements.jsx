@@ -33,8 +33,8 @@ const AddRemoveElements = () => {
     <div className="container mx-auto py-8 bg-gray-100 min-h-full">
       {/* Back Link */}
       <div className="mb-4">
-        <Link to=".." className="text-blue-600 hover:text-blue-800 underline">
-          ← Back to Automation
+        <Link to="../selenium/cfinspector" className="text-blue-600 hover:text-blue-800 underline">
+          ← Back to CFInspector
         </Link>
       </div>
 

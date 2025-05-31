@@ -13,7 +13,7 @@ public class PageNavigationUtility {
             homePage = new HomePage(driver);
             homePage.navigateTo(baseUrl);
             LoggerUtil.info("Navigating to Home page: " + driver.getCurrentUrl());
-            homePage.clickCaseStudiesButton();
+            homePage.clickResourcesButton();
             if(homePage.getCurrentUrl().equalsIgnoreCase(baseUrl + "/"))
                 return homePage.clickHomeButton();
         } catch (RuntimeException e) {
@@ -30,8 +30,8 @@ public class PageNavigationUtility {
             HomePage homePage =  navigateToHomePage(driver);
             automationPage = new AutomationPage(driver);
             LoggerUtil.info("Navigating to Automation Testing page: " + automationPage.getCurrentUrl());
-            homePage.clickCaseStudiesButton();
-            if (homePage.displayCaseStudiesDropdown()) {
+            homePage.clickResourcesButton();
+            if (homePage.displayResourcesDropdown()) {
                 return homePage.clickAutomationLink();
             }
         } catch (RuntimeException e) {

@@ -5,22 +5,22 @@ import axios from 'axios';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
-  const [isCaseStudiesOpen, setIsCaseStudiesOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [firstName, setFirstName] = useState(localStorage.getItem('first_name') || null);
   const logo = '/static/images/logo.png';
   const navigate = useNavigate();
   const location = useLocation();
-  const caseStudiesRef = useRef(null);
+  const ResourcesRef = useRef(null);
   const authDropdownRef = useRef(null);
 
-  const caseStudiesItems = [
-    { name: 'Java', path: '/case-studies/java' },
-    { name: 'Python', path: '/case-studies/python' },
-    { name: 'MarkdownToHTML', path: '/case-studies/markdowntohtml' },
-    { name: 'Automation', path: '/case-studies/automation' },
+  const ResourcesItems = [
+    { name: 'Java', path: '/resources/java' },
+    { name: 'Python', path: '/resources/python' },
+    { name: 'Selenium', path: '/resources/selenium' },
+    { name: 'Docs', path: '/resources/docs' },
   ];
 
-  const isCaseStudiesActive = location.pathname.startsWith('/case-studies');
+  const isResourcesActive = location.pathname.startsWith('/resources');
 
   useEffect(() => {
     const updateFirstName = () => {
@@ -56,8 +56,8 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (caseStudiesRef.current && !caseStudiesRef.current.contains(event.target)) {
-        setIsCaseStudiesOpen(false);
+      if (ResourcesRef.current && !ResourcesRef.current.contains(event.target)) {
+        setIsResourcesOpen(false);
       }
       if (authDropdownRef.current && !authDropdownRef.current.contains(event.target)) {
         setIsAuthDropdownOpen(false);
@@ -116,32 +116,32 @@ const Header = () => {
             >
               Home
             </NavLink>
-            <div className="relative" ref={caseStudiesRef}>
+            <div className="relative" ref={ResourcesRef}>
               <NavLink
-                to="/case-studies"
+                to="/resources"
                 onClick={(e) => {
                   e.preventDefault();
-                  setIsCaseStudiesOpen(!isCaseStudiesOpen);
+                  setIsResourcesOpen(!isResourcesOpen);
                 }}
                 className={() =>
                   `w-24 text-center h-10 flex items-center justify-center ${
-                    isCaseStudiesActive ? 'text-white' : 'text-primary-blue'
+                    isResourcesActive ? 'text-white' : 'text-primary-blue'
                   } hover:text-bluish-black hover:bg-transparent hover:rounded`
                 }
-                id="menu_case_studies"
+                id="menu_resources"
               >
-                Case Studies
+                Resources
               </NavLink>
-              {isCaseStudiesOpen && (
-                <div className="absolute left-0 mt-2 w-48 rounded shadow-lg sm:block" id="case_studies_dropdown">
-                  {caseStudiesItems.map((item) => (
+              {isResourcesOpen && (
+                <div className="absolute left-0 mt-2 w-48 rounded shadow-lg sm:block" id="resources_dropdown">
+                  {ResourcesItems.map((item) => (
                     <NavLink
                       key={item.path}
                       to={item.path}
                       className={({ isActive }) =>
                         `block px-4 py-2 ${isActive ? 'text-primary-blue font-bold' : 'text-primary-blue hover:bg-white'}`
                       }
-                      onClick={() => setIsCaseStudiesOpen(false)}
+                      onClick={() => setIsResourcesOpen(false)}
                     >
                       {item.name}
                     </NavLink>

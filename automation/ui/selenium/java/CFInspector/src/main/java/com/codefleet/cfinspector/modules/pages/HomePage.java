@@ -1,6 +1,5 @@
 package com.codefleet.cfinspector.modules.pages;
 
-import com.codefleet.cfinspector.modules.config.ConfigManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -32,45 +31,45 @@ public class HomePage extends BasePage {
         return new ContactPage(driver);
     }
 
-    public void clickCaseStudiesButton() {
-        WebElement caseStudiesButton = driver.findElement(locatorParser.getElementLocator("header.menu_case_studies"));
-        click(caseStudiesButton);
+    public void clickResourcesButton() {
+        WebElement resourcesButton = driver.findElement(locatorParser.getElementLocator("header.menu_resources"));
+        click(resourcesButton);
     }
 
-    public boolean displayCaseStudiesDropdown() {
-        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.case_studies_dropdown"));
+    public boolean displayResourcesDropdown() {
+        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.resources_dropdown"));
         return isElementDisplayed(dropdown);
     }
 
     public boolean displayJavaLink() {
-        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.case_studies_java_link"));
+        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.resources_java_link"));
         return isElementDisplayed(dropdown);
     }
 
     public boolean displayPythonLink() {
-        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.case_studies_python_link"));
+        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.resources_python_link"));
         return isElementDisplayed(dropdown);
     }
 
     public boolean displayAutomationLink() {
-        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.case_studies_automation_link"));
+        WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
         return isElementDisplayed(dropdown);
     }
 
     public JavaPage clickJavaLink() {
-        WebElement javaLink = driver.findElement(locatorParser.getElementLocator("header.case_studies_java_link"));
+        WebElement javaLink = driver.findElement(locatorParser.getElementLocator("header.resources_java_link"));
         click(javaLink);
         return new JavaPage(driver);
     }
 
     public PythonPage clickPythonLink() {
-        WebElement pythonLink = driver.findElement(locatorParser.getElementLocator("header.case_studies_python_link"));
+        WebElement pythonLink = driver.findElement(locatorParser.getElementLocator("header.resources_python_link"));
         click(pythonLink);
         return new PythonPage(driver);
     }
 
     public AutomationPage clickAutomationLink() {
-        WebElement automationLink = driver.findElement(locatorParser.getElementLocator("header.case_studies_automation_link"));
+        WebElement automationLink = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
         click(automationLink);
         return new AutomationPage(driver);
     }

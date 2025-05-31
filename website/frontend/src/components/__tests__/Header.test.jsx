@@ -26,23 +26,23 @@ describe('Header Component', () => {
         <Header />
       </MemoryRouter>
     );
-    const navLinks = ['Home', 'Case Studies', 'Contact'];
+    const navLinks = ['Home', 'Resources', 'Contact'];
     navLinks.forEach((link) => {
       expect(screen.getByText(link)).toBeInTheDocument();
     });
   });
 
-  test('renders Case Studies dropdown with correct links', () => {
+  test('renders Resources dropdown with correct links', () => {
     render(
       <MemoryRouter>
         <Header />
       </MemoryRouter>
     );
-    const caseStudiesButton = screen.getByText('Case Studies');
-    expect(caseStudiesButton).toBeInTheDocument();
+    const ResourcesButton = screen.getByText('Resources');
+    expect(ResourcesButton).toBeInTheDocument();
 
     // Click to open dropdown
-    fireEvent.click(caseStudiesButton);
+    fireEvent.click(ResourcesButton);
 
     const dropdownLinks = ['Java', 'Python', 'Automation'];
     dropdownLinks.forEach((link) => {
