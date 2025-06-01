@@ -23,32 +23,48 @@ public class PageNavigationUtility {
         return homePage;
     }
 
-
-    public static AutomationPage navigateToAutomationPage(WebDriver driver) {
-        AutomationPage automationPage;
+    public static SeleniumPage navigateToSeleniumPage(WebDriver driver) {
+        SeleniumPage seleniumPage;
         try {
             HomePage homePage =  navigateToHomePage(driver);
-            automationPage = new AutomationPage(driver);
-            LoggerUtil.info("Navigating to Automation Testing page: " + automationPage.getCurrentUrl());
+            seleniumPage = new SeleniumPage(driver);
+            LoggerUtil.info("Navigating to Selenium Testing page: " + seleniumPage.getCurrentUrl());
             homePage.clickResourcesButton();
             if (homePage.displayResourcesDropdown()) {
-                return homePage.clickAutomationLink();
+                return homePage.clickSeleniumLink();
             }
         } catch (RuntimeException e) {
-            LoggerUtil.error("Failed to navigate to A/B Testing page", e);
-            throw new RuntimeException("Navigating to Automation page failed.");
+            LoggerUtil.error("Failed to navigate to Selenium page", e);
+            throw new RuntimeException("Navigating to Selenium page failed.");
         }
-        return automationPage;
+        return seleniumPage;
+    }
+
+
+    public static CFInspectorPage navigateToCFInspectorPage(WebDriver driver) {
+        CFInspectorPage cfInspectorPage;
+        try {
+            SeleniumPage seleniumPage = navigateToSeleniumPage(driver);
+            cfInspectorPage = new CFInspectorPage(driver);
+            if (seleniumPage.displayProjectCFInspector()) {
+                seleniumPage.clickProjectCFInspector();
+                LoggerUtil.info("Navigating to CFInspector Testing page: " + cfInspectorPage.getCurrentUrl());
+            }
+        } catch (RuntimeException e) {
+            LoggerUtil.error("Failed to navigate to CFInspector page", e);
+            throw new RuntimeException("Navigating to CFInspector page failed.");
+        }
+        return cfInspectorPage;
     }
 
 
     public static ABTestPage navigateToABTestPage(WebDriver driver) {
         ABTestPage abTestPage;
         try {
-            AutomationPage automationPage = navigateToAutomationPage(driver);
+            CFInspectorPage CFInspectorPage = navigateToCFInspectorPage(driver);
             abTestPage = new ABTestPage(driver);
             LoggerUtil.info("Navigating to A/B Testing page: " + abTestPage.getCurrentUrl());
-            abTestPage = automationPage.clickABTestingLink();
+            abTestPage = CFInspectorPage.clickABTestingLink();
         } catch (RuntimeException e) {
             LoggerUtil.error("Failed to navigate to A/B Testing page", e);
             throw new RuntimeException("Navigation to A/B Testing page failed.", e);
@@ -60,10 +76,10 @@ public class PageNavigationUtility {
     {
         AddRemoveElementsPage addRemoveElementsPage;
         try{
-            AutomationPage automationPage = navigateToAutomationPage(driver);
+            CFInspectorPage CFInspectorPage = navigateToCFInspectorPage(driver);
             addRemoveElementsPage = new AddRemoveElementsPage(driver);
             LoggerUtil.info("Navigating to Add Remove Elements page: " + addRemoveElementsPage.getCurrentUrl());
-            addRemoveElementsPage = automationPage.clickAddRemoveLink();
+            addRemoveElementsPage = CFInspectorPage.clickAddRemoveLink();
         }catch (RuntimeException e){
             LoggerUtil.error("Failed to navigate to Add Remove Elements page.", e);
             throw new RuntimeException("Navigating to Add Remove Elements page failed.", e);

@@ -10,12 +10,12 @@ public class PythonPage extends BasePage{
     }
 
     public boolean isPythonPageLoaded() {
-        WebElement pythonPageHeading = driver.findElement(locatorParser.getElementLocator("python.heading"));
+        WebElement pythonPageHeading = driver.findElement(locatorParser.getElementLocator("python.title"));
         return isElementDisplayed(pythonPageHeading);
     }
 
     public String getTitleText() {
-        WebElement title = driver.findElement(locatorParser.getElementLocator("python.heading"));
+        WebElement title = driver.findElement(locatorParser.getElementLocator("python.title"));
         return getText(title);
     }
 }

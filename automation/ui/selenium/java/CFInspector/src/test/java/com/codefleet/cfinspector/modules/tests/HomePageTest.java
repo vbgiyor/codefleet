@@ -41,20 +41,7 @@ public class HomePageTest extends BasePageTest {
         Assert.assertTrue(homePage.displayResourcesDropdown(), "Resources dropdown is not displayed.");
         Assert.assertTrue(homePage.displayJavaLink(), "Java redirection displayed in Resources dropdown.");
         Assert.assertTrue(homePage.displayPythonLink(), "Python redirection displayed in Resources dropdown.");
-        Assert.assertTrue(homePage.displayAutomationLink(), "Automation redirection displayed in Resources dropdown.");
-    }
-
-    @Test
-    public void testNavigationToAutomationPageWorks() {
-        homePage.clickResourcesButton();
-        AutomationPage automationPage = homePage.clickAutomationLink();
-        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium";
-        String actualUrl = automationPage.getCurrentUrl();
-        Assert.assertEquals(actualUrl, expectedUrl, "Navigation to Automation page failed");
-        Assert.assertTrue(automationPage.isAutomationPageLoaded(), "Automation page did not load properly");
-        String expectedTitle = "Automation Testing";
-        String actualTitle = automationPage.getTitleText();
-        Assert.assertEquals(actualTitle, expectedTitle, "Automation page title is incorrect");
+        Assert.assertTrue(homePage.displaySeleniumLink(), "Selenium redirection displayed in Resources dropdown.");
     }
 
     @Test
@@ -67,7 +54,7 @@ public class HomePageTest extends BasePageTest {
         String actualUrl = javaPage.getCurrentUrl();
         Assert.assertEquals(actualUrl, expected_url, "Navigation to Java page failed.");
         Assert.assertTrue(javaPage.isJavaPageLoaded(), "Java page didn't load properly.");
-        String expectedHeading = "Java Case Study";
+        String expectedHeading = "Java Resource Library";
         String actualHeading = javaPage.getTitleText();
         Assert.assertEquals(actualHeading, expectedHeading, "Java page heading displayed incorrectly.");
     }

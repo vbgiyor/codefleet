@@ -1,18 +1,17 @@
 package com.codefleet.cfinspector.modules.pages;
 
-import com.codefleet.cfinspector.modules.utils.WaitForElementsUtil;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class AutomationPage extends BasePage {
+public class CFInspectorPage extends BasePage {
 
-    public AutomationPage(WebDriver driver) {
+    public CFInspectorPage(WebDriver driver) {
         super(driver);
     }
 
-    public String getTitleText() {
-        WebElement title = driver.findElement(locatorParser.getElementLocator("automation.title"));
-        return getText(title);
+    public String getProjectTitleText() {
+        WebElement title = driver.findElement(locatorParser.getElementLocator("cfinspector.project.title"));
+        return title.getText();
     }
 
     public String getInternetDescriptionText() {

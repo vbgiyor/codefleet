@@ -12,10 +12,10 @@ public class ABTestPage extends BasePage {
         super(driver);
     }
 
-    public AutomationPage clickBackLink() {
+    public CFInspectorPage clickBackLink() {
         WebElement backLink = driver.findElement(locatorParser.getElementLocator("abtest.back_link"));
         click(backLink);
-        return new AutomationPage(driver);
+        return new CFInspectorPage(driver);
     }
 
     public String getVersionAHeadlineText() {
