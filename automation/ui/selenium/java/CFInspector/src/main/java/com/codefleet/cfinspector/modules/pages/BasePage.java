@@ -75,7 +75,8 @@ public abstract class BasePage implements CoreActions {
                 WaitForElementsUtil.waitUntilElementToBeVisible(driver, element);
                 boolean displayed = element.isDisplayed();
                 if (displayed) {
-                    LoggerUtil.info("Element: "+ element.getText() +" is displayed.");
+                    LoggerUtil.info("Element: "+ element.getText().replaceAll("[\\n\\r]+", " ")
+                            +" is displayed.");
                 }
                 return displayed;
             } catch (TimeoutException e) {

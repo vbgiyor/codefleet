@@ -12,7 +12,6 @@ public class PageNavigationUtility {
         try {
             homePage = new HomePage(driver);
             homePage.navigateTo(baseUrl);
-            LoggerUtil.info("Navigating to Home page: " + driver.getCurrentUrl());
             homePage.clickResourcesButton();
             if(homePage.getCurrentUrl().equalsIgnoreCase(baseUrl + "/"))
                 return homePage.clickHomeButton();
@@ -20,6 +19,7 @@ public class PageNavigationUtility {
             LoggerUtil.error("Failed to navigate to Home page", e);
             throw new RuntimeException("Navigating to Home page failed.");
         }
+        LoggerUtil.info("Navigated to Home page: " + driver.getCurrentUrl());
         return homePage;
     }
 
@@ -28,7 +28,6 @@ public class PageNavigationUtility {
         try {
             HomePage homePage =  navigateToHomePage(driver);
             seleniumPage = new SeleniumPage(driver);
-            LoggerUtil.info("Navigating to Selenium Testing page: " + seleniumPage.getCurrentUrl());
             homePage.clickResourcesButton();
             if (homePage.displayResourcesDropdown()) {
                 return homePage.clickSeleniumLink();
@@ -37,6 +36,7 @@ public class PageNavigationUtility {
             LoggerUtil.error("Failed to navigate to Selenium page", e);
             throw new RuntimeException("Navigating to Selenium page failed.");
         }
+        LoggerUtil.info("Navigated to Selenium Testing page: " + seleniumPage.getCurrentUrl());
         return seleniumPage;
     }
 
@@ -48,7 +48,7 @@ public class PageNavigationUtility {
             cfInspectorPage = new CFInspectorPage(driver);
             if (seleniumPage.displayProjectCFInspector()) {
                 seleniumPage.clickProjectCFInspector();
-                LoggerUtil.info("Navigating to CFInspector Testing page: " + cfInspectorPage.getCurrentUrl());
+                LoggerUtil.info("Navigated to CFInspector Testing page: " + cfInspectorPage.getCurrentUrl());
             }
         } catch (RuntimeException e) {
             LoggerUtil.error("Failed to navigate to CFInspector page", e);
@@ -61,10 +61,12 @@ public class PageNavigationUtility {
     public static ABTestPage navigateToABTestPage(WebDriver driver) {
         ABTestPage abTestPage;
         try {
-            CFInspectorPage CFInspectorPage = navigateToCFInspectorPage(driver);
+            CFInspectorPage cfInspectorPage = navigateToCFInspectorPage(driver);
             abTestPage = new ABTestPage(driver);
-            LoggerUtil.info("Navigating to A/B Testing page: " + abTestPage.getCurrentUrl());
-            abTestPage = CFInspectorPage.clickABTestingLink();
+            if (cfInspectorPage.displayABTestingLink()) {
+                abTestPage =  cfInspectorPage.clickABTestingLink();
+                LoggerUtil.info("Navigated to A/B Testing page: " + abTestPage.getCurrentUrl());
+            }
         } catch (RuntimeException e) {
             LoggerUtil.error("Failed to navigate to A/B Testing page", e);
             throw new RuntimeException("Navigation to A/B Testing page failed.", e);
@@ -76,10 +78,12 @@ public class PageNavigationUtility {
     {
         AddRemoveElementsPage addRemoveElementsPage;
         try{
-            CFInspectorPage CFInspectorPage = navigateToCFInspectorPage(driver);
+            CFInspectorPage cfInspectorPage = navigateToCFInspectorPage(driver);
             addRemoveElementsPage = new AddRemoveElementsPage(driver);
-            LoggerUtil.info("Navigating to Add Remove Elements page: " + addRemoveElementsPage.getCurrentUrl());
-            addRemoveElementsPage = CFInspectorPage.clickAddRemoveLink();
+            if (cfInspectorPage.displayAddRemoveLink()) {
+                addRemoveElementsPage = cfInspectorPage.clickAddRemoveLink();
+                LoggerUtil.info("Navigated to Add Remove Elements page: " + addRemoveElementsPage.getCurrentUrl());
+            }
         }catch (RuntimeException e){
             LoggerUtil.error("Failed to navigate to Add Remove Elements page.", e);
             throw new RuntimeException("Navigating to Add Remove Elements page failed.", e);

@@ -50,8 +50,10 @@ public class ABTestPageTest extends BasePageTest {
 
     @Test
     public void testNavigationBackToCFInspectorPageWorks() {
+        LoggerUtil.info("Navigating back to CFInspector Page");
+
         CFInspectorPage returnedPage = abTestPage.clickBackLink();
-        Assert.assertTrue(returnedPage.isAutomationPageLoaded(),
+        Assert.assertTrue(returnedPage.isCFInspectorPageLoaded(),
                 "Navigation back to CFInspector page failed; A/B Testing link is not displayed.");
         String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector";
         String actualUrl = returnedPage.getCurrentUrl();

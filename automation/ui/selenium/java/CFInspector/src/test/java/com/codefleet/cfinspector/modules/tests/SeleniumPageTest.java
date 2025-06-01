@@ -39,9 +39,9 @@ public class SeleniumPageTest extends BasePageTest {
     @Test
     public void testSeleniumPageDescriptionIsCorrect() {
         String descriptionText = seleniumPage.getDescriptionText();
-        LoggerUtil.info("Selenium Page Description: " + descriptionText);
         Assert.assertTrue(descriptionText.contains("This in-depth tutorial series explores Selenium UI automation with Java"),
                 "Selenium page description is incorrect or missing expected content.");
+        LoggerUtil.info("Selenium Page Description is displayed as expected.");
     }
 
     @Test

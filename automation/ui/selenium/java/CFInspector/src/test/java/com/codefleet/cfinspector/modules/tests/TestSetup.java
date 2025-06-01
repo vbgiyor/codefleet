@@ -2,7 +2,6 @@ package com.codefleet.cfinspector.modules.tests;
 
 import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.LocatorParser;
-import org.testng.annotations.BeforeSuite;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +19,8 @@ public class TestSetup {
                 "home.title",
                 "home.description",
                 "automation.title",
-                "automation.ab_testing_link",
-                "automation.add_remove_link",
+                "cfinspector.ab_testing_link",
+                "cfinspector.add_remove_link",
                 "abtest.headline",
                 "abtest.paragraph",
                 "abtest.elemental_selenium_link"
