@@ -3,7 +3,7 @@ package com.codefleet.cfinspector.modules.tests;
 import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
 import com.codefleet.cfinspector.modules.pages.AddRemoveElementsPage;
-import com.codefleet.cfinspector.modules.pages.AutomationPage;
+import com.codefleet.cfinspector.modules.pages.CFInspectorPage;
 import com.codefleet.cfinspector.modules.pages.PageNavigationUtility;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
 import org.openqa.selenium.WebDriver;
@@ -25,7 +25,7 @@ public class AddRemoveElementsPageTest extends BasePageTest {
 
     @Test
     public void testAddRemovePageLoadsSuccessfully() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation/addremoveelements";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector/addremoveelements";
         String actualUrl = addRemoveElementsPage.getCurrentUrl();
         LoggerUtil.info("Current URL: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "Add Remove Elements page did not load successfully");
@@ -116,6 +116,10 @@ public class AddRemoveElementsPageTest extends BasePageTest {
         LoggerUtil.info("Adding element: " + inputText);
         addRemoveElementsPage.insertInputFieldText(inputText);
         addRemoveElementsPage.clickAddButton();
+        List<String> listTextBefore = addRemoveElementsPage.getListItemsText();
+        LoggerUtil.info("List after addition: " + listTextBefore);
+
+
 
         LoggerUtil.info("Clicking Remove button to remove the last element");
         addRemoveElementsPage.clickRemoveButton();
@@ -162,15 +166,14 @@ public class AddRemoveElementsPageTest extends BasePageTest {
     }
 
     @Test
-    public void testNavigationBackToAutomationPage() {
-        LoggerUtil.info("Navigating back to Automation page");
-        AutomationPage returnedPage = addRemoveElementsPage.clickBackLink();
-        Assert.assertTrue(returnedPage.isAutomationPageLoaded(),
-                "Navigation back to Automation page failed; A/B Testing link is not displayed.");
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation";
+    public void testNavigationBackToCFInspectorPageWorks() {
+        LoggerUtil.info("Navigating back to CFInspector Page");
+
+        CFInspectorPage returnedPage = addRemoveElementsPage.clickBackLink();
+        Assert.assertTrue(returnedPage.isCFInspectorPageLoaded(),
+                "Navigation back to CFInspector page failed; Add Remove link is not displayed.");
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector";
         String actualUrl = returnedPage.getCurrentUrl();
-        LoggerUtil.info("Expected URL: " + expectedUrl);
-        LoggerUtil.info("Actual URL: " + actualUrl);
-        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to Automation page URL.");
+        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to CFInspector page URL.");
     }
 }

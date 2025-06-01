@@ -2,7 +2,7 @@
 # 📘 Tutorial: Rendering Markdown Files Outside a Project as HTML
 
 ## 🔍 Introduction
-This tutorial guides you through rendering a Markdown file (e.g., `rendering_markdown_doc_as_html.md`) located outside your project directory as HTML on any page within a React/Django application using Docker. We'll use a `/docs` directory outside the project to store Markdown files, mount it into the container, and display the content in a modal on a page like `/case-studies/python`. This setup ensures CI pipeline compatibility and avoids file duplication.
+This tutorial guides you through rendering a Markdown file (e.g., `rendering_markdown_doc_as_html.md`) located outside your project directory as HTML on any page within a React/Django application using Docker. We'll use a `/docs` directory outside the project to store Markdown files, mount it into the container, and display the content in a modal on a page like `/resources/python`. This setup ensures CI pipeline compatibility and avoids file duplication.
 
 ## ✅ Prerequisites
 - A React/Django project with Docker, structured as:
@@ -148,7 +148,7 @@ We'll fetch the Markdown file from the backend and render it as HTML in a modal 
    docker-compose down
    docker-compose up --build
    ```
-2. Navigate to `http://localhost:3000/case-studies/python`.
+2. Navigate to `http://localhost:3000/resources/python`.
 3. Click the link to open the modal and verify that `rendering_markdown_doc_as_html.md` is rendered as HTML.
 
 ## 🔁 Step 6: Ensure CI Pipeline Compatibility

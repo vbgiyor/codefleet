@@ -50,11 +50,11 @@ const BasicAuth = () => {
     <div className="container mx-auto py-8 bg-gray-100 min-h-full">
       <div className="mb-4">
         <Link
-          to="/case-studies/automation"
+          to="../selenium/cfinspector"
           className="text-blue-600 hover:text-blue-800 underline"
           id="back_to_automation_link"
         >
-          ← Back to Automation
+          ← Back to CFInspector
         </Link>
       </div>
       <h2 className="text-2xl font-bold text-center mb-6" id="basic_auth_title">

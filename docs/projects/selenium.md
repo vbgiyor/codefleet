@@ -102,11 +102,160 @@ The `selenium` project is a Java-based UI testing framework using Selenium WebDr
 
 ### CFInspector (Without Docker)
 1. Ensure Codefleet website is running (see Setup).
-2. Install dependencies and run tests:
+2. Move to project directory:
    ```bash
    cd automation/ui/selenium/java/CFInspector
-   mvn clean test -Dtestng.xml=testng.xml -DBROWSER=chrome -DHEADLESS=true -DBASE_URL=http://localhost:8000
    ```
+   To run TestNG tests with Maven using different XML configurations and options, you would typically use the following Maven command structure. Below is a list of valid commands with various options you might use for executing your test suites in Codefleet.
+
+   ### 1. **Basic TestNG Suite Run**
+
+   To run a specific TestNG suite (`testng.xml`) using Maven:
+
+   ```bash
+   mvn test -DsuiteXmlFile=testng.xml
+   ```
+
+   Where `testng.xml` can be any of your XML configurations like `Firefox.xml`, `parallel.xml`, or `default.xml`.
+
+   ### 2. **With Browser Parameter (e.g., Firefox, Chrome)**
+
+   To specify the browser to use during test execution (this is passed as a parameter to the tests):
+
+   ```bash
+   mvn test -DsuiteXmlFile=Firefox.xml -Dbrowser=firefox
+   ```
+
+   Or for Chrome:
+
+   ```bash
+   mvn test -DsuiteXmlFile=parallel.xml -Dbrowser=chrome
+   ```
+
+   ### 3. **With Headless Mode**
+
+   To run the tests in headless mode (no UI), you can add an environment variable or a system property to trigger headless execution. For example, for Firefox:
+
+   ```bash
+   mvn test -DsuiteXmlFile=Firefox.xml -Dbrowser=firefox -Dheadless=true
+   ```
+
+   For Chrome:
+
+   ```bash
+   mvn test -DsuiteXmlFile=parallel.xml -Dbrowser=chrome -Dheadless=true
+   ```
+
+   ### 4. **Parallel Execution**
+
+   You can specify parallel execution in your `parallel.xml` configuration by setting the `parallel` attribute in the XML itself. If you want to manually control thread count, you can pass it as a system property:
+
+   ```bash
+   mvn test -DsuiteXmlFile=parallel.xml -DthreadCount=2
+   ```
+
+   ### 5. **Generate a Report**
+
+   To generate an HTML or TestNG report:
+
+   ```bash
+   mvn test -DsuiteXmlFile=Firefox.xml -Dreport=true
+   ```
+
+   You would need to have a reporting plugin configured in your `pom.xml` (e.g., TestNG Report Plugin or Allure).
+
+   ### 6. **Skip Certain Tests or Groups**
+
+   To skip certain groups or tests, you can use the `-Dgroups` or `-DexcludedGroups` parameter.
+
+   To run only tests from a specific group:
+
+   ```bash
+   mvn test -DsuiteXmlFile=default.xml -Dgroups="smoke"
+   ```
+
+   To exclude tests from a specific group:
+
+   ```bash
+   mvn test -DsuiteXmlFile=default.xml -DexcludedGroups="slow"
+   ```
+
+   ### 7. **TestNG Parameters**
+
+   To pass custom parameters to the tests, you can use `-DparameterName=value`. For example, if you want to pass a custom `username` or `password` to the tests:
+
+   ```bash
+   mvn test -DsuiteXmlFile=Firefox.xml -Dusername=testuser -Dpassword=testpassword
+   ```
+
+   ### 8. **Running Specific Tests or Classes**
+
+   If you only want to run specific classes or methods from your test suite, you can specify them in the command.
+
+   To run a specific class:
+
+   ```bash
+   mvn test -DsuiteXmlFile=default.xml -Dtest=com.codefleet.cfinspector.modules.tests.HomePageTest
+   ```
+
+   Or to run a specific test method:
+
+   ```bash
+   mvn test -DsuiteXmlFile=default.xml -Dtest=com.codefleet.cfinspector.modules.tests.HomePageTest#testHomePage
+   ```
+
+   ### 9. **Skip Tests**
+
+   If you want to skip tests during a build (e.g., skipping unit tests but still running integration tests):
+
+   ```bash
+   mvn install -DskipTests
+   ```
+
+   Or skip tests but still run the test phase:
+
+   ```bash
+   mvn test -DskipTests
+   ```
+
+   ### 10. **Clear Previous Reports**
+
+   To clear old reports before running the tests, you can delete the `target` folder before the execution:
+
+   ```bash
+   mvn clean test -DsuiteXmlFile=default.xml
+   ```
+
+   This command will clean the previous build results and generate fresh ones.
+
+   ### 11. **Other Useful Options**
+
+   * **Skip the Maven Surefire Plugin**: If you want to skip the Surefire plugin (used to run tests):
+
+   ```bash
+   mvn clean install -Dmaven.test.skip=true
+   ```
+
+   * **Run Tests Only in a Specific Package**: You can specify tests to run in a package:
+
+   ```bash
+   mvn test -DsuiteXmlFile=default.xml -Dtest=com.codefleet.cfinspector.modules.tests.*
+   ```
+
+   ---
+
+   ### Summary of Common Options:
+
+   * `-DsuiteXmlFile=path/to/testng.xml` — Path to the XML suite file.
+   * `-Dbrowser=firefox` or `-Dbrowser=chrome` — Set the browser.
+   * `-Dheadless=true` — Run tests in headless mode.
+   * `-DthreadCount=n` — Number of threads for parallel execution.
+   * `-Dreport=true` — Enable report generation.
+   * `-Dgroups="group_name"` — Run specific groups of tests.
+   * `-DexcludedGroups="group_name"` — Exclude specific groups from execution.
+   * `-DparameterName=value` — Pass parameters to tests.
+   * `-DskipTests=true` — Skip running tests but still build the project.
+
 3. View reports:
    - Reports: `target/surefire-reports/`
    - Screenshots (if failed): `target/screenshots/`
@@ -137,7 +286,7 @@ The `selenium` project is a Java-based UI testing framework using Selenium WebDr
   - `LoggerUtil`, `ScreenShotUtil`, `WaitForElementsUtil`: Utility classes.
 - **Tests**:
   - `HomePageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/homepage`).
-  - `ABTestPageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/automationpage/abtestpage`).
+  - `ABTestPageTest` (in `src/test/java/com/codefleet/cfinspector/modules/tests/selenium/page/abtestpage`).
 - **Configuration**:
   - `data.properties`: Test data.
   - `locators.properties`: Element locators.

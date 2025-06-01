@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-const DocViewer = () => {
+const HTMLViewer = () => {
   const { category, subcategory, doc } = useParams();
   const [htmlContent, setHtmlContent] = useState("");
   const [error, setError] = useState(null);
@@ -64,4 +64,4 @@ const DocViewer = () => {
   );
 };
 
-export default DocViewer;
+export default HTMLViewer;

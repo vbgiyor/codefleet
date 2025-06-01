@@ -21,7 +21,7 @@ public class ABTestPageTest extends BasePageTest {
 
     @Test
     public void testABTestPageLoads() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation/abtest";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector/abtest";
         String actualUrl = abTestPage.getCurrentUrl();
         LoggerUtil.info("Current URL in testABTestPageLoads: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "A/B Testing page did not load successfully");
@@ -49,12 +49,14 @@ public class ABTestPageTest extends BasePageTest {
     }
 
     @Test
-    public void testNavigationBackToAutomationPageWorks() {
-        AutomationPage returnedPage = abTestPage.clickBackLink();
-        Assert.assertTrue(returnedPage.isAutomationPageLoaded(),
-                "Navigation back to Automation page failed; A/B Testing link is not displayed.");
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation";
+    public void testNavigationBackToCFInspectorPageWorks() {
+        LoggerUtil.info("Navigating back to CFInspector Page");
+
+        CFInspectorPage returnedPage = abTestPage.clickBackLink();
+        Assert.assertTrue(returnedPage.isCFInspectorPageLoaded(),
+                "Navigation back to CFInspector page failed; A/B Testing link is not displayed.");
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector";
         String actualUrl = returnedPage.getCurrentUrl();
-        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to Automation page URL.");
+        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to CFInspector page URL.");
     }
 }

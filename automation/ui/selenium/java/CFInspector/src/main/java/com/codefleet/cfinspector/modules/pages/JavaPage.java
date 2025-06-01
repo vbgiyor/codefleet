@@ -10,12 +10,12 @@ public class JavaPage extends BasePage{
     }
 
     public boolean isJavaPageLoaded() {
-        WebElement javaPageHeading = driver.findElement(locatorParser.getElementLocator("java.heading"));
+        WebElement javaPageHeading = driver.findElement(locatorParser.getElementLocator("java.title"));
         return isElementDisplayed(javaPageHeading);
     }
 
     public String getTitleText() {
-        WebElement title = driver.findElement(locatorParser.getElementLocator("java.heading"));
+        WebElement title = driver.findElement(locatorParser.getElementLocator("java.title"));
         return getText(title);
     }
 

@@ -27,7 +27,7 @@ import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
 import com.codefleet.cfinspector.modules.pages.ABTestPage;
 import com.codefleet.cfinspector.modules.pages.AutomationPage;
-import com.codefleet.cfinspector.modules.pages.CaseStudiesPage;
+import com.codefleet.cfinspector.modules.pages.ResourcesPage;
 import com.codefleet.cfinspector.modules.pages.HomePage;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
 import org.openqa.selenium.WebDriver;
@@ -44,23 +44,23 @@ public class ABTestPageTest extends BasePageTest {
     public void navigateToABTestPage() {
         driver = WebDriverFactory.getDriverThreadLocal();
         HomePage homePage = new HomePage(driver);
-        CaseStudiesPage caseStudiesPage = new CaseStudiesPage(driver);
+        ResourcesPage ResourcesPage = new ResourcesPage(driver);
         AutomationPage automationPage;
         abTestPage = new ABTestPage(driver);
 
         String baseUrl = ConfigManager.getBaseUrl();
         homePage.navigateTo(baseUrl);
-        homePage.clickCaseStudiesButton();
-        boolean displayDropdown = caseStudiesPage.displayCaseStudiesDropdown();
+        homePage.clickResourcesButton();
+        boolean displayDropdown = ResourcesPage.displayResourcesDropdown();
         LoggerUtil.info("displayDropdown: " + displayDropdown);
         try {
             if (displayDropdown) {
-                automationPage = caseStudiesPage.clickAutomationLink();
+                automationPage = ResourcesPage.clickAutomationLink();
                 LoggerUtil.info("Clicked Automation link. Redirecting to Automation page.");
                 abTestPage = automationPage.clickABTestingLink();
             } else {
-                LoggerUtil.error("Case Studies dropdown not displayed.");
-                Assert.fail("Failed to navigate to A/B Testing page: Case Studies dropdown not displayed.");
+                LoggerUtil.error("Resources dropdown not displayed.");
+                Assert.fail("Failed to navigate to A/B Testing page: Resources dropdown not displayed.");
             }
         } catch (Exception e) {
             LoggerUtil.error("Error navigating to A/B Testing page.", e);
@@ -70,7 +70,7 @@ public class ABTestPageTest extends BasePageTest {
 
     @Test
     public void testABTestPageLoads() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/case-studies/automation/abtest";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/abtest";
         String actualUrl = abTestPage.getCurrentUrl();
         LoggerUtil.info("Current URL in testABTestPageLoads: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "A/B Testing page did not load successfully");
@@ -99,21 +99,21 @@ public class ABTestPageTest extends BasePageTest {
    public class NavigationUtil {
        public static ABTestPage navigateToABTestPage(WebDriver driver) {
            HomePage homePage = new HomePage(driver);
-           CaseStudiesPage caseStudiesPage = new CaseStudiesPage(driver);
+           ResourcesPage ResourcesPage = new ResourcesPage(driver);
            AutomationPage automationPage;
            ABTestPage abTestPage = new ABTestPage(driver);
            String baseUrl = ConfigManager.getBaseUrl();
            homePage.navigateTo(baseUrl);
-           homePage.clickCaseStudiesButton();
-           if (caseStudiesPage.displayCaseStudiesDropdown()) {
-               automationPage = caseStudiesPage.clickAutomationLink();
+           homePage.clickResourcesButton();
+           if (ResourcesPage.displayResourcesDropdown()) {
+               automationPage = ResourcesPage.clickAutomationLink();
                return automationPage.clickABTestingLink();
            }
            throw new RuntimeException("Failed to navigate to A/B Testing page");
        }
    }
    ```
-3. **Optimize Navigation**: Use direct URLs if valid (e.g., `driver.get(baseUrl + "/case-studies/automation/abtest")`) or optimize page object methods.
+3. **Optimize Navigation**: Use direct URLs if valid (e.g., `driver.get(baseUrl + "/resources/selenium/abtest")`) or optimize page object methods.
 4. **Test One Behavior**: Each test should verify a single feature (e.g., headline text, button visibility).
 5. **Parallel Execution**:
    - Use thread-local WebDriver.

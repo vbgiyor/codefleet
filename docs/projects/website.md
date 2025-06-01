@@ -207,7 +207,7 @@ The Codefleet website is a full-stack web application built with a Django backen
      - Verify footer displays logo, "Codefleet", and "© 2025 Codefleet. All rights reserved."
 
 ## Known Issues
-- Static pages (`/java`, `/python`, `/automation`) are placeholders and need content.
+- Static pages (`/java`, `/python`, `/selenium`) are placeholders and need content.
 - Email functionality requires a configured email server in `settings.py`.
 - Password reset success message is incorrect.
 - CI pipeline occasionally fails with `TemplateDoesNotExist` for `index.html`.
@@ -218,7 +218,7 @@ The Codefleet website is a full-stack web application built with a Django backen
 - Updated CI pipeline (`website_and_cfinspector_ci.yml`) to run Django tests.
 
 ## Next Steps
-- Implement content for `/java`, `/python`, `/automation` pages.
+- Implement content for `/java`, `/python`, `/selenium` pages.
 - Configure production email server.
 - Deploy to a hosting service (e.g., AWS, Azure).
 
