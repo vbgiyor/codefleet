@@ -40,5 +40,4 @@ const Python = () => {
     </div>
   );
 };
-
 export default Python;
