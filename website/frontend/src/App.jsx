@@ -22,10 +22,14 @@ import CFInspectorPage from "./pages/list/CFInpsector";
 function App() {
   return (
     <HelmetProvider>
+      {" "}
       <Router>
+        {" "}
         <div className="flex flex-col min-h-screen">
-          <Header className="navbar" />
+          {" "}
+          <Header className="navbar" />{" "}
           <main className="flex-grow pt-16 container mx-auto">
+            {" "}
             <Routes>
               {/* Home */}
               <Route path="/" element={<><Helmet><title>Codefleet - Home</title></Helmet><Home /></>} />
