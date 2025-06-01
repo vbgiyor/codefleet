@@ -3,7 +3,7 @@ package com.codefleet.cfinspector.modules.tests;
 import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
 import com.codefleet.cfinspector.modules.pages.AddRemoveElementsPage;
-import com.codefleet.cfinspector.modules.pages.AutomationPage;
+import com.codefleet.cfinspector.modules.pages.CFInspectorPage;
 import com.codefleet.cfinspector.modules.pages.PageNavigationUtility;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
 import org.openqa.selenium.WebDriver;
@@ -25,7 +25,7 @@ public class AddRemoveElementsPageTest extends BasePageTest {
 
     @Test
     public void testAddRemovePageLoadsSuccessfully() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/addremoveelements";
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector/addremoveelements";
         String actualUrl = addRemoveElementsPage.getCurrentUrl();
         LoggerUtil.info("Current URL: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "Add Remove Elements page did not load successfully");
@@ -163,14 +163,14 @@ public class AddRemoveElementsPageTest extends BasePageTest {
 
     @Test
     public void testNavigationBackToAutomationPage() {
-        LoggerUtil.info("Navigating back to Automation page");
-        AutomationPage returnedPage = addRemoveElementsPage.clickBackLink();
+        LoggerUtil.info("Navigating back to CFInspector Page");
+        CFInspectorPage returnedPage = addRemoveElementsPage.clickBackLink();
         Assert.assertTrue(returnedPage.isAutomationPageLoaded(),
-                "Navigation back to Automation page failed; A/B Testing link is not displayed.");
-        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium";
+                "Navigation back to CFInspector Page failed; A/B Testing link is not displayed.");
+        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector";
         String actualUrl = returnedPage.getCurrentUrl();
         LoggerUtil.info("Expected URL: " + expectedUrl);
         LoggerUtil.info("Actual URL: " + actualUrl);
-        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to Automation page URL.");
+        Assert.assertEquals(actualUrl, expectedUrl, "Did not navigate back to CFInspector Page URL.");
     }
 }
