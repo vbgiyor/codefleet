@@ -47,16 +47,15 @@ public class PageNavigationUtility {
             SeleniumPage seleniumPage = navigateToSeleniumPage(driver);
             cfInspectorPage = new CFInspectorPage(driver);
             if (seleniumPage.displayProjectCFInspector()) {
-                seleniumPage.clickProjectCFInspector();
-                LoggerUtil.info("Navigated to CFInspector Testing page: " + cfInspectorPage.getCurrentUrl());
+                return seleniumPage.clickProjectCFInspector();
             }
         } catch (RuntimeException e) {
             LoggerUtil.error("Failed to navigate to CFInspector page", e);
             throw new RuntimeException("Navigating to CFInspector page failed.");
         }
+        LoggerUtil.info("Navigated to CFInspector Testing page: " + cfInspectorPage.getCurrentUrl());
         return cfInspectorPage;
     }
-
 
     public static ABTestPage navigateToABTestPage(WebDriver driver) {
         ABTestPage abTestPage;
@@ -64,13 +63,13 @@ public class PageNavigationUtility {
             CFInspectorPage cfInspectorPage = navigateToCFInspectorPage(driver);
             abTestPage = new ABTestPage(driver);
             if (cfInspectorPage.displayABTestingLink()) {
-                abTestPage =  cfInspectorPage.clickABTestingLink();
-                LoggerUtil.info("Navigated to A/B Testing page: " + abTestPage.getCurrentUrl());
+                return cfInspectorPage.clickABTestingLink();
             }
         } catch (RuntimeException e) {
             LoggerUtil.error("Failed to navigate to A/B Testing page", e);
             throw new RuntimeException("Navigation to A/B Testing page failed.", e);
         }
+        LoggerUtil.info("Navigated to A/B Testing page: " + abTestPage.getCurrentUrl());
         return abTestPage;
     }
 
@@ -81,13 +80,13 @@ public class PageNavigationUtility {
             CFInspectorPage cfInspectorPage = navigateToCFInspectorPage(driver);
             addRemoveElementsPage = new AddRemoveElementsPage(driver);
             if (cfInspectorPage.displayAddRemoveLink()) {
-                addRemoveElementsPage = cfInspectorPage.clickAddRemoveLink();
-                LoggerUtil.info("Navigated to Add Remove Elements page: " + addRemoveElementsPage.getCurrentUrl());
+                return cfInspectorPage.clickAddRemoveLink();
             }
         }catch (RuntimeException e){
             LoggerUtil.error("Failed to navigate to Add Remove Elements page.", e);
-            throw new RuntimeException("Navigating to Add Remove Elements page failed.", e);
+            throw new RuntimeException("Navigation to Add Remove Elements page failed.", e);
         }
+        LoggerUtil.info("Navigated to Add Remove Elements page: " + addRemoveElementsPage.getCurrentUrl());
         return addRemoveElementsPage;
     }
 }
