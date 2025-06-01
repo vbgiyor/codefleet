@@ -1,5 +1,7 @@
 package com.codefleet.cfinspector.modules.pages;
 
+import com.codefleet.cfinspector.modules.utils.WaitForElementsUtil;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -42,6 +44,8 @@ public class CFInspectorPage extends BasePage {
 
     public AddRemoveElementsPage clickAddRemoveLink() {
         WebElement addRemoveLink = driver.findElement(locatorParser.getElementLocator("cfinspector.add_remove_link"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", addRemoveLink);
+        WaitForElementsUtil.waitUntilElementToBeClickable(driver, addRemoveLink);
         click(addRemoveLink);
         return new AddRemoveElementsPage(driver);
     }
