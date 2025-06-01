@@ -72,5 +72,6 @@ public class HomePage extends BasePage {
         WebElement seleniumLink = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
         click(seleniumLink);
         return new SeleniumPage(driver);
+
     }
 }
