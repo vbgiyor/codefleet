@@ -51,7 +51,7 @@ public class HomePage extends BasePage {
         return isElementDisplayed(dropdown);
     }
 
-    public boolean displayAutomationLink() {
+    public boolean displaySeleniumLink() {
         WebElement dropdown = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
         return isElementDisplayed(dropdown);
     }
@@ -68,9 +68,10 @@ public class HomePage extends BasePage {
         return new PythonPage(driver);
     }
 
-    public AutomationPage clickAutomationLink() {
-        WebElement automationLink = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
-        click(automationLink);
-        return new AutomationPage(driver);
+    public SeleniumPage clickSeleniumLink() {
+        WebElement seleniumLink = driver.findElement(locatorParser.getElementLocator("header.resources_selenium_link"));
+        click(seleniumLink);
+        return new SeleniumPage(driver);
+
     }
 }

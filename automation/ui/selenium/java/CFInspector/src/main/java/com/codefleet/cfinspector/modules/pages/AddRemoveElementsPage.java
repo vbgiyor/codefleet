@@ -12,10 +12,10 @@ public class AddRemoveElementsPage extends BasePage {
         super(driver);
     }
 
-    public AutomationPage clickBackLink() {
+    public CFInspectorPage clickBackLink() {
         WebElement backLink = driver.findElement(locatorParser.getElementLocator("addremove.back_link"));
         click(backLink);
-        return new AutomationPage(driver);
+        return new CFInspectorPage(driver);
     }
 
     public WebElement getHeadingText() {

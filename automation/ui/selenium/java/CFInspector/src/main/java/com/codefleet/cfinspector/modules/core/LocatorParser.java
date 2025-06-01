@@ -12,7 +12,7 @@ public class LocatorParser {
     private static final ConcurrentHashMap<String, By> locatorCache = new ConcurrentHashMap<>();
 
     public enum LocatorType {
-        ID, TAGNAME, LINK, PARTIALLINK, CSS, NAME, XPATH;
+        ID, TAGNAME, LINKTEXT, PARTIALLINK, CSS, NAME, XPATH;
 
         public static LocatorType fromString(String type) {
             try {
@@ -46,7 +46,7 @@ public class LocatorParser {
                 case TAGNAME:
                     locator = By.tagName(locatorValue);
                     break;
-                case LINK:
+                case LINKTEXT:
                     locator = By.linkText(locatorValue);
                     break;
                 case PARTIALLINK:

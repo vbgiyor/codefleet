@@ -3,6 +3,8 @@
     <test name="DefaultExecutionTestSuite">
         <classes>
             <class name="com.codefleet.cfinspector.modules.tests.HomePageTest"/>
+            <class name="com.codefleet.cfinspector.modules.tests.SeleniumPageTest"/>
+            <class name="com.codefleet.cfinspector.modules.tests.CFInspectorTest"/>
             <class name="com.codefleet.cfinspector.modules.tests.ABTestPageTest"/>
             <class name="com.codefleet.cfinspector.modules.tests.AddRemoveElementsPageTest"/>
         </classes>
