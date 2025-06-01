@@ -1,4 +1,3 @@
-// App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Header from "./components/Header";
