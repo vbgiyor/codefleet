@@ -44,7 +44,7 @@ describe('Header Component', () => {
     // Click to open dropdown
     fireEvent.click(ResourcesButton);
 
-    const dropdownLinks = ['Java', 'Python', 'Automation'];
+    const dropdownLinks = ['Java', 'Python','Selenium', 'Docs'];
     dropdownLinks.forEach((link) => {
       expect(screen.getByText(link)).toBeInTheDocument();
     });
