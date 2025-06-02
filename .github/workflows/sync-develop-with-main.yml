@@ -1,40 +1,31 @@
 name: Sync Develop with Main
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual triggering
   push:
     branches:
       - main
+      - develop
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Grant write access for GITHUB_TOKEN (optional if using PAT)
+      contents: write # Required for pushing changes
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # Updated to v4 for latest features
         with:
-          repository: vbgiyor/codefleet
-          token: ${{ secrets.GH_TOKEN }} 
-          fetch-depth: 0
-          ssh-strict: true
-          persist-credentials: true
-          clean: true
-          sparse-checkout-cone-mode: true
-          fetch-tags: false
-          lfs: false
-          submodules: false
-          set-safe-directory: true
+          token: ${{ secrets.GH_TOKEN }} # Use PAT or GitHub token from secrets
+          fetch-depth: 0 # Full history for accurate merges
       - name: Sync main and develop
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git fetch origin
           git checkout main
           git pull origin main
           git checkout develop
           git pull origin develop
-          git merge origin/main --no-edit
+          git merge main --no-edit
           git push origin develop
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Use PAT for push
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Ensure token is available
