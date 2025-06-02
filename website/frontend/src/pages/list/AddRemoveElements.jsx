@@ -3,7 +3,14 @@ import { Link } from "react-router-dom";
 
 const AddRemoveElements = () => {
   const MAX_ELEMENTS = 5; // Maximum allowed elements in the list
-  const [list, setList] = useState(["AI", "ML", "Data Science"]);
+
+  // Initialize the list with default items
+  const [list, setList] = useState([
+    { name: "AI", id: 1 },
+    { name: "ML", id: 2 },
+    { name: "Data Science", id: 3 },
+  ]);
+
   const [inputValue, setInputValue] = useState("");
 
   // Handle input change
@@ -14,8 +21,13 @@ const AddRemoveElements = () => {
   // Add Element
   const handleAddElement = () => {
     const trimmedValue = inputValue.trim();
-    if (trimmedValue.length >= 1 && trimmedValue.length <= 32 && list.length < MAX_ELEMENTS) {
-      setList([...list, `New Element: ${trimmedValue}`]);
+    if (
+      trimmedValue.length >= 1 &&
+      trimmedValue.length <= 32 &&
+      list.length < MAX_ELEMENTS
+    ) {
+      const newElement = { name: `New Element: ${trimmedValue}`, id: list.length + 1 };
+      setList([...list, newElement]);
       setInputValue(""); // Clear input
     }
   };
@@ -24,7 +36,7 @@ const AddRemoveElements = () => {
   const handleRemoveElement = () => {
     if (list.length > 0) {
       const updatedList = [...list];
-      updatedList.pop();
+      updatedList.pop(); // Remove last element
       setList(updatedList);
     }
   };
@@ -32,10 +44,8 @@ const AddRemoveElements = () => {
   return (
     <div className="container mx-auto py-8 bg-gray-100 min-h-full">
       {/* Back Link */}
-      <div className="mb-4">
-        <Link to="../selenium/cfinspector" className="text-blue-600 hover:text-blue-800 underline">
-          ← Back to CFInspector
-        </Link>
+      <div className="back-link">
+    <   Link to="../selenium/cfinspector" className="text-blue-600 hover:text-blue-800 underline"> ← Back to CFInspector </Link>
       </div>
 
       {/* Title */}
@@ -55,7 +65,9 @@ const AddRemoveElements = () => {
         <button
           onClick={handleAddElement}
           className={`bg-blue-600 text-white py-2 px-4 rounded-lg mr-2 transition duration-300 ${
-            list.length >= MAX_ELEMENTS || inputValue.trim().length < 1 || inputValue.trim().length > 32
+            list.length >= MAX_ELEMENTS ||
+            inputValue.trim().length < 1 ||
+            inputValue.trim().length > 32
               ? "bg-blue-300 cursor-not-allowed"
               : "hover:bg-blue-500"
           }`}
@@ -80,7 +92,7 @@ const AddRemoveElements = () => {
         {list.length > 0 ? (
           <ul className="list-disc list-inside text-gray-700">
             {list.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index}>{item.name}</li>
             ))}
           </ul>
         ) : (
@@ -90,7 +102,9 @@ const AddRemoveElements = () => {
 
       {/* Limit Reached Message */}
       {list.length >= MAX_ELEMENTS && (
-        <p className="text-red-600 text-center mt-4">Maximum limit of 5 elements reached.</p>
+        <p className="text-red-600 text-center mt-4">
+          Maximum limit of 5 elements reached.
+        </p>
       )}
     </div>
   );

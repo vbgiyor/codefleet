@@ -5,9 +5,12 @@ import com.codefleet.cfinspector.modules.core.CoreActions;
 import com.codefleet.cfinspector.modules.core.LocatorParser;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
 import com.codefleet.cfinspector.modules.utils.WaitForElementsUtil;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public abstract class BasePage implements CoreActions {
     protected WebDriver driver;
@@ -22,6 +25,10 @@ public abstract class BasePage implements CoreActions {
         driver.get(url);
     }
 
+    public void navigateToPreviousPage() {
+        driver.navigate().back();
+    }
+
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
@@ -30,23 +37,28 @@ public abstract class BasePage implements CoreActions {
     public void click(WebElement element) {
         int attempts = 0;
         int maxAttempts = ConfigManager.getRetryAttempts();
-
         while (attempts <= maxAttempts) {
             try {
                 WaitForElementsUtil.waitUntilElementToBeClickable(driver, element);
                 assert element != null;
-                LoggerUtil.info("Successful click for element: " + element.getText());
+                String elementText = element.getText();
+                // Use JavaScript to click the element
+                LoggerUtil.info("Successful click for element: " + elementText);
                 element.click();
-                return; // Exit the method once the click is successful
-            } catch (TimeoutException e) {
+                return;
+            } catch (TimeoutException | org.openqa.selenium.ElementClickInterceptedException e) {
                 attempts++;
+                // Take screenshot for debugging
                 if (attempts > maxAttempts) {
-                    LoggerUtil.error("Unable to click element: " + (element != null ? element.getText() : "null element") +
-                            " after " + maxAttempts + " retries.", e);
-                    throw e; // Throw the exception after the last attempt
+                    File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                    try {
+                        Files.copy(screenshot.toPath(), Paths.get("screenshot_" + System.currentTimeMillis() + ".png"));
+                    } catch (IOException ex) {
+                        LoggerUtil.error("Failed to save screenshot", ex);
+                    }
+                    LoggerUtil.error("Unable to click element: " + (element != null ? element.getText() : "null element") + " after " + maxAttempts + " retries.", e);
+                    throw e;
                 }
-                LoggerUtil.info("Retry " + attempts + "/" + maxAttempts + " - Element: " +
-                        (element != null ? element.getText() : "null element") + " is not clickable yet.");
             }
         }
     }
@@ -69,26 +81,22 @@ public abstract class BasePage implements CoreActions {
     public boolean isElementDisplayed(WebElement element) {
         int attempts = 0;
         int maxAttempts = ConfigManager.getRetryAttempts();
-
         while (attempts < maxAttempts) {
             try {
                 WaitForElementsUtil.waitUntilElementToBeVisible(driver, element);
                 boolean displayed = element.isDisplayed();
                 if (displayed) {
-                    LoggerUtil.info("Element: "+ element.getText().replaceAll("[\\n\\r]+", " ")
-                            +" is displayed.");
+                    LoggerUtil.info("Element: " + element.getText().replaceAll("[\\n\\r]+", " ") + " is displayed.");
                 }
                 return displayed;
             } catch (TimeoutException e) {
                 attempts++;
                 if (attempts >= maxAttempts) {
-                    LoggerUtil.error("Element: "+ element.getText() +" is not visible after "
-                            + maxAttempts + ".", e);
+                    LoggerUtil.error("Element: " + element.getText() + " is not visible after " + maxAttempts + ".", e);
                     return false;
                 }
             }
-            LoggerUtil.info("Element: "+ element.getText() +" is visible. Retrying (" + attempts + "/"
-                    + maxAttempts + ".");
+            LoggerUtil.info("Element: " + element.getText() + " is visible. Retrying (" + attempts + "/" + maxAttempts + ".");
         }
         return false;
     }

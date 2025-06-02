@@ -31,6 +31,7 @@ public class WebDriverFactory {
                     if(headless) {
                         chromeOptions.addArguments("--headless=new");
                         chromeOptions.addArguments("--disable-dev-shm-usage");
+                        chromeOptions.addArguments("--window-size=1920,1080");
                     }
                     driverThreadLocal.set(new ChromeDriver(chromeOptions));
                     break;
@@ -38,8 +39,11 @@ public class WebDriverFactory {
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
-                    if(headless)
+                    if(headless) {
                         firefoxOptions.addArguments("--headless");
+                        firefoxOptions.addArguments("--width=1920");
+                        firefoxOptions.addArguments("--height=1080");
+                    }
                     driverThreadLocal.set(new FirefoxDriver(firefoxOptions));
                     break;
 

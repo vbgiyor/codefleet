@@ -1,9 +1,8 @@
 package com.codefleet.cfinspector.modules.pages;
 
-import com.codefleet.cfinspector.modules.utils.WaitForElementsUtil;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 
 public class CFInspectorPage extends BasePage {
 
@@ -19,11 +18,6 @@ public class CFInspectorPage extends BasePage {
     public String getInternetDescriptionText() {
         WebElement internetDescription = driver.findElement(locatorParser.getElementLocator("cfinspector.internet_description"));
         return getText(internetDescription);
-    }
-
-    public void clickInternetLink() {
-        WebElement internetLink = driver.findElement(locatorParser.getElementLocator("cfinspector.internet_link"));
-        click(internetLink);
     }
 
     public boolean displayABTestingLink() {
@@ -42,12 +36,23 @@ public class CFInspectorPage extends BasePage {
                 .getElementLocator("cfinspector.add_remove_link")));
     }
 
+
     public AddRemoveElementsPage clickAddRemoveLink() {
         WebElement addRemoveLink = driver.findElement(locatorParser.getElementLocator("cfinspector.add_remove_link"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", addRemoveLink);
-        WaitForElementsUtil.waitUntilElementToBeClickable(driver, addRemoveLink);
         click(addRemoveLink);
         return new AddRemoveElementsPage(driver);
+    }
+
+    public boolean isCFInspectorPageLoaded() {
+        WebElement cfProjectTitle = driver.findElement(locatorParser.getElementLocator("cfinspector.project.title"));
+        return isElementDisplayed(cfProjectTitle);
+    }
+
+    public boolean clickBackLinkToSeleniumProjects() {
+        WebElement backLink = driver.findElement(locatorParser.getElementLocator("cfinspector.back_to_selenium_projects_link"));
+        click(backLink);
+        SeleniumPage seleniumPage =  new SeleniumPage(driver);
+        return seleniumPage.isSeleniumPageLoaded();
     }
 
     public BasicAuthPage clickBasicAuthLink() {
@@ -279,16 +284,5 @@ public class CFInspectorPage extends BasePage {
     public void clickOriginalInternetLink() {
         WebElement originalInternetLink = driver.findElement(locatorParser.getElementLocator("cfinspector.original_internet_link"));
         click(originalInternetLink);
-    }
-
-    public boolean isCFInspectorPageLoaded() {
-        WebElement cfProjectTitle = driver.findElement(locatorParser.getElementLocator("cfinspector.project.title"));
-        return isElementDisplayed(cfProjectTitle);
-    }
-
-    public CFInspectorPage clickBackLink() {
-        WebElement backLink = driver.findElement(locatorParser.getElementLocator("addremove.back_link"));
-        click(backLink);
-        return new CFInspectorPage(driver);
     }
 }
