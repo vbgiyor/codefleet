@@ -1,11 +1,9 @@
 name: Sync Develop with Main
-
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -13,16 +11,16 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }} # Use the new PAT
       - name: Sync main and develop
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
       - name: Authenticate and Sync Branches
         env:
-          GH_PAT: ${{ secrets.act-local-token }}
+          GH_PAT: ${{ secrets.GH_TOKEN }} # Use the new PAT
         run: |
-          git remote set-url origin https://x-access-token:${act-local-token}@github.com/vbgiyor/codefleet.git
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/vbgiyor/codefleet.git
           git fetch origin
           git checkout main
           git pull origin main
