@@ -9,20 +9,26 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Grant write access for GITHUB_TOKEN (optional if using PAT)
     steps:
       - uses: actions/checkout@v3
         with:
+          repository: vbgiyor/codefleet
+          token: ${{ secrets.GH_TOKEN }} 
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }} # Use the new PAT
+          ssh-strict: true
+          persist-credentials: true
+          clean: true
+          sparse-checkout-cone-mode: true
+          fetch-tags: false
+          lfs: false
+          submodules: false
+          set-safe-directory: true
       - name: Sync main and develop
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-      - name: Authenticate and Sync Branches
-        env:
-          GH_PAT: ${{ secrets.GH_TOKEN }} # Use the new PAT
-        run: |
-          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/vbgiyor/codefleet.git
           git fetch origin
           git checkout main
           git pull origin main
@@ -30,3 +36,5 @@ jobs:
           git pull origin develop
           git merge origin/main --no-edit
           git push origin develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Use PAT for push
