@@ -10,6 +10,15 @@ public class SeleniumPage extends BasePage {
         super(driver);
     }
 
+    public boolean isSeleniumPageLoaded() {
+        WebElement getTitleElement = getTitleElement();
+        return isElementDisplayed(getTitleElement);
+    }
+
+    public WebElement getTitleElement() {
+        return driver.findElement(locatorParser.getElementLocator("selenium.title"));
+    }
+
     public String getTitleText() {
         WebElement title = driver.findElement(locatorParser.getElementLocator("selenium.title"));
         WaitForElementsUtil.waitUntilElementToBeVisible(driver, title);

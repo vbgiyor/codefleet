@@ -1,7 +1,7 @@
-package com.codefleet.cfinspector.modules.pages;
+package com.codefleet.cfinspector.modules.utils;
 
 import com.codefleet.cfinspector.modules.config.ConfigManager;
-import com.codefleet.cfinspector.modules.utils.LoggerUtil;
+import com.codefleet.cfinspector.modules.pages.*;
 import org.openqa.selenium.WebDriver;
 
 public class PageNavigationUtility {

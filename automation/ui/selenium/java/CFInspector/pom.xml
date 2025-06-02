@@ -136,6 +136,11 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <org.apache.http.wire.level>warn</org.apache.http.wire.level>
+                        <org.apache.hc.client5.http.wire> warn</org.apache.hc.client5.http.wire>
+                        <org.apache.hc.client5.http.impl.io> debug</org.apache.hc.client5.http.impl.io>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
