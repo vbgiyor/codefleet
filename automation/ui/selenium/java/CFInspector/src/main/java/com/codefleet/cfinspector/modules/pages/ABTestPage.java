@@ -1,6 +1,7 @@
 package com.codefleet.cfinspector.modules.pages;
 
 import com.codefleet.cfinspector.modules.utils.WaitForElementsUtil;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -12,8 +13,15 @@ public class ABTestPage extends BasePage {
         super(driver);
     }
 
+
     public CFInspectorPage clickBackLink() {
         WebElement backLink = driver.findElement(locatorParser.getElementLocator("abtest.back_link"));
+        /* In case of ElementClickIntercepted exception, replicate this logic evenly across project. Commented for time being.
+            1. Scroll the element into view and adjust for any possible fixed elements like the navbar
+            2. ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, arguments[0].getBoundingClientRect().top - 100);", backLink);
+            3. Add an explicit wait to ensure it's clickable
+            4. WaitForElementsUtil.waitUntilElementToBeClickable(driver, backLink);
+        */
         click(backLink);
         return new CFInspectorPage(driver);
     }

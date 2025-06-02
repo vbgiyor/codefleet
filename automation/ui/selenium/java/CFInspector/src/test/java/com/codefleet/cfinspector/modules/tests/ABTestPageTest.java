@@ -4,6 +4,7 @@ import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
 import com.codefleet.cfinspector.modules.pages.*;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
+import com.codefleet.cfinspector.modules.utils.PageNavigationUtility;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -30,10 +31,12 @@ public class ABTestPageTest extends BasePageTest {
     @Test
     public void testABTestPageHeadlineTextIsCorrect() {
         LoggerUtil.info("Current URL in testABTestPageHeadlineTextIsCorrect: " + abTestPage.getCurrentUrl());
-        if (abTestPage.isVersionA()) {
+        boolean isVersionA = abTestPage.isVersionA();
+        boolean isVersionB = abTestPage.isVersionB();
+        if (isVersionA) {
             String versionAHeadline = abTestPage.getVersionAHeadlineText();
             Assert.assertEquals(versionAHeadline, "Surprise!!!", "Version A headline text is incorrect. Found: " + versionAHeadline);
-        } else if (abTestPage.isVersionB()) {
+        } else if (isVersionB) {
             String versionBHeadline = abTestPage.getVersionBHeadlineText();
             Assert.assertEquals(versionBHeadline, "Good News!!!", "Version B headline text is incorrect. Found: " + versionBHeadline);
         } else {

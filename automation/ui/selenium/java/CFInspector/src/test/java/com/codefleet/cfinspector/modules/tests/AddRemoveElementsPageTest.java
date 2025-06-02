@@ -4,7 +4,7 @@ import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
 import com.codefleet.cfinspector.modules.pages.AddRemoveElementsPage;
 import com.codefleet.cfinspector.modules.pages.CFInspectorPage;
-import com.codefleet.cfinspector.modules.pages.PageNavigationUtility;
+import com.codefleet.cfinspector.modules.utils.PageNavigationUtility;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;

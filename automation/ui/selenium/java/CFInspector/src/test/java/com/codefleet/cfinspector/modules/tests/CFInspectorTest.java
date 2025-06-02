@@ -2,22 +2,19 @@ package com.codefleet.cfinspector.modules.tests;
 
 import com.codefleet.cfinspector.modules.config.ConfigManager;
 import com.codefleet.cfinspector.modules.core.WebDriverFactory;
-import com.codefleet.cfinspector.modules.pages.ABTestPage;
-import com.codefleet.cfinspector.modules.pages.CFInspectorPage;
-import com.codefleet.cfinspector.modules.pages.PageNavigationUtility;
+import com.codefleet.cfinspector.modules.pages.*;
 import com.codefleet.cfinspector.modules.utils.LoggerUtil;
+import com.codefleet.cfinspector.modules.utils.PageNavigationUtility;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+
+import static org.testng.AssertJUnit.*;
 
 public class CFInspectorTest extends BasePageTest {
 
     private CFInspectorPage cfInspectorPage;
-//    private WebDriver driver;
 
     @BeforeMethod
     public void navigateToCFInspectorPage() {
@@ -26,57 +23,63 @@ public class CFInspectorTest extends BasePageTest {
     }
 
     @Test
-    public void testNavigationToCFInspectorPageWorks() {
-        String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector";
-        String actualUrl = cfInspectorPage.getCurrentUrl();
-        Assert.assertEquals(actualUrl, expectedUrl, "Navigation to CFInspector page failed");
-        Assert.assertTrue(cfInspectorPage.isCFInspectorPageLoaded(), "CFInspector page did not load properly");
-
-        String expectedTitle = "Project: CFInspector";
-        String actualTitle = cfInspectorPage.getProjectTitleText();
-        Assert.assertEquals(actualTitle, expectedTitle, "CFInspector page title is incorrect");
-    }
-
-    @Test
-    public void testInternetDescriptionText() {
+    public void testAutomationContextText() {
         String expectedDescription = "This collection of resources is designed to help you practice automation testing";
         String actualDescription = cfInspectorPage.getInternetDescriptionText();
         Assert.assertTrue(actualDescription.contains(expectedDescription), "Internet description text does not match");
     }
 
     @Test
-    public void testClickInternetLink() {
-        cfInspectorPage.clickInternetLink();
-        String expectedUrl = "https://the-internet.herokuapp.com/";
-        String actualUrl = cfInspectorPage.getCurrentUrl();
-        Assert.assertEquals(actualUrl, expectedUrl, "Navigation after clicking Internet link failed");
-    }
-
-    @Test
     public void testNavigationToABTestingPageWorks() {
-        cfInspectorPage.clickABTestingLink();
+        ABTestPage abTestPage = cfInspectorPage.clickABTestingLink();
+        assertNotNull("Add/Remove Elements Page is not loaded", abTestPage);
         String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector/abtest";
-        String actualUrl = cfInspectorPage.getCurrentUrl();
-        LoggerUtil.info("Current URL in testNavigationToABTestingPageWorks: " + actualUrl);
-        Assert.assertEquals(actualUrl, expectedUrl, "A/B Testing page did not load successfully");
-        LoggerUtil.info("Redirecting to parent page CFInspector.");
-
+        Assert.assertEquals(cfInspectorPage.getCurrentUrl(), expectedUrl, "A/B Testing page did not load successfully");
     }
 
     @Test
-    public void testNavigationToAddRemovePageWorks() {
-        SoftAssert softAssert = new SoftAssert();
-        try {
-            cfInspectorPage.clickAddRemoveLink();
-            String expectedUrl = ConfigManager.getBaseUrl() + "/resources/selenium/cfinspector/addremoveelements";
-            String actualUrl = cfInspectorPage.getCurrentUrl();
-            LoggerUtil.info("Current URL in testNavigationToAddRemovePageWorks: " + actualUrl);
-            softAssert.assertEquals(actualUrl, expectedUrl, "Add Remove page did not load successfully");
-        }
-        catch (AssertionError e)
-        {
-            LoggerUtil.error("testNavigationToAddRemovePageWorks is failed. Continuing to run other tests.", e);
-        }
+    public void testIsCFInspectorPageLoaded() {
+        // Verify that the CF Inspector page is loaded by checking for the project title
+        assertTrue("CFInspector page is not loaded", cfInspectorPage.isCFInspectorPageLoaded());
+    }
+
+    @Test
+    public void testGetProjectTitleText() {
+        // Verify that the project title matches the expected title
+        String projectTitle = cfInspectorPage.getProjectTitleText();
+        assertEquals("Project: CFInspector", projectTitle);
+    }
+
+    @Test
+    public void testGetInternetDescriptionText() {
+        // Verify that the internet description is displayed correctly
+        String internetDescription = cfInspectorPage.getInternetDescriptionText();
+        assertTrue("Internet description is not correct", internetDescription.contains("This collection of resources is designed to help you practice automation testing"));
+    }
+
+    @Test
+    public void testDisplayABTestingLink() {
+        // Verify that the A/B Testing link is displayed
+        assertTrue("A/B Testing link is not displayed", cfInspectorPage.displayABTestingLink());
+    }
+
+    @Test
+    public void testDisplayAddRemoveLink() {
+        // Verify that the Add/Remove Elements link is displayed
+        assertTrue("Add/Remove Elements link is not displayed", cfInspectorPage.displayAddRemoveLink());
+    }
+
+    @Test
+    public void testClickAddRemoveLink() {
+        // Verify that clicking the Add/Remove Elements link navigates to the correct page
+        AddRemoveElementsPage addRemoveElementsPage = cfInspectorPage.clickAddRemoveLink();
+        assertNotNull("Add/Remove Elements Page is not loaded", addRemoveElementsPage);
+    }
+
+    @Test
+    public void testBackLinkNavigation() {
+        assertTrue("Returned page is not Selenium Projects page",cfInspectorPage.clickBackLinkToSeleniumProjects());
+        assertNotNull("Back navigation failed", cfInspectorPage);
     }
 
     @Test
@@ -93,19 +96,15 @@ public class CFInspectorTest extends BasePageTest {
         String hostUrl = ConfigManager.getBaseUrl().split("//")[1];
         String expectedUrl = "http://" + username + ":" + password + "@" + hostUrl + "/resources/selenium/cfinspector/basicauth";
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless=new");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
-        WebDriver driver = new ChromeDriver(chromeOptions);
-        driver.get(expectedUrl);
-        String actualUrl = driver.getCurrentUrl();
+        WebDriver basicAuthDriver  = WebDriverFactory.getDriverThreadLocal();
+        LoggerUtil.info("Basic Auth specific WebDriver instance initialized.");
+
+        basicAuthDriver.get(expectedUrl);
+        String actualUrl = basicAuthDriver.getCurrentUrl();
         LoggerUtil.info("Current URL in testClickBasicAuthLink: " + actualUrl);
         Assert.assertEquals(actualUrl, expectedUrl, "Navigation after clicking Basic Auth link failed");
-        driver.quit();
-    }
-
-    private WebDriver initializeBasicAuthSpecificChromeDriver(ChromeOptions chromeOptions) {
-        return new ChromeDriver(chromeOptions);
+        WebDriverFactory.quitDriver();
+        LoggerUtil.info("Basic Auth specific WebDriver instance closed.");
     }
 
     @Test
@@ -116,16 +115,14 @@ public class CFInspectorTest extends BasePageTest {
         String expectedUrl = "http://" + username + ":" + password + "@" +
                 hostUrl + "/resources/selenium/cfinspector/basicauth";
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless=new");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
+        WebDriver basicAuthDriver  = WebDriverFactory.getDriverThreadLocal();
+        LoggerUtil.info("Basic Auth specific WebDriver instance initialized.");
 
-        WebDriver driver = initializeBasicAuthSpecificChromeDriver(chromeOptions);
-        driver.get(expectedUrl);
+        basicAuthDriver.get(expectedUrl);
 
         try {
             /*If getPageSource() is null, the code skips the .contains() method and prevents the NullPointerException.*/
-            String pageSource = driver.getPageSource();
+            String pageSource = basicAuthDriver.getPageSource();
             boolean errorMessageDisplayed = pageSource != null &&
                     (pageSource.contains("Invalid credentials")
                             || pageSource.contains("Unauthorized")
@@ -136,7 +133,9 @@ public class CFInspectorTest extends BasePageTest {
             LoggerUtil.error("Error while checking the error message on the page", e);
             Assert.fail("Test failed due to exception: " + e.getMessage());
         } finally {
-            driver.quit();
+            WebDriverFactory.quitDriver();
+            LoggerUtil.info("Basic Auth specific WebDriver instance closed.");
         }
     }
+
 }

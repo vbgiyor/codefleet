@@ -84,10 +84,10 @@ const Header = () => {
             <img
               src={logo}
               alt="Codefleet Logo"
-              className="h-14 w-auto" // Reverted to original size
+              className="h-14 w-auto"
               id="logo"
               loading="lazy"
-              onError={() => console.error('Logo failed to load')}
+              onError={() => console.error("Logo failed to load")}
             />
             <h1 className="text-2xl font-bold ml-2 bauhaus-font" id="company_name">
               Codefleet
@@ -99,17 +99,28 @@ const Header = () => {
             id="menu_btn"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
             </svg>
           </button>
         </div>
-        <nav className={`sm:flex ${isMenuOpen ? 'block' : 'hidden'} w-full sm:w-auto mt-4 sm:mt-0`}>
+
+        <nav
+          className={`sm:flex ${isMenuOpen ? "block" : "hidden"} w-full sm:w-auto mt-4 sm:mt-0`}
+        >
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+            {/* Menu Links */}
             <NavLink
               to="/"
               className={({ isActive }) =>
                 `w-24 text-center h-10 flex items-center justify-center ${
-                  isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'
+                  isActive
+                    ? "text-white"
+                    : "text-primary-blue hover:text-bluish-black hover:bg-transparent"
                 }`
               }
               id="menu_home"
@@ -125,7 +136,7 @@ const Header = () => {
                 }}
                 className={() =>
                   `w-24 text-center h-10 flex items-center justify-center ${
-                    isResourcesActive ? 'text-white' : 'text-primary-blue'
+                    isResourcesActive ? "text-white" : "text-primary-blue"
                   } hover:text-bluish-black hover:bg-transparent hover:rounded`
                 }
                 id="menu_resources"
@@ -133,13 +144,18 @@ const Header = () => {
                 Resources
               </NavLink>
               {isResourcesOpen && (
-                <div className="absolute left-0 mt-2 w-48 rounded shadow-lg sm:block" id="resources_dropdown">
+                <div
+                  className="absolute left-0 mt-2 w-48 rounded shadow-lg sm:block"
+                  id="resources_dropdown"
+                >
                   {ResourcesItems.map((item) => (
                     <NavLink
                       key={item.path}
                       to={item.path}
                       className={({ isActive }) =>
-                        `block px-4 py-2 ${isActive ? 'text-primary-blue font-bold' : 'text-primary-blue hover:bg-white'}`
+                        `block px-4 py-2 ${
+                          isActive ? "text-primary-blue font-bold" : "text-primary-blue hover:bg-white"
+                        }`
                       }
                       onClick={() => setIsResourcesOpen(false)}
                     >
@@ -153,20 +169,23 @@ const Header = () => {
               to="/contact"
               className={({ isActive }) =>
                 `w-24 text-center h-10 flex items-center justify-center ${
-                  isActive ? 'text-white' : 'text-primary-blue hover:text-bluish-black hover:bg-transparent'
+                  isActive
+                    ? "text-white"
+                    : "text-primary-blue hover:text-bluish-black hover:bg-transparent"
                 }`
               }
               id="menu_contact"
             >
               Contact
             </NavLink>
+            {/* Authentication Dropdown */}
             <div className="relative" ref={authDropdownRef}>
               <button
                 onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
                 className="btn w-28 text-center h-10 flex items-center justify-center text-bluish-black hover:bg-white"
                 id="auth_dropdown_btn"
               >
-                {firstName ? `${firstName}` : 'Account'}
+                {firstName ? `${firstName}` : "Account"}
               </button>
               {isAuthDropdownOpen && (
                 <div

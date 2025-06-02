@@ -13,10 +13,8 @@ const ABTestingComponent = () => {
   return (
     <div className="container mx-auto py-8 flex flex-col justify-start items-center min-h-full bg-gray-100 relative">
       {/* Back Link */}
-      <div className="absolute top-4 left-4">
-        <Link to="../selenium/cfinspector" className="text-blue-600 hover:text-blue-800 underline">
-          ← Back to CFInspector
-        </Link>
+      <div className="back-link">
+        <Link to="../selenium/cfinspector" className="text-blue-600 hover:text-blue-800 underline"> ← Back to CFInspector </Link>
       </div>
 
       {version === 'A' ? (

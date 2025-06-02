@@ -22,7 +22,7 @@ public class BasePageTest {
             LoggerUtil.info("No browser parameter provided, will use data.properties");
         }
         WebDriverFactory.getDriverThreadLocal();
-        LoggerUtil.info("WebDriver initialized.");
+        LoggerUtil.info("Test Suite WebDriver instance initialized.");
     }
 
     @AfterMethod
@@ -43,7 +43,7 @@ public class BasePageTest {
     @AfterClass
     public void tearDown(ITestContext context) {
         WebDriverFactory.quitDriver();
-        LoggerUtil.info("WebDriver instance is closed.");
+        LoggerUtil.info("Test Suite WebDriver instance closed.");
         System.clearProperty("browser");
         // Add logic to write test results to CSV using ITestContext in the future
         // Example: String suiteName = context.getSuite().getName();
