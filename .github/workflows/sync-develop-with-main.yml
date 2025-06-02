@@ -1,9 +1,11 @@
 name: Sync Develop with Main
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+
 jobs:
   sync:
     runs-on: ubuntu-latest
