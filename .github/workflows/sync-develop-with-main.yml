@@ -17,11 +17,13 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global core.sshCommand "ssh -i ~/.ssh/id_ed25519"
-      - name: Merge main into develop
+      - name: Sync main and develop
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
           git fetch origin
+          git checkout main
+          git pull origin main
           git checkout develop
           git merge origin/main --no-edit
           git push origin develop
